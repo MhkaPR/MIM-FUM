@@ -1,0 +1,5 @@
+﻿  Form_Main.c
+C:\Users\mhkap\Desktop\MIM\logic_Form.h(21,12): warning C4244: 'funzione': conversione da 'time_t' a 'unsigned int'. Possibile perdita di dati.
+C:\Users\mhkap\Desktop\MIM\logic_Form.h(29,6): warning C4101: 'Dice': variabile locale senza riferimenti
+C:\Users\mhkap\Desktop\MIM\Form_Main.c(202,25): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+  Meet_in_the_Middle.vcxproj -> C:\Users\mhkap\Desktop\MIM\x64\Debug\Meet_in_the_Middle.exe

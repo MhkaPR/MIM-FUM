@@ -1,0 +1,46 @@
+Graphic:
+    *Pages
+        +StartGame
+        +Form_continue
+        +FristMenu
+            +buttons_continueANDnew_Form
+                +Template_Form
+                    -FristMenu
+                    +appointment_Form
+                        +Board_Form
+                            +Messages_To_Menu
+                                -FristMenu
+                               -Board_Form
+                            +Messages_To_Refresh
+                               -Board_Form
+                            +Messages_New_Card
+                                -Board_Form
+                            +Messages_Choose_Card
+                                -Board_Form
+                            +Messages_Sucsess
+                                -FristMenu
+                            -Guide
+                                -Board_Form
+            +Setting
+                -Board_Form
+            +AboutUs
+                -Board_Form
+            +Guide
+                -slides
+                -Board_Form
+    +Animation
+        -Move Nuts
+        -appointment
+        -Sucsess
+        -StartGame
+        -Caridors
+    +Voices
+        -Sucsess
+        -Click
+        -HEIN BAZI
+        -Dice
+        -Move Nuts
+        -New_Card
+        -Entering_Card
+        -Caridors
+        -ZADE SHODAN

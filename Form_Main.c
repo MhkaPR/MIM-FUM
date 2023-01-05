@@ -4,6 +4,8 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 #pragma region ENUMS
 enum Dice {
 	DiceM3,
@@ -94,6 +96,11 @@ struct button
 	int Y_frist, Y_end;
 	int sw_Link;
 };
+struct NUT
+{
+	int x;
+	int y;
+};
 #pragma endregion
 void must_init(bool check, const char* description)
 {
@@ -124,6 +131,7 @@ bool sw_btn(struct button* btn, ALLEGRO_MOUSE_STATE* mouse)
 }
 int main()
 {
+	srand(time(0));
 	//Setting
 #pragma region create Window
 
@@ -162,7 +170,21 @@ int main()
 	bool sw_btnDown = false;
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
-
+	//variable LOGIC-------------------------
+	int ArrayCardsPlace[9];
+	int ArrayCarridorsPlace[9][2] = { 0 };
+	int CardsP1[4] = { 0 }, CardsP2[4] = { 0 };
+	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
+	int Dice, count = 0, iP1 = 0, iP2 = 0;
+	int CardChoosed;
+	short int IsDoorClosed = 0;
+	short int CoefDice = 1;
+	short int Is_VETO = 0;
+	short int sw_AgainDice = 0;
+	short int playerSW = 1;
+	short int IsLimitP1 = 0;
+	short int IsLimitP2 = 0;
+	//-------------------------------------------
 	struct button btn_Guide;
 	btn_Guide.X_frist = PBG_L;
 	btn_Guide.Y_frist = PBG_T;
@@ -207,6 +229,9 @@ int main()
 	btn_aboutUs.X_end = auR;
 	btn_aboutUs.Y_end = auB;
 	btn_aboutUs.sw_Link = AboutUs_Form;
+
+	struct NUT P1Nut1;
+
 
 
 	//Objects
@@ -345,6 +370,7 @@ int main()
 						exit(2);
 					}
 				}
+
 #pragma endregion
 				break;
 			case buttons_continueANDnew_Form:
@@ -402,10 +428,9 @@ int main()
 					if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
 					{
 						sw_btnDown = true;
-						Dice_PIC_VAR = Dice_PIC[DiceRand()];
-						Game(turn);
-						turn++;
-						turn %= 2;
+						Dice = DiceRand();
+						Dice_PIC_VAR = Dice_PIC[Dice];
+						ConvertToDiceMIM(&Dice);
 					}
 					if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
 				}
@@ -423,6 +448,14 @@ int main()
 				al_draw_bitmap(CaractersP1_PIC, 10, 290, 0);
 				al_draw_bitmap(CaractersP2_PIC, 1090, 100, 0);
 				//-----------------------------------------
+
+				if ((Player1[0] + Dice) > -1 && (Player1[0] + Dice) < 81)//check for Being to period
+				{
+					Player1[0] += Dice;
+					MoveGraphic(Player1[0],&P1Nut1);
+				}
+
+
 #pragma endregion
 				break;
 			case appointment_Form:

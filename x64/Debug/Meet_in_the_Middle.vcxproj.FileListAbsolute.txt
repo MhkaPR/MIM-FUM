@@ -1,3 +1,4 @@
 C:\Users\mhkap\source\repos\Meet_in_the_Middle\x64\Debug\Meet_in_the_Middle.exe
 C:\Users\mhkap\source\repos\MIM-Meet-in-the-Middle-Game\x64\Debug\Meet_in_the_Middle.exe
 C:\Users\mhkap\Desktop\MIM\x64\Debug\Meet_in_the_Middle.exe
+C:\MIM-FUM\x64\Debug\Meet_in_the_Middle.exe

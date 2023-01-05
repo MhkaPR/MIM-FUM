@@ -536,4 +536,4 @@ int MoveGraphic(int Corresponding_number, int* x, int* y)
 	}
 }
 //Hello Mahdi
-//aleik hello
+//aleik hello .

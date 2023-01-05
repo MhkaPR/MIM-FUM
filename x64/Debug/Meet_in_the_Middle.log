@@ -1,5 +1,4 @@
 ﻿  Form_Main.c
-C:\MIM-FUM\Form_Main.c(219,25): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(169,6): warning C4101: 'ArrayCardsPlace': variabile locale senza riferimenti
-C:\MIM-FUM\Form_Main.c(174,6): warning C4101: 'CardChoosed': variabile locale senza riferimenti
-  Meet_in_the_Middle.vcxproj -> C:\MIM-FUM\x64\Debug\Meet_in_the_Middle.exe
+C:\Users\novin\Desktop\MIM-FUM\logic_Form.h(133,8): error C2037: left of 'x' specifies undefined struct/union 'NUT'
+C:\Users\novin\Desktop\MIM-FUM\logic_Form.h(134,8): error C2037: left of 'y' specifies undefined struct/union 'NUT'
+C:\Users\novin\Desktop\MIM-FUM\Form_Main.c(224,25): warning C4047: '=': 'int' differs in levels of indirection from 'void *'

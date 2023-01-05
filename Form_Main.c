@@ -79,10 +79,10 @@ enum Position_Block_TwePesonE
 enum GuideForms { P1, P2, P3, P4, P5 };
 enum aboutus
 {
-	auL=385,
-	auR=543,
-	auT=637,
-	auB=794,
+	auL = 385,
+	auR = 543,
+	auT = 637,
+	auB = 794,
 };
 #pragma endregion
 #pragma region STRUCTS
@@ -101,6 +101,7 @@ struct NUT
 	int x;
 	int y;
 };
+
 #pragma endregion
 void must_init(bool check, const char* description)
 {
@@ -142,7 +143,7 @@ int main()
 	must_init(al_install_keyboard(), "Key Board");
 	must_init(al_install_mouse(), "Mouse");
 
-	ALLEGRO_TIMER* timer = al_create_timer(1.0/60.0);
+	ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
 	must_init(timer, "timer");
 
 	ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
@@ -168,6 +169,7 @@ int main()
 	bool LinkCursor = false;
 	bool Permission_change_mouse = false;
 	bool sw_btnDown = false;
+	bool IsDiced = false;
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
 	//variable LOGIC-------------------------
@@ -175,7 +177,7 @@ int main()
 	int ArrayCarridorsPlace[9][2] = { 0 };
 	int CardsP1[4] = { 0 }, CardsP2[4] = { 0 };
 	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
-	int Dice, count = 0, iP1 = 0, iP2 = 0;
+	int DiceVar=0, count = 0, iP1 = 0, iP2 = 0;
 	int CardChoosed;
 	short int IsDoorClosed = 0;
 	short int CoefDice = 1;
@@ -231,7 +233,8 @@ int main()
 	btn_aboutUs.sw_Link = AboutUs_Form;
 
 	struct NUT P1Nut1;
-
+	P1Nut1.x = 365;
+	P1Nut1.y = 730;
 
 
 	//Objects
@@ -428,9 +431,18 @@ int main()
 					if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
 					{
 						sw_btnDown = true;
-						Dice = DiceRand();
-						Dice_PIC_VAR = Dice_PIC[Dice];
-						ConvertToDiceMIM(&Dice);
+						DiceVar = DiceRand();
+						if ((Player1[0] + DiceVar) < 0 && (Player1[0] + DiceVar) > 80)//check for Being to period
+						{
+							DiceVar = 0;
+						}
+						else
+						{
+							IsDiced = true;
+							Dice_PIC_VAR = Dice_PIC[DiceVar];
+							ConvertToDiceMIM(&DiceVar);
+						}
+						
 					}
 					if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
 				}
@@ -438,7 +450,8 @@ int main()
 				//-----------------------------------------
 
 				//Nuts-------------------------------------
-				al_draw_bitmap(NutsP1_PIC[NUT1], 365, 730, 0);
+				//al_draw_bitmap(NutsP1_PIC[NUT1], 365, 730, 0);
+				al_draw_bitmap(NutsP1_PIC[NUT1], P1Nut1.x, P1Nut1.y, 0);
 				al_draw_bitmap(NutsP1_PIC[NUT2], 470, 730, 0);
 				al_draw_bitmap(NutsP2_PIC[NUT1], 760, 5, 0);
 				al_draw_bitmap(NutsP2_PIC[NUT2], 865, 5, 0);
@@ -448,11 +461,12 @@ int main()
 				al_draw_bitmap(CaractersP1_PIC, 10, 290, 0);
 				al_draw_bitmap(CaractersP2_PIC, 1090, 100, 0);
 				//-----------------------------------------
-
-				if ((Player1[0] + Dice) > -1 && (Player1[0] + Dice) < 81)//check for Being to period
+				//DiceVar = 0;
+				if(IsDiced) if((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
 				{
-					Player1[0] += Dice;
-					MoveGraphic(Player1[0],&P1Nut1);
+					Player1[0] += DiceVar;
+					MoveGraphic(Player1[0], &(P1Nut1.x),&(P1Nut1.y));
+					IsDiced = false;
 				}
 
 
@@ -518,7 +532,7 @@ int main()
 
 	al_destroy_bitmap(FristMenu_Form_PIC);
 
-	
+
 
 
 #pragma endregion

@@ -3,4 +3,5 @@ C:\MIM-FUM\Form_Main.c(226,25): warning C4047: '=': 'int' differisce da 'void *'
 C:\MIM-FUM\Form_Main.c(176,6): warning C4101: 'ArrayCardsPlace': variabile locale senza riferimenti
 C:\MIM-FUM\Form_Main.c(181,6): warning C4101: 'CardChoosed': variabile locale senza riferimenti
 C:\MIM-FUM\logic_Form.h(537): warning C4716: 'MoveGraphic': deve restituire un valore
+  LINK : C:\MIM-FUM\x64\Debug\Meet_in_the_Middle.exe non trovato o non compilato dall'ultimo collegamento incrementale; verrà eseguito il collegamento completo
   Meet_in_the_Middle.vcxproj -> C:\MIM-FUM\x64\Debug\Meet_in_the_Middle.exe

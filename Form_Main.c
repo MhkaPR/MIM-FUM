@@ -216,6 +216,7 @@ int main()
 
 	bool Tik_Dice = false;
 	bool Tik_Nut = false;
+	bool Tik_Player = true;
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
 	//variable LOGIC-------------------------
@@ -385,9 +386,11 @@ int main()
 	//FristMenu
 	ALLEGRO_BITMAP* FristMenu_Form_PIC = al_load_bitmap("Images/startMenu/Form.png");
 
-
-#pragma endregion
 	ALLEGRO_BITMAP* Dice_PIC_VAR = Dice_PIC[DiceP3];
+
+	ALLEGRO_COLOR NutActiveColorP2 = al_map_rgb(145, 216, 247);
+	ALLEGRO_COLOR NutActiveColorP1 = al_map_rgb(247, 173, 175);
+#pragma endregion
 
 
 	//current Window
@@ -514,21 +517,32 @@ int main()
 				al_draw_bitmap(Dice_PIC_VAR, DICE_L, DICE_T, 0);
 				if (sw_btn(&btn_Dice, &mouseState))
 				{
-					al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
-					if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
+					if (Tik_Player)
 					{
-						User_operation = CLICKDICE;
-						Tik_Dice = true;
+						al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
+						if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
+						{
+							User_operation = CLICKDICE;
+							Tik_Dice = true;
+							Tik_Player = false;
+						}
+						if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
 					}
-					if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
 				}
 				else al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 				//-----------------------------------------
 
 				//Nuts-------------------------------------
+				if (player_Turn == P1)al_draw_circle(P1Nut1.x + PPNW / 2 - 1, P1Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
 				al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
+
+				if (player_Turn == P1)al_draw_circle(P1Nut2.x + PPNW / 2 - 1, P1Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
 				al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
+
+				if (player_Turn == P2)al_draw_circle(P2Nut1.x + PPNW / 2 - 1, P2Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
 				al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
+
+				if (player_Turn == P2)al_draw_circle(P2Nut2.x + PPNW / 2 - 1, P2Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
 				al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
 				if (Tik_Dice == true)
 				{
@@ -539,6 +553,7 @@ int main()
 							User_operation = CLICKNUT1_P1;
 							Tik_Nut = true;
 							Tik_Dice = false;
+							Tik_Player = true;
 						}
 					}
 					else if (sw_btn(&btn_P1Nut2, &mouseState))
@@ -548,6 +563,7 @@ int main()
 							User_operation = CLICKNUT2_P1;
 							Tik_Nut = true;
 							Tik_Dice = false;
+							Tik_Player = true;
 						}
 					}
 					else if (sw_btn(&btn_P2Nut1, &mouseState))
@@ -557,6 +573,7 @@ int main()
 							User_operation = CLICKNUT1_P2;
 							Tik_Nut = true;
 							Tik_Dice = false;
+							Tik_Player = true;
 						}
 					}
 					else if (sw_btn(&btn_P2Nut2, &mouseState))
@@ -566,6 +583,7 @@ int main()
 							User_operation = CLICKNUT2_P2;
 							Tik_Nut = true;
 							Tik_Dice = false;
+							Tik_Player = true;
 						}
 					}
 				}
@@ -630,7 +648,7 @@ int main()
 							}
 							User_operation = -1;
 							player_Turn = P2;
-							
+
 
 						}
 						break;
@@ -651,7 +669,7 @@ int main()
 							}
 							User_operation = -1;
 							player_Turn = P2;
-							
+
 						}
 						break;
 					case CLICKNUT1_ENEMY:
@@ -715,7 +733,6 @@ int main()
 							}
 							User_operation = -1;
 							player_Turn = P1;
-							
 						}
 						break;
 					case CLICKNUT2_P2:
@@ -735,7 +752,7 @@ int main()
 							}
 							User_operation = -1;
 							player_Turn = P1;
-							
+
 						}
 						break;
 					case CLICKNUT1_ENEMY:

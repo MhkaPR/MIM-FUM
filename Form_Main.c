@@ -7,6 +7,8 @@
 #include <time.h>
 #include <stdlib.h>
 #pragma region ENUMS
+
+
 enum Dice {
 	DiceM3,
 	DiceM2,
@@ -29,7 +31,7 @@ enum LuckyCard
 	Place2,
 	Place3,
 	Place4,
-};
+};//hello
 enum Pages
 {
 	StartGame,
@@ -63,7 +65,6 @@ enum Position_Block_Guide
 	PBG_T = 638,
 	PBG_B = 795,
 };
-
 enum Position_Block_TwePesonE
 {
 	TwLT = 32,
@@ -84,6 +85,44 @@ enum aboutus
 	auT = 637,
 	auB = 794,
 };
+enum Works_of_player
+{
+	CLICKDICE,
+	CLICKCARD_doorclosed,
+	CLICKCARD_coef,
+	CLICKCARD_limit,
+	CLICKCARD_diceagain,
+	CLICKNUT1_P1,
+	CLICKNUT2_P1,
+	CLICKNUT1_P2,
+	CLICKNUT2_P2,
+	CLICKNUT1_ENEMY,
+	CLICKNUT2_ENEMY,
+};
+enum Position_P1Nut1
+{
+	PP1N1_L = 365,
+	PP1N1_T = 730,
+	PPNW = 68,
+};
+enum Position_P1Nut2
+{
+	PP1N2_L = 470,
+	PP1N2_T = 730,
+
+};
+enum Position_P2Nut1
+{
+	PP2N1_L = 760,
+	PP2N1_T = 5,
+};
+
+enum Position_P2Nut2
+{
+	PP2N2_L = 865,
+	PP2N2_T = 5,
+};
+
 #pragma endregion
 #pragma region STRUCTS
 struct POINT
@@ -100,6 +139,7 @@ struct NUT
 {
 	int x;
 	int y;
+	ALLEGRO_BITMAP* picture;
 };
 
 #pragma endregion
@@ -164,21 +204,22 @@ int main()
 	al_register_event_source(queue, al_get_mouse_event_source());
 
 #pragma endregion
+
+
+#pragma region Variables
 	bool sw = true;
 	bool done = false;
 	bool LinkCursor = false;
 	bool Permission_change_mouse = false;
 	bool sw_btnDown = false;
 	bool IsDiced = false;
+
+	bool Tik_Dice = false;
+	bool Tik_Nut = false;
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
 	//variable LOGIC-------------------------
-	int ArrayCardsPlace[9];
-	int ArrayCarridorsPlace[9][2] = { 0 };
-	int CardsP1[4] = { 0 }, CardsP2[4] = { 0 };
-	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
-	int DiceVar=0, count = 0, iP1 = 0, iP2 = 0;
-	int CardChoosed;
+	bool player_Turn = P1;//turn of players
 	short int IsDoorClosed = 0;
 	short int CoefDice = 1;
 	short int Is_VETO = 0;
@@ -186,6 +227,14 @@ int main()
 	short int playerSW = 1;
 	short int IsLimitP1 = 0;
 	short int IsLimitP2 = 0;
+	int ArrayCardsPlace[9];
+	int ArrayCarridorsPlace[9][2] = { 0 };
+	int CardsP1[4] = { 0 }, CardsP2[4] = { 0 };
+	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
+	int DiceVar = 0, count = 0, iP1 = 0, iP2 = 0;
+	int CardChoosed;
+	enum Works_of_player User_operation = -1;
+
 	//-------------------------------------------
 	struct button btn_Guide;
 	btn_Guide.X_frist = PBG_L;
@@ -232,11 +281,50 @@ int main()
 	btn_aboutUs.Y_end = auB;
 	btn_aboutUs.sw_Link = AboutUs_Form;
 
+	struct button btn_P1Nut1;
+	btn_P1Nut1.X_frist = PP1N1_L;
+	btn_P1Nut1.Y_frist = PP1N1_T;
+	btn_P1Nut1.X_end = PP1N1_L + PPNW;
+	btn_P1Nut1.Y_end = PP1N1_T + PPNW;
+	btn_P1Nut1.sw_Link = NULL;
+
+	struct button btn_P1Nut2;
+	btn_P1Nut2.X_frist = PP1N2_L;
+	btn_P1Nut2.Y_frist = PP1N2_T;
+	btn_P1Nut2.X_end = PP1N2_L + PPNW;
+	btn_P1Nut2.Y_end = PP1N2_T + PPNW;
+	btn_P1Nut2.sw_Link = NULL;
+
+	struct button btn_P2Nut1;
+	btn_P2Nut1.X_frist = PP2N1_L;
+	btn_P2Nut1.Y_frist = PP2N1_T;
+	btn_P2Nut1.X_end = PP2N1_L + PPNW;
+	btn_P2Nut1.Y_end = PP2N1_T + PPNW;
+	btn_P2Nut1.sw_Link = NULL;
+
+	struct button btn_P2Nut2;
+	btn_P2Nut2.X_frist = PP2N2_L;
+	btn_P2Nut2.Y_frist = PP2N2_T;
+	btn_P2Nut2.X_end = PP2N2_L + PPNW;
+	btn_P2Nut2.Y_end = PP2N2_T + PPNW;
+	btn_P2Nut2.sw_Link = NULL;
+
 	struct NUT P1Nut1;
-	P1Nut1.x = 365;
-	P1Nut1.y = 730;
+	P1Nut1.x = PP1N1_L;
+	P1Nut1.y = PP1N1_T;
 
+	struct NUT P1Nut2;
+	P1Nut2.x = PP1N2_L;
+	P1Nut2.y = PP1N2_T;
 
+	struct NUT P2Nut1;
+	P2Nut1.x = PP2N1_L;
+	P2Nut1.y = PP2N1_T;
+
+	struct NUT P2Nut2;
+	P2Nut2.x = PP2N2_L;
+	P2Nut2.y = PP2N2_T;
+#pragma endregion
 	//Objects
 #pragma region Images of Board Form
 	ALLEGRO_EVENT event;
@@ -252,12 +340,12 @@ int main()
 	Dice_PIC[DiceM1] = al_load_bitmap("Images/Dice/TAS_mine1.png");
 
 	ALLEGRO_BITMAP* NutsP1_PIC[2];
-	NutsP1_PIC[NUT1] = al_load_bitmap("Images/MOHRE1.png");
-	NutsP1_PIC[NUT2] = al_load_bitmap("Images/MOHRE1.png");
+	P1Nut1.picture = al_load_bitmap("Images/MOHRE1.png");
+	P1Nut2.picture = al_load_bitmap("Images/MOHRE1.png");
 
 	ALLEGRO_BITMAP* NutsP2_PIC[2];
-	NutsP2_PIC[NUT1] = al_load_bitmap("Images/MOHRE2.png");
-	NutsP2_PIC[NUT2] = al_load_bitmap("Images/MOHRE2.png");
+	P2Nut1.picture = al_load_bitmap("Images/MOHRE2.png");
+	P2Nut2.picture = al_load_bitmap("Images/MOHRE2.png");
 
 	ALLEGRO_BITMAP* lucky_CardP1_PIC[4];
 	lucky_CardP1_PIC[Place1] = al_load_bitmap("Images/BLOCK_cart.png");
@@ -388,7 +476,6 @@ int main()
 				break;
 			case Board_Form:
 #pragma region codes
-
 				if (Permission_change_mouse)
 				{
 					al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
@@ -430,9 +517,163 @@ int main()
 					al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
 					if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
 					{
+						/*sw_btnDown = true;
+						DiceVar = DiceRand();*/
+						//User_operation = CLICKDICE;
+						/*if ((Player1[0] + DiceVar) < 0 && (Player1[0] + DiceVar) > 80)	DiceVar = 0;
+						else
+						{
+							IsDiced = true;
+							Dice_PIC_VAR = Dice_PIC[DiceVar];
+							ConvertToDiceMIM(&DiceVar);
+						}*/
+						User_operation = CLICKDICE;
+					}
+					if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
+				}
+				else al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+				//-----------------------------------------
+
+				//Nuts-------------------------------------
+				al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
+				al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
+				al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
+				al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
+				if (sw_btn(&btn_P1Nut1, &mouseState))
+				{
+					if (al_mouse_button_down(&mouseState, 1))
+					{
+						User_operation = CLICKNUT1_P1;
+						Tik_Nut = true;
+					}
+				}
+				else if (sw_btn(&btn_P1Nut2, &mouseState))
+				{
+					if (al_mouse_button_down(&mouseState, 1))
+					{
+						User_operation = CLICKNUT2_P1;
+						Tik_Nut = true;
+					}
+				}
+				else if (sw_btn(&btn_P2Nut1, &mouseState))
+				{
+					if (al_mouse_button_down(&mouseState, 1))
+					{
+						User_operation = CLICKNUT1_P2;
+						Tik_Nut = true;
+					}
+				}
+				else if (sw_btn(&btn_P2Nut2, &mouseState))
+				{
+					if (al_mouse_button_down(&mouseState, 1))
+					{
+						User_operation = CLICKNUT2_P2;
+						Tik_Nut = true;
+					}
+				}
+				//-----------------------------------------
+				// 
+				//Caracters--------------------------------
+				al_draw_bitmap(CaractersP1_PIC, 10, 290, 0);
+				al_draw_bitmap(CaractersP2_PIC, 1090, 100, 0);
+				//-----------------------------------------
+				//DiceVar = 0;
+#pragma region LOGIC
+				switch (player_Turn)
+				{
+				case P1:
+					switch (User_operation)
+					{
+					case CLICKDICE:
+						/*if (IsDiced)if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
+						{
+							Player1[0] += DiceVar;
+							MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
+							IsDiced = false;
+						}*/
 						sw_btnDown = true;
 						DiceVar = DiceRand();
-						if ((Player1[0] + DiceVar) < 0 && (Player1[0] + DiceVar) > 80)//check for Being to period
+						//User_operation = CLICKDICE;
+						if (((Player1[0] + DiceVar) < 0 && (Player1[0] + DiceVar) > 80) ||
+							((Player1[1] + DiceVar) < 0 && (Player1[1] + DiceVar) > 80))
+						{
+							DiceVar = 0;
+
+						}
+						else
+						{
+							IsDiced = true;
+							Dice_PIC_VAR = Dice_PIC[DiceVar];
+							ConvertToDiceMIM(&DiceVar);
+						}
+						User_operation = -1;
+						/*player_Turn++; player_Turn %= 2;*/
+						break;
+					case CLICKCARD_doorclosed:
+						break;
+					case CLICKCARD_coef:
+						break;
+					case CLICKCARD_limit:
+						break;
+					case CLICKCARD_diceagain:
+						break;
+					case CLICKNUT1_P1:
+						printf("yesP1N1\n\n");
+
+						if (IsDiced)if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
+						{
+							Player1[0] += DiceVar;
+							MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
+							btn_P1Nut1.X_frist = P1Nut1.x;
+							btn_P1Nut1.Y_frist = P1Nut1.y;
+							btn_P1Nut1.X_end = P1Nut1.x + PPNW;
+							btn_P1Nut1.Y_end = P1Nut1.y + PPNW;
+
+							IsDiced = false;
+						}
+						User_operation = -1;
+						player_Turn = P2;
+						break;
+					case CLICKNUT2_P1:
+						printf("yesP1N2\n\n");
+						if (IsDiced)if ((Player1[1] + DiceVar) > -1 && (Player1[1] + DiceVar) < 81)//check for Being to period
+						{
+							Player1[1] += DiceVar;
+							MoveGraphic(Player1[1], &(P1Nut2.x), &(P1Nut2.y));
+							btn_P1Nut2.X_frist = P1Nut2.x;
+							btn_P1Nut2.Y_frist = P1Nut2.y;
+							btn_P1Nut2.X_end = P1Nut2.x + PPNW;
+							btn_P1Nut2.Y_end = P1Nut2.y + PPNW;
+
+							IsDiced = false;
+						}
+						User_operation = -1;
+						player_Turn = P2;
+						break;
+					case CLICKNUT1_ENEMY:
+						break;
+					case CLICKNUT2_ENEMY:
+						break;
+					default:
+						break;
+					}
+
+					break;
+				case P2:
+					switch (User_operation)
+					{
+					case CLICKDICE:
+						/*if (IsDiced)if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
+						{
+							Player1[0] += DiceVar;
+							MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
+							IsDiced = false;
+						}*/
+						sw_btnDown = true;
+						DiceVar = DiceRand();
+						//User_operation = CLICKDICE;
+						if (((Player2[0] + DiceVar) < 0 && (Player2[0] + DiceVar) > 80) ||
+							((Player2[1] + DiceVar) < 0 && (Player2[1] + DiceVar) > 80))
 						{
 							DiceVar = 0;
 						}
@@ -442,32 +683,64 @@ int main()
 							Dice_PIC_VAR = Dice_PIC[DiceVar];
 							ConvertToDiceMIM(&DiceVar);
 						}
-						
-					}
-					if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
-				}
-				else al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
-				//-----------------------------------------
+						User_operation = -1;
+						break;
+					case CLICKCARD_doorclosed:
+						break;
+					case CLICKCARD_coef:
+						break;
+					case CLICKCARD_limit:
+						break;
+					case CLICKCARD_diceagain:
+						break;
+					case CLICKNUT1_P2:
+							printf("yesP2N1\n\n");
 
-				//Nuts-------------------------------------
-				//al_draw_bitmap(NutsP1_PIC[NUT1], 365, 730, 0);
-				al_draw_bitmap(NutsP1_PIC[NUT1], P1Nut1.x, P1Nut1.y, 0);
-				al_draw_bitmap(NutsP1_PIC[NUT2], 470, 730, 0);
-				al_draw_bitmap(NutsP2_PIC[NUT1], 760, 5, 0);
-				al_draw_bitmap(NutsP2_PIC[NUT2], 865, 5, 0);
-				//-----------------------------------------
-				// 
-				//Caracters--------------------------------
-				al_draw_bitmap(CaractersP1_PIC, 10, 290, 0);
-				al_draw_bitmap(CaractersP2_PIC, 1090, 100, 0);
-				//-----------------------------------------
-				//DiceVar = 0;
-				if(IsDiced) if((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
-				{
-					Player1[0] += DiceVar;
-					MoveGraphic(Player1[0], &(P1Nut1.x),&(P1Nut1.y));
-					IsDiced = false;
+							if (IsDiced)if ((Player2[0] + DiceVar) > -1 && (Player2[0] + DiceVar) < 81)//check for Being to period
+							{
+								Player2[0] += DiceVar;
+								MoveGraphic(Player2[0], &(P2Nut1.x), &(P2Nut1.y));
+								btn_P2Nut1.X_frist = P2Nut1.x;
+								btn_P2Nut1.Y_frist = P2Nut1.y;
+								btn_P2Nut1.X_end = P2Nut1.x + PPNW;
+								btn_P2Nut1.Y_end = P2Nut1.y + PPNW;
+
+								IsDiced = false;
+							}
+							User_operation = -1;
+							player_Turn = P1;
+						break;
+					case CLICKNUT2_P2:
+							printf("yesP2N2\n\n");
+
+							if (IsDiced)if ((Player2[1] + DiceVar) > -1 && (Player2[1] + DiceVar) < 81)//check for Being to period
+							{
+								Player2[1] += DiceVar;
+								MoveGraphic(Player2[1], &(P2Nut2.x), &(P2Nut2.y));
+								btn_P2Nut2.X_frist = P2Nut2.x;
+								btn_P2Nut2.Y_frist = P2Nut2.y;
+								btn_P2Nut2.X_end = P2Nut2.x + PPNW;
+								btn_P2Nut2.Y_end = P2Nut2.y + PPNW;
+
+								IsDiced = false;
+							}
+							User_operation = -1;
+							player_Turn = P1;
+						break;
+					case CLICKNUT1_ENEMY:
+						break;
+					case CLICKNUT2_ENEMY:
+						break;
+					default:
+						break;
+					}
+
+					break;
+				default:
+					break;
 				}
+
+#pragma endregion
 
 
 #pragma endregion
@@ -539,4 +812,5 @@ int main()
 
 
 	return 0;
+
 }

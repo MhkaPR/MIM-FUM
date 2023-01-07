@@ -217,6 +217,12 @@ int main()
 	bool Tik_Dice = false;
 	bool Tik_Nut = false;
 	bool Tik_Player = true;
+
+	bool P1N1_IsLive = true;
+	bool P1N2_IsLive = true;
+	bool P2N1_IsLive = true;
+	bool P2N2_IsLive = true;
+
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
 	//variable LOGIC-------------------------
@@ -522,6 +528,7 @@ int main()
 						al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
 						if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
 						{
+							printf("hh\n");
 							User_operation = CLICKDICE;
 							Tik_Dice = true;
 							Tik_Player = false;
@@ -548,43 +555,47 @@ int main()
 				{
 					if (sw_btn(&btn_P1Nut1, &mouseState))
 					{
-						if (al_mouse_button_down(&mouseState, 1))
-						{
-							User_operation = CLICKNUT1_P1;
-							Tik_Nut = true;
-							Tik_Dice = false;
-							Tik_Player = true;
-						}
+						if (P1N1_IsLive)
+							if (al_mouse_button_down(&mouseState, 1))
+							{
+								User_operation = CLICKNUT1_P1;
+								Tik_Nut = true;
+								Tik_Dice = false;
+								Tik_Player = true;
+							}
 					}
 					else if (sw_btn(&btn_P1Nut2, &mouseState))
 					{
-						if (al_mouse_button_down(&mouseState, 1))
-						{
-							User_operation = CLICKNUT2_P1;
-							Tik_Nut = true;
-							Tik_Dice = false;
-							Tik_Player = true;
-						}
+						if (P1N2_IsLive)
+							if (al_mouse_button_down(&mouseState, 1))
+							{
+								User_operation = CLICKNUT2_P1;
+								Tik_Nut = true;
+								Tik_Dice = false;
+								Tik_Player = true;
+							}
 					}
 					else if (sw_btn(&btn_P2Nut1, &mouseState))
 					{
-						if (al_mouse_button_down(&mouseState, 1))
-						{
-							User_operation = CLICKNUT1_P2;
-							Tik_Nut = true;
-							Tik_Dice = false;
-							Tik_Player = true;
-						}
+						if (P2N1_IsLive)
+							if (al_mouse_button_down(&mouseState, 1))
+							{
+								User_operation = CLICKNUT1_P2;
+								Tik_Nut = true;
+								Tik_Dice = false;
+								Tik_Player = true;
+							}
 					}
 					else if (sw_btn(&btn_P2Nut2, &mouseState))
 					{
-						if (al_mouse_button_down(&mouseState, 1))
-						{
-							User_operation = CLICKNUT2_P2;
-							Tik_Nut = true;
-							Tik_Dice = false;
-							Tik_Player = true;
-						}
+						if (P2N2_IsLive)
+							if (al_mouse_button_down(&mouseState, 1))
+							{
+								User_operation = CLICKNUT2_P2;
+								Tik_Nut = true;
+								Tik_Dice = false;
+								Tik_Player = true;
+							}
 					}
 				}
 				//-----------------------------------------
@@ -772,7 +783,35 @@ int main()
 
 
 #pragma endregion
-				break;
+				if (Player1[0] == 40)
+				{
+					P1Nut1.x = 810;
+					P1Nut1.y = 1300;
+					P1N1_IsLive = false;
+					Player1[0] = -1;
+				}
+				if (Player1[1] == 40)
+				{
+					P1Nut2.x = 810;
+					P1Nut2.y = 1300;
+					P1N2_IsLive = false;
+					Player1[1] = -1;
+				}
+				if (Player2[0] == 40)
+				{
+					P2Nut1.x = 810;
+					P2Nut1.y = 1300;
+					P2N1_IsLive = false;
+					Player2[0] = -1;
+				}
+				if (Player2[1] == 40)
+				{
+					P2Nut2.x = 810;
+					P2Nut2.y = 1300;
+					P2N2_IsLive = false;
+					Player2[1] = -1;
+				}
+					break;
 			case appointment_Form:
 				break;
 			case Choose_Card:
@@ -780,6 +819,7 @@ int main()
 			default:
 				break;
 			}
+
 			//Build Window-----------------------------
 			al_flip_display();
 			//-----------------------------------------

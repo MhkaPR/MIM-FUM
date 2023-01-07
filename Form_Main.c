@@ -517,17 +517,8 @@ int main()
 					al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
 					if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
 					{
-						/*sw_btnDown = true;
-						DiceVar = DiceRand();*/
-						//User_operation = CLICKDICE;
-						/*if ((Player1[0] + DiceVar) < 0 && (Player1[0] + DiceVar) > 80)	DiceVar = 0;
-						else
-						{
-							IsDiced = true;
-							Dice_PIC_VAR = Dice_PIC[DiceVar];
-							ConvertToDiceMIM(&DiceVar);
-						}*/
 						User_operation = CLICKDICE;
+						Tik_Dice = true;
 					}
 					if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
 				}
@@ -539,36 +530,43 @@ int main()
 				al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
 				al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
 				al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
-				if (sw_btn(&btn_P1Nut1, &mouseState))
+				if (Tik_Dice == true)
 				{
-					if (al_mouse_button_down(&mouseState, 1))
+					if (sw_btn(&btn_P1Nut1, &mouseState))
 					{
-						User_operation = CLICKNUT1_P1;
-						Tik_Nut = true;
+						if (al_mouse_button_down(&mouseState, 1))
+						{
+							User_operation = CLICKNUT1_P1;
+							Tik_Nut = true;
+							Tik_Dice = false;
+						}
 					}
-				}
-				else if (sw_btn(&btn_P1Nut2, &mouseState))
-				{
-					if (al_mouse_button_down(&mouseState, 1))
+					else if (sw_btn(&btn_P1Nut2, &mouseState))
 					{
-						User_operation = CLICKNUT2_P1;
-						Tik_Nut = true;
+						if (al_mouse_button_down(&mouseState, 1))
+						{
+							User_operation = CLICKNUT2_P1;
+							Tik_Nut = true;
+							Tik_Dice = false;
+						}
 					}
-				}
-				else if (sw_btn(&btn_P2Nut1, &mouseState))
-				{
-					if (al_mouse_button_down(&mouseState, 1))
+					else if (sw_btn(&btn_P2Nut1, &mouseState))
 					{
-						User_operation = CLICKNUT1_P2;
-						Tik_Nut = true;
+						if (al_mouse_button_down(&mouseState, 1))
+						{
+							User_operation = CLICKNUT1_P2;
+							Tik_Nut = true;
+							Tik_Dice = false;
+						}
 					}
-				}
-				else if (sw_btn(&btn_P2Nut2, &mouseState))
-				{
-					if (al_mouse_button_down(&mouseState, 1))
+					else if (sw_btn(&btn_P2Nut2, &mouseState))
 					{
-						User_operation = CLICKNUT2_P2;
-						Tik_Nut = true;
+						if (al_mouse_button_down(&mouseState, 1))
+						{
+							User_operation = CLICKNUT2_P2;
+							Tik_Nut = true;
+							Tik_Dice = false;
+						}
 					}
 				}
 				//-----------------------------------------
@@ -598,7 +596,6 @@ int main()
 							((Player1[1] + DiceVar) < 0 && (Player1[1] + DiceVar) > 80))
 						{
 							DiceVar = 0;
-
 						}
 						else
 						{
@@ -619,36 +616,43 @@ int main()
 						break;
 					case CLICKNUT1_P1:
 						printf("yesP1N1\n\n");
-
-						if (IsDiced)if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
+						if (Tik_Nut == true)
 						{
-							Player1[0] += DiceVar;
-							MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
-							btn_P1Nut1.X_frist = P1Nut1.x;
-							btn_P1Nut1.Y_frist = P1Nut1.y;
-							btn_P1Nut1.X_end = P1Nut1.x + PPNW;
-							btn_P1Nut1.Y_end = P1Nut1.y + PPNW;
+							if (IsDiced)if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
+							{
+								Player1[0] += DiceVar;
+								MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
+								btn_P1Nut1.X_frist = P1Nut1.x;
+								btn_P1Nut1.Y_frist = P1Nut1.y;
+								btn_P1Nut1.X_end = P1Nut1.x + PPNW;
+								btn_P1Nut1.Y_end = P1Nut1.y + PPNW;
+								IsDiced = false;
+							}
+							User_operation = -1;
+							player_Turn = P2;
+							
 
-							IsDiced = false;
 						}
-						User_operation = -1;
-						player_Turn = P2;
 						break;
 					case CLICKNUT2_P1:
-						printf("yesP1N2\n\n");
-						if (IsDiced)if ((Player1[1] + DiceVar) > -1 && (Player1[1] + DiceVar) < 81)//check for Being to period
+						if (Tik_Nut == true)
 						{
-							Player1[1] += DiceVar;
-							MoveGraphic(Player1[1], &(P1Nut2.x), &(P1Nut2.y));
-							btn_P1Nut2.X_frist = P1Nut2.x;
-							btn_P1Nut2.Y_frist = P1Nut2.y;
-							btn_P1Nut2.X_end = P1Nut2.x + PPNW;
-							btn_P1Nut2.Y_end = P1Nut2.y + PPNW;
+							printf("yesP1N2\n\n");
+							if (IsDiced)if ((Player1[1] + DiceVar) > -1 && (Player1[1] + DiceVar) < 81)//check for Being to period
+							{
+								Player1[1] += DiceVar;
+								MoveGraphic(Player1[1], &(P1Nut2.x), &(P1Nut2.y));
+								btn_P1Nut2.X_frist = P1Nut2.x;
+								btn_P1Nut2.Y_frist = P1Nut2.y;
+								btn_P1Nut2.X_end = P1Nut2.x + PPNW;
+								btn_P1Nut2.Y_end = P1Nut2.y + PPNW;
 
-							IsDiced = false;
+								IsDiced = false;
+							}
+							User_operation = -1;
+							player_Turn = P2;
+							
 						}
-						User_operation = -1;
-						player_Turn = P2;
 						break;
 					case CLICKNUT1_ENEMY:
 						break;
@@ -694,6 +698,8 @@ int main()
 					case CLICKCARD_diceagain:
 						break;
 					case CLICKNUT1_P2:
+						if (Tik_Nut == true)
+						{
 							printf("yesP2N1\n\n");
 
 							if (IsDiced)if ((Player2[0] + DiceVar) > -1 && (Player2[0] + DiceVar) < 81)//check for Being to period
@@ -709,8 +715,12 @@ int main()
 							}
 							User_operation = -1;
 							player_Turn = P1;
+							
+						}
 						break;
 					case CLICKNUT2_P2:
+						if (Tik_Nut == true)
+						{
 							printf("yesP2N2\n\n");
 
 							if (IsDiced)if ((Player2[1] + DiceVar) > -1 && (Player2[1] + DiceVar) < 81)//check for Being to period
@@ -721,11 +731,12 @@ int main()
 								btn_P2Nut2.Y_frist = P2Nut2.y;
 								btn_P2Nut2.X_end = P2Nut2.x + PPNW;
 								btn_P2Nut2.Y_end = P2Nut2.y + PPNW;
-
 								IsDiced = false;
 							}
 							User_operation = -1;
 							player_Turn = P1;
+							
+						}
 						break;
 					case CLICKNUT1_ENEMY:
 						break;

@@ -195,6 +195,9 @@ int main()
 	must_init(disp, "Window");
 
 	ALLEGRO_FONT* font = al_create_builtin_font();
+	//ALLEGRO_FONT* font = al_load_font("8zw4l-9i9da.tga",30,2);
+	//ALLEGRO_FONT* font = al_load_ttf_font("C:\\Windows\\Fonts\\Arial\\Arial Italic.ttf", 10, ALLEGRO_TTF_NO_KERNING);
+	//ALLEGRO_FONT* font = al_load_ttf_font_stretch("C:\\Windows\\Fonts\\Arial\\Arial Italic.ttf", 10,20, ALLEGRO_TTF_NO_KERNING);
 
 	ALLEGRO_MOUSE_STATE mouseState;
 
@@ -546,11 +549,19 @@ int main()
 				al_draw_bitmap(lucky_CardP1_PIC[Place2], 340, 391, 0);
 				al_draw_bitmap(lucky_CardP1_PIC[Place3], 340, 496, 0);
 				al_draw_bitmap(lucky_CardP1_PIC[Place4], 340, 601, 0);
+				al_draw_text(font, al_map_rgb(0, 0, 0), 250, 286, 0, "Door Closed");
+				al_draw_text(font, al_map_rgb(0, 0, 0), 250, 391, 0, "Coef");
+				al_draw_text(font, al_map_rgb(0, 0, 0), 250, 496, 0, "Limit");
+				al_draw_text(font, al_map_rgb(0, 0, 0), 250, 601, 0, "Again Dice");
 
 				al_draw_bitmap(lucky_CardP2_PIC[Place1], 936, 100, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place2], 936, 205, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place3], 936, 310, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place4], 936, 415, 0);
+				al_draw_text(font, al_map_rgb(0, 0, 0), 960, 100, 0, "Door Closed");
+				al_draw_text(font, al_map_rgb(0, 0, 0), 960, 205, 0, "Coef");
+				al_draw_text(font, al_map_rgb(0, 0, 0), 960, 310, 0, "Limit");
+				al_draw_text(font, al_map_rgb(0, 0, 0), 960, 415, 0, "Again Dice");
 
 				al_draw_bitmap(Place_Start_Nuts_P1[Place1], 350, 692, 0);
 				al_draw_bitmap(Place_Start_Nuts_P1[Place2], 455, 692, 0);
@@ -703,8 +714,8 @@ int main()
 								//Hitting
 								if (Player1[0] == Player2[0]) {
 									Player2[0] = 80;
-									P2Nut1.x=PP2N1_L;
-									P2Nut1.y=PP2N1_T;
+									P2Nut1.x = PP2N1_L;
+									P2Nut1.y = PP2N1_T;
 
 									btn_P2Nut1.X_frist = PP2N1_L;
 									btn_P2Nut1.Y_frist = PP2N1_T;
@@ -722,6 +733,33 @@ int main()
 									btn_P2Nut2.Y_end = PP2N2_T + PPNW;
 								}
 								//--------------------------------
+								//Become add a Lucky Card
+								if (IsLuckyCardPlace(Player1[0], ArrayCardsPlace))
+								{
+									CardChoosed = CardRand();
+									CardsP1[CardChoosed]++;
+									switch (CardChoosed)
+									{
+									case DOORCLOSED:
+										printf("a DOOR_CLOSED card added.\n");
+										break;
+									case COEF:
+										printf("a COEF card added.\n");
+										break;
+									case LIMIT:
+										printf("a LIMIT card added.\n");
+										break;
+									case DICEAGAIN:
+										printf("a DICE_AGAIN card added.\n");
+										break;
+									}
+									for (int i = 0; i < 4; i++)
+									{
+										printf("%d ", CardsP1[i]);
+									}
+								}
+								//--------------------------------------
+
 								btn_P1Nut1.X_frist = P1Nut1.x;
 								btn_P1Nut1.Y_frist = P1Nut1.y;
 								btn_P1Nut1.X_end = P1Nut1.x + PPNW;
@@ -767,6 +805,32 @@ int main()
 									btn_P2Nut2.Y_end = PP2N2_T + PPNW;
 								}
 								//--------------------------------
+								//Become add a Lucky Card
+								if (IsLuckyCardPlace(Player1[1], ArrayCardsPlace))
+								{
+									CardChoosed = CardRand();
+									CardsP1[CardChoosed]++;
+									switch (CardChoosed)
+									{
+									case DOORCLOSED:
+										printf("a DOOR_CLOSED card added.\n");
+										break;
+									case COEF:
+										printf("a COEF card added.\n");
+										break;
+									case LIMIT:
+										printf("a LIMIT card added.\n");
+										break;
+									case DICEAGAIN:
+										printf("a DICE_AGAIN card added.\n");
+										break;
+									}
+									for (int i = 0; i < 4; i++)
+									{
+										printf("%d ", CardsP1[i]);
+									}
+								}
+								//--------------------------------------
 								btn_P1Nut2.X_frist = P1Nut2.x;
 								btn_P1Nut2.Y_frist = P1Nut2.y;
 								btn_P1Nut2.X_end = P1Nut2.x + PPNW;
@@ -847,8 +911,34 @@ int main()
 									btn_P1Nut2.Y_frist = PP1N2_T;
 									btn_P1Nut2.X_end = PP1N2_L + PPNW;
 									btn_P1Nut2.Y_end = PP1N2_T + PPNW;
-								}			
+								}
 								//--------------------------------
+								//Become add a Lucky Card
+								if (IsLuckyCardPlace(Player2[0], ArrayCardsPlace))
+								{
+									CardChoosed = CardRand();
+									CardsP2[CardChoosed]++;
+									switch (CardChoosed)
+									{
+									case DOORCLOSED:
+										printf("a DOOR_CLOSED card added.\n");
+										break;
+									case COEF:
+										printf("a COEF card added.\n");
+										break;
+									case LIMIT:
+										printf("a LIMIT card added.\n");
+										break;
+									case DICEAGAIN:
+										printf("a DICE_AGAIN card added.\n");
+										break;
+									}
+									for (int i = 0; i < 4; i++)
+									{
+										printf("%d ", CardsP2[i]);
+									}
+								}
+								//--------------------------------------
 								btn_P2Nut1.X_frist = P2Nut1.x;
 								btn_P2Nut1.Y_frist = P2Nut1.y;
 								btn_P2Nut1.X_end = P2Nut1.x + PPNW;
@@ -872,6 +962,7 @@ int main()
 								IsCarridorPlace(&Player2[1], ArrayCarridorsPlace);
 								//-------------------------------
 								MoveGraphic(Player2[1], &(P2Nut2.x), &(P2Nut2.y));
+								//Hitting
 								if (Player2[1] == Player1[0]) {
 									Player1[0] = 0;
 									P1Nut1.x = PP1N1_L;
@@ -892,6 +983,33 @@ int main()
 									btn_P1Nut2.X_end = PP1N2_L + PPNW;
 									btn_P1Nut2.Y_end = PP1N2_T + PPNW;
 								}
+								//-----------------------------------------
+								//Become add a Lucky Card
+								if (IsLuckyCardPlace(Player2[1], ArrayCardsPlace))
+								{
+									CardChoosed = CardRand();
+									CardsP2[CardChoosed]++;
+									switch (CardChoosed)
+									{
+									case DOORCLOSED:
+										printf("a DOOR_CLOSED card added.\n");
+										break;
+									case COEF:
+										printf("a COEF card added.\n");
+										break;
+									case LIMIT:
+										printf("a LIMIT card added.\n");
+										break;
+									case DICEAGAIN:
+										printf("a DICE_AGAIN card added.\n");
+										break;
+									}
+									for (int i = 0; i < 4; i++)
+									{
+										printf("%d ", CardsP2[i]);
+									}
+								}
+								//--------------------------------------
 								btn_P2Nut2.X_frist = P2Nut2.x;
 								btn_P2Nut2.Y_frist = P2Nut2.y;
 								btn_P2Nut2.X_end = P2Nut2.x + PPNW;
@@ -963,6 +1081,14 @@ int main()
 			sw = false;
 
 		}
+		if (Player1[0] == 40 && Player1[1] == 40)
+		{
+			printf("***************************   Hoora P1   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+		}
+		else if (Player2[0] == 40 && Player2[1] == 40)
+		{
+			printf("***************************   Hoora P2   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+		}
 	}
 #pragma region Destroying
 	al_destroy_display(disp);
@@ -1009,13 +1135,6 @@ int main()
 	al_destroy_bitmap(Board_PIC);
 
 	al_destroy_bitmap(FristMenu_Form_PIC);
-
-
-
-
 #pragma endregion
-
-
 	return 0;
-
 }

@@ -7,8 +7,6 @@
 #include <time.h>
 #include <stdlib.h>
 #pragma region ENUMS
-
-
 enum Dice {
 	DiceM3,
 	DiceM2,
@@ -209,7 +207,7 @@ int main()
 #pragma endregion
 
 
-#pragma region Variables
+#pragma region  Variables
 	bool sw = true;
 	bool done = false;
 	bool LinkCursor = false;
@@ -333,7 +331,63 @@ int main()
 	btn_P2Nut2.X_end = PP2N2_L + PPNW;
 	btn_P2Nut2.Y_end = PP2N2_T + PPNW;
 	btn_P2Nut2.sw_Link = NULL;
+	//Edit!!!
+	struct button btn_DoorClosedP1;
+	btn_DoorClosedP1.X_frist = PP2N2_L;
+	btn_DoorClosedP1.Y_frist = PP2N2_T;
+	btn_DoorClosedP1.X_end = PP2N2_L + PPNW;
+	btn_DoorClosedP1.Y_end = PP2N2_T + PPNW;
+	btn_DoorClosedP1.sw_Link = NULL;
 
+	struct button btn_CoefP1;
+	btn_CoefP1.X_frist = PP2N2_L;
+	btn_CoefP1.Y_frist = PP2N2_T;
+	btn_CoefP1.X_end = PP2N2_L + PPNW;
+	btn_CoefP1.Y_end = PP2N2_T + PPNW;
+	btn_CoefP1.sw_Link = NULL;
+
+	struct button btn_LimitP1;
+	btn_LimitP1.X_frist = PP2N2_L;
+	btn_LimitP1.Y_frist = PP2N2_T;
+	btn_LimitP1.X_end = PP2N2_L + PPNW;
+	btn_LimitP1.Y_end = PP2N2_T + PPNW;
+	btn_LimitP1.sw_Link = NULL;
+
+	struct button btn_DiceAgainP1;
+	btn_DiceAgainP1.X_frist = PP2N2_L;
+	btn_DiceAgainP1.Y_frist = PP2N2_T;
+	btn_DiceAgainP1.X_end = PP2N2_L + PPNW;
+	btn_DiceAgainP1.Y_end = PP2N2_T + PPNW;
+	btn_DiceAgainP1.sw_Link = NULL;
+				//p2
+	struct button btn_DoorClosedP2;
+	btn_DoorClosedP2.X_frist = PP2N2_L;
+	btn_DoorClosedP2.Y_frist = PP2N2_T;
+	btn_DoorClosedP2.X_end = PP2N2_L + PPNW;
+	btn_DoorClosedP2.Y_end = PP2N2_T + PPNW;
+	btn_DoorClosedP2.sw_Link = NULL;
+
+	struct button btn_CoefP2;
+	btn_CoefP2.X_frist = PP2N2_L;
+	btn_CoefP2.Y_frist = PP2N2_T;
+	btn_CoefP2.X_end = PP2N2_L + PPNW;
+	btn_CoefP2.Y_end = PP2N2_T + PPNW;
+	btn_CoefP2.sw_Link = NULL;
+
+	struct button btn_LimitP2;
+	btn_LimitP2.X_frist = PP2N2_L;
+	btn_LimitP2.Y_frist = PP2N2_T;
+	btn_LimitP2.X_end = PP2N2_L + PPNW;
+	btn_LimitP2.Y_end = PP2N2_T + PPNW;
+	btn_LimitP2.sw_Link = NULL;
+
+	struct button btn_DiceAgainP2;
+	btn_DiceAgainP2.X_frist = PP2N2_L;
+	btn_DiceAgainP2.Y_frist = PP2N2_T;
+	btn_DiceAgainP2.X_end = PP2N2_L + PPNW;
+	btn_DiceAgainP2.Y_end = PP2N2_T + PPNW;
+	btn_DiceAgainP2.sw_Link = NULL;
+	//------------------
 	struct NUT P1Nut1;
 	P1Nut1.x = PP1N1_L;
 	P1Nut1.y = PP1N1_T;
@@ -669,12 +723,6 @@ int main()
 					switch (User_operation)
 					{
 					case CLICKDICE:
-						/*if (IsDiced)if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
-						{
-							Player1[0] += DiceVar;
-							MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
-							IsDiced = false;
-						}*/
 						sw_btnDown = true;
 						DiceVar = DiceRand();
 						//User_operation = CLICKDICE;

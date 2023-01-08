@@ -119,16 +119,11 @@ int Is_Any_Card(const int ArrCard[])
 }
 int IsLuckyCardPlace(int Position, const int ArrayCardsPlace[])
 {
-	if (Position == ArrayCardsPlace[0]) return 1;
-	else if (Position == ArrayCardsPlace[1]) return 1;
-	else if (Position == ArrayCardsPlace[2]) return 1;
-	else if (Position == ArrayCardsPlace[3]) return 1;
-	else if (Position == ArrayCardsPlace[4]) return 1;
-	else if (Position == ArrayCardsPlace[5]) return 1;
-	else if (Position == ArrayCardsPlace[6]) return 1;
-	else if (Position == ArrayCardsPlace[7]) return 1;
-	else if (Position == ArrayCardsPlace[8]) return 1;
-	else return 0;
+	for (int i = 0; i < 9; i++)
+	{
+		if (Position == ArrayCardsPlace[i]) return 1;
+	}
+	return 0;
 }
 bool Is_DOORCLOSEDcard(const int CardsP1[])
 {

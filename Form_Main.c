@@ -700,6 +700,28 @@ int main()
 								IsCarridorPlace(&Player1[0], ArrayCarridorsPlace);
 								//-------------------------------
 								MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
+								//Hitting
+								if (Player1[0] == Player2[0]) {
+									Player2[0] = 80;
+									P2Nut1.x=PP2N1_L;
+									P2Nut1.y=PP2N1_T;
+
+									btn_P2Nut1.X_frist = PP2N1_L;
+									btn_P2Nut1.Y_frist = PP2N1_T;
+									btn_P2Nut1.X_end = PP2N1_L + PPNW;
+									btn_P2Nut1.Y_end = PP2N1_T + PPNW;
+								}
+								if (Player1[0] == Player2[1]) {
+									Player2[1] = 80;
+									P2Nut1.x = PP2N2_L;
+									P2Nut1.y = PP2N2_T;
+
+									btn_P2Nut2.X_frist = PP2N2_L;
+									btn_P2Nut2.Y_frist = PP2N2_T;
+									btn_P2Nut2.X_end = PP2N2_L + PPNW;
+									btn_P2Nut2.Y_end = PP2N2_T + PPNW;
+								}
+								//--------------------------------
 								btn_P1Nut1.X_frist = P1Nut1.x;
 								btn_P1Nut1.Y_frist = P1Nut1.y;
 								btn_P1Nut1.X_end = P1Nut1.x + PPNW;
@@ -723,6 +745,28 @@ int main()
 								IsCarridorPlace(&Player1[1], ArrayCarridorsPlace);
 								//-------------------------------
 								MoveGraphic(Player1[1], &(P1Nut2.x), &(P1Nut2.y));
+								//Hitting
+								if (Player1[1] == Player2[0]) {
+									Player2[0] = 80;
+									P2Nut1.x = PP2N1_L;
+									P2Nut1.y = PP2N1_T;
+
+									btn_P2Nut1.X_frist = PP2N1_L;
+									btn_P2Nut1.Y_frist = PP2N1_T;
+									btn_P2Nut1.X_end = PP2N1_L + PPNW;
+									btn_P2Nut1.Y_end = PP2N1_T + PPNW;
+								}
+								if (Player1[1] == Player2[1]) {
+									Player2[1] = 80;
+									P2Nut2.x = PP2N2_L;
+									P2Nut2.y = PP2N2_T;
+
+									btn_P2Nut2.X_frist = PP2N2_L;
+									btn_P2Nut2.Y_frist = PP2N2_T;
+									btn_P2Nut2.X_end = PP2N2_L + PPNW;
+									btn_P2Nut2.Y_end = PP2N2_T + PPNW;
+								}
+								//--------------------------------
 								btn_P1Nut2.X_frist = P1Nut2.x;
 								btn_P1Nut2.Y_frist = P1Nut2.y;
 								btn_P1Nut2.X_end = P1Nut2.x + PPNW;
@@ -748,15 +792,8 @@ int main()
 					switch (User_operation)
 					{
 					case CLICKDICE:
-						/*if (IsDiced)if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
-						{
-							Player1[0] += DiceVar;
-							MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
-							IsDiced = false;
-						}*/
 						sw_btnDown = true;
 						DiceVar = DiceRand();
-						//User_operation = CLICKDICE;
 						if (((Player2[0] + DiceVar) < 0 && (Player2[0] + DiceVar) > 80) ||
 							((Player2[1] + DiceVar) < 0 && (Player2[1] + DiceVar) > 80))
 						{
@@ -790,6 +827,28 @@ int main()
 								IsCarridorPlace(&Player2[0], ArrayCarridorsPlace);
 								//-------------------------------
 								MoveGraphic(Player2[0], &(P2Nut1.x), &(P2Nut1.y));
+								//Hitting
+								if (Player2[0] == Player1[0]) {
+									Player1[0] = 0;
+									P1Nut1.x = PP1N1_L;
+									P1Nut1.y = PP1N1_T;
+
+									btn_P1Nut1.X_frist = PP1N1_L;
+									btn_P1Nut1.Y_frist = PP1N1_T;
+									btn_P1Nut1.X_end = PP1N1_L + PPNW;
+									btn_P1Nut1.Y_end = PP1N1_T + PPNW;
+								}
+								if (Player2[0] == Player1[1]) {
+									Player1[1] = 0;
+									P1Nut2.x = PP1N2_L;
+									P1Nut2.y = PP1N2_T;
+
+									btn_P1Nut2.X_frist = PP1N2_L;
+									btn_P1Nut2.Y_frist = PP1N2_T;
+									btn_P1Nut2.X_end = PP1N2_L + PPNW;
+									btn_P1Nut2.Y_end = PP1N2_T + PPNW;
+								}			
+								//--------------------------------
 								btn_P2Nut1.X_frist = P2Nut1.x;
 								btn_P2Nut1.Y_frist = P2Nut1.y;
 								btn_P2Nut1.X_end = P2Nut1.x + PPNW;
@@ -813,6 +872,26 @@ int main()
 								IsCarridorPlace(&Player2[1], ArrayCarridorsPlace);
 								//-------------------------------
 								MoveGraphic(Player2[1], &(P2Nut2.x), &(P2Nut2.y));
+								if (Player2[1] == Player1[0]) {
+									Player1[0] = 0;
+									P1Nut1.x = PP1N1_L;
+									P1Nut1.y = PP1N1_T;
+
+									btn_P1Nut1.X_frist = PP1N1_L;
+									btn_P1Nut1.Y_frist = PP1N1_T;
+									btn_P1Nut1.X_end = PP1N1_L + PPNW;
+									btn_P1Nut1.Y_end = PP1N1_T + PPNW;
+								}
+								if (Player2[1] == Player1[1]) {
+									Player1[1] = 0;
+									P1Nut2.x = PP1N2_L;
+									P1Nut2.y = PP1N2_T;
+
+									btn_P1Nut2.X_frist = PP1N2_L;
+									btn_P1Nut2.Y_frist = PP1N2_T;
+									btn_P1Nut2.X_end = PP1N2_L + PPNW;
+									btn_P1Nut2.Y_end = PP1N2_T + PPNW;
+								}
 								btn_P2Nut2.X_frist = P2Nut2.x;
 								btn_P2Nut2.Y_frist = P2Nut2.y;
 								btn_P2Nut2.X_end = P2Nut2.x + PPNW;

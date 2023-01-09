@@ -687,6 +687,7 @@ int main()
 				al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
 				if (Tik_Dice)
 				{
+					al_get_mouse_state(&mouseState);
 					if (sw_btn(&btn_P1Nut1, &mouseState))
 					{
 						if (IsLimitP1 == 0)
@@ -788,20 +789,10 @@ int main()
 					case CLICKDICE:
 						sw_btnDown = true;
 						DiceVar = DiceRand();
-						//User_operation = CLICKDICE;
-						if (((Player1[0] + DiceVar) < 0 && (Player1[0] + DiceVar) > 80) ||
-							((Player1[1] + DiceVar) < 0 && (Player1[1] + DiceVar) > 80))
-						{
-							DiceVar = 0;
-						}
-						else
-						{
-							IsDiced = true;
-							Dice_PIC_VAR = Dice_PIC[DiceVar];
-							ConvertToDiceMIM(&DiceVar);
-						}
+						IsDiced = true;
+						Dice_PIC_VAR = Dice_PIC[DiceVar];
+						ConvertToDiceMIM(&DiceVar);
 						User_operation = -1;
-						/*player_Turn++; player_Turn %= 2;*/
 						break;
 					case CLICKCARD_doorclosed:
 						break;
@@ -969,17 +960,10 @@ int main()
 					case CLICKDICE:
 						sw_btnDown = true;
 						DiceVar = DiceRand();
-						if (((Player2[0] + DiceVar) < 0 && (Player2[0] + DiceVar) > 80) ||
-							((Player2[1] + DiceVar) < 0 && (Player2[1] + DiceVar) > 80))
-						{
-							DiceVar = 0;
-						}
-						else
-						{
-							IsDiced = true;
-							Dice_PIC_VAR = Dice_PIC[DiceVar];
-							ConvertToDiceMIM(&DiceVar);
-						}
+						IsDiced = true;
+						Dice_PIC_VAR = Dice_PIC[DiceVar];
+						ConvertToDiceMIM(&DiceVar);
+
 						User_operation = -1;
 						break;
 					case CLICKCARD_doorclosed:

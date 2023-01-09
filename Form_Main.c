@@ -226,7 +226,6 @@ int main()
 	bool LinkCursor = false;
 	bool Permission_change_mouse = false;
 	bool sw_btnDown = false;
-	bool IsDiced = false;
 
 	bool Tik_Dice = false;
 	bool Tik_Nut = false;
@@ -789,7 +788,6 @@ int main()
 					case CLICKDICE:
 						sw_btnDown = true;
 						DiceVar = DiceRand();
-						IsDiced = true;
 						Dice_PIC_VAR = Dice_PIC[DiceVar];
 						ConvertToDiceMIM(&DiceVar);
 						User_operation = -1;
@@ -806,7 +804,7 @@ int main()
 						printf("yesP1N1\n\n");
 						if (Tik_Nut == true)
 						{
-							if (IsDiced)if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
+							if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
 							{
 								Player1[0] += DiceVar;
 								//move with carridors
@@ -866,7 +864,6 @@ int main()
 								btn_P1Nut1.Y_frist = P1Nut1.y;
 								btn_P1Nut1.X_end = P1Nut1.x + PPNW;
 								btn_P1Nut1.Y_end = P1Nut1.y + PPNW;
-								IsDiced = false;
 							}
 							User_operation = -1;
 							player_Turn = P2;
@@ -878,7 +875,7 @@ int main()
 						if (Tik_Nut == true)
 						{
 							printf("yesP1N2\n\n");
-							if (IsDiced)if ((Player1[1] + DiceVar) > -1 && (Player1[1] + DiceVar) < 81)//check for Being to period
+							if ((Player1[1] + DiceVar) > -1 && (Player1[1] + DiceVar) < 81)//check for Being to period
 							{
 								Player1[1] += DiceVar;
 								//move with carridors
@@ -938,7 +935,6 @@ int main()
 								btn_P1Nut2.X_end = P1Nut2.x + PPNW;
 								btn_P1Nut2.Y_end = P1Nut2.y + PPNW;
 
-								IsDiced = false;
 							}
 							User_operation = -1;
 							player_Turn = P2;
@@ -960,7 +956,6 @@ int main()
 					case CLICKDICE:
 						sw_btnDown = true;
 						DiceVar = DiceRand();
-						IsDiced = true;
 						Dice_PIC_VAR = Dice_PIC[DiceVar];
 						ConvertToDiceMIM(&DiceVar);
 
@@ -979,7 +974,7 @@ int main()
 						{
 							printf("yesP2N1\n\n");
 
-							if (IsDiced)if ((Player2[0] + DiceVar) > -1 && (Player2[0] + DiceVar) < 81)//check for Being to period
+							if ((Player2[0] + DiceVar) > -1 && (Player2[0] + DiceVar) < 81)//check for Being to period
 							{
 								Player2[0] += DiceVar;
 								//move with carridors
@@ -1038,8 +1033,6 @@ int main()
 								btn_P2Nut1.Y_frist = P2Nut1.y;
 								btn_P2Nut1.X_end = P2Nut1.x + PPNW;
 								btn_P2Nut1.Y_end = P2Nut1.y + PPNW;
-
-								IsDiced = false;
 							}
 							User_operation = -1;
 							player_Turn = P1;
@@ -1050,7 +1043,7 @@ int main()
 						{
 							printf("yesP2N2\n\n");
 
-							if (IsDiced)if ((Player2[1] + DiceVar) > -1 && (Player2[1] + DiceVar) < 81)//check for Being to period
+							if ((Player2[1] + DiceVar) > -1 && (Player2[1] + DiceVar) < 81)//check for Being to period
 							{
 								Player2[1] += DiceVar;
 								//move with carridors
@@ -1109,7 +1102,6 @@ int main()
 								btn_P2Nut2.Y_frist = P2Nut2.y;
 								btn_P2Nut2.X_end = P2Nut2.x + PPNW;
 								btn_P2Nut2.Y_end = P2Nut2.y + PPNW;
-								IsDiced = false;
 							}
 							User_operation = -1;
 							player_Turn = P1;

@@ -120,7 +120,20 @@ enum Position_P2Nut2
 	PP2N2_L = 865,
 	PP2N2_T = 5,
 };
-
+enum Position_MenuInTheBoardIcon
+{
+	PMBI_L = 35,
+	PMBI_R = 100,
+	PMBI_T = -5,
+	PMBI_B = 60,
+};
+enum Position_YesInMenuMessageInTheBoard
+{
+	PYIMMIB_L = 673,
+	PYIMMIB_T = 515,
+	PYIMMIB_R = 882,
+	PYIMMIB_B = 580,
+};
 #pragma endregion
 #pragma region STRUCTS
 struct POINT
@@ -223,6 +236,8 @@ int main()
 	bool P1N2_IsLive = true;
 	bool P2N1_IsLive = true;
 	bool P2N2_IsLive = true;
+
+	bool sw_Show_MessageBoxMenu = false;
 
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
@@ -359,7 +374,7 @@ int main()
 	btn_DiceAgainP1.X_end = PP2N2_L + PPNW;
 	btn_DiceAgainP1.Y_end = PP2N2_T + PPNW;
 	btn_DiceAgainP1.sw_Link = NULL;
-				//p2
+	//p2
 	struct button btn_DoorClosedP2;
 	btn_DoorClosedP2.X_frist = PP2N2_L;
 	btn_DoorClosedP2.Y_frist = PP2N2_T;
@@ -387,6 +402,21 @@ int main()
 	btn_DiceAgainP2.X_end = PP2N2_L + PPNW;
 	btn_DiceAgainP2.Y_end = PP2N2_T + PPNW;
 	btn_DiceAgainP2.sw_Link = NULL;
+
+	struct button btn_MenuInTheBoard;
+	btn_MenuInTheBoard.X_frist = PMBI_L;
+	btn_MenuInTheBoard.Y_frist = PMBI_T;
+	btn_MenuInTheBoard.X_end = PMBI_L + PPNW;
+	btn_MenuInTheBoard.Y_end = PMBI_T + PPNW;
+	btn_MenuInTheBoard.sw_Link = NULL;
+
+	//MenuMassage
+	struct button btn_YesInMenuMessageInTheBoard;
+	btn_YesInMenuMessageInTheBoard.X_frist = PYIMMIB_L;
+	btn_YesInMenuMessageInTheBoard.Y_frist = PYIMMIB_T;
+	btn_YesInMenuMessageInTheBoard.X_end = PYIMMIB_R;
+	btn_YesInMenuMessageInTheBoard.Y_end = PYIMMIB_B;
+	btn_YesInMenuMessageInTheBoard.sw_Link = NULL;
 	//------------------
 	struct NUT P1Nut1;
 	P1Nut1.x = PP1N1_L;
@@ -464,10 +494,14 @@ int main()
 	//FristMenu
 	ALLEGRO_BITMAP* FristMenu_Form_PIC = al_load_bitmap("Images/startMenu/Form.png");
 
+	ALLEGRO_BITMAP* MenuInTheBoard_PIC = al_load_bitmap("Images/MessageMenu.png");
+
 	ALLEGRO_BITMAP* Dice_PIC_VAR = Dice_PIC[DiceP3];
 
 	ALLEGRO_COLOR NutActiveColorP2 = al_map_rgb(145, 216, 247);
 	ALLEGRO_COLOR NutActiveColorP1 = al_map_rgb(247, 173, 175);
+
+
 #pragma endregion
 
 
@@ -591,13 +625,6 @@ int main()
 				}
 				al_get_mouse_state(&mouseState);
 				al_clear_to_color(al_map_rgb(240, 240, 240));
-				//Menu Frame-------------------------------
-				al_draw_bitmap(MenuFramePic, 25, -12, 0);
-				al_draw_bitmap(Menu_InTheBoard_Icon, 35, -5, 0);
-				al_draw_bitmap(RefreshIcon, 105, -5, 0);
-				al_draw_bitmap(GuideIcon, 170, -5, 0);
-				//-----------------------------------------
-
 				//Board Frame------------------------------
 				al_draw_bitmap(lucky_CardP1_PIC[Place1], 340, 286, 0);
 				al_draw_bitmap(lucky_CardP1_PIC[Place2], 340, 391, 0);
@@ -658,7 +685,7 @@ int main()
 
 				if (IsLimitP2 == 0)if (player_Turn == P2)al_draw_circle(P2Nut2.x + PPNW / 2 - 1, P2Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
 				al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
-				if (Tik_Dice == true)
+				if (Tik_Dice)
 				{
 					if (sw_btn(&btn_P1Nut1, &mouseState))
 					{
@@ -710,12 +737,48 @@ int main()
 					}
 				}
 				//-----------------------------------------
-				// 
+
 				//Caracters--------------------------------
 				al_draw_bitmap(CaractersP1_PIC, 10, 290, 0);
 				al_draw_bitmap(CaractersP2_PIC, 1090, 100, 0);
 				//-----------------------------------------
-				//DiceVar = 0;
+
+				//Menu Frame-------------------------------
+				al_draw_bitmap(MenuFramePic, 25, -12, 0);
+				al_draw_bitmap(Menu_InTheBoard_Icon, 35, -5, 0);
+
+				al_get_mouse_state(&mouseState);
+				if (sw_btn(&btn_MenuInTheBoard, &mouseState))
+				{
+					if (al_mouse_button_down(&mouseState, 1))
+					{
+						printf("Hello\n");
+						sw_Show_MessageBoxMenu = true;
+					}
+				}
+				if (sw_Show_MessageBoxMenu)
+				{
+					printf("No\n");
+					al_draw_bitmap(MenuInTheBoard_PIC, 0, 0, 0);
+					al_flip_display();
+					while (1)
+					{
+						al_wait_for_event(queue, &event);
+						al_get_mouse_state(&mouseState);
+						if (sw_btn(&btn_YesInMenuMessageInTheBoard, &mouseState))
+						{
+							if (al_mouse_button_down(&mouseState, 1))
+							{
+								sw_Show_MessageBoxMenu = false;
+								break;
+							}
+						}
+						printf("Yes\n");
+					}
+				}
+				al_draw_bitmap(RefreshIcon, 105, -5, 0);
+				al_draw_bitmap(GuideIcon, 170, -5, 0);
+				//-----------------------------------------
 #pragma region LOGIC
 				switch (player_Turn)
 				{

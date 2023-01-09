@@ -695,8 +695,12 @@ int main()
 								{
 									User_operation = CLICKNUT1_P1;
 									Tik_Nut = true;
-									Tik_Dice = false;
-									Tik_Player = true;
+									
+									if (player_Turn == P1)
+									{
+										Tik_Dice = false;
+										Tik_Player = true;
+									}
 								}
 					}
 					else if (sw_btn(&btn_P1Nut2, &mouseState))
@@ -707,8 +711,12 @@ int main()
 								{
 									User_operation = CLICKNUT2_P1;
 									Tik_Nut = true;
-									Tik_Dice = false;
-									Tik_Player = true;
+									
+									if (player_Turn == P1)
+									{
+										Tik_Dice = false;
+										Tik_Player = true;
+									}
 								}
 					}
 					else if (sw_btn(&btn_P2Nut1, &mouseState))
@@ -719,8 +727,11 @@ int main()
 								{
 									User_operation = CLICKNUT1_P2;
 									Tik_Nut = true;
-									Tik_Dice = false;
-									Tik_Player = true;
+									if (player_Turn == P2)
+									{
+										Tik_Dice = false;
+										Tik_Player = true;
+									}
 								}
 					}
 					else if (sw_btn(&btn_P2Nut2, &mouseState))
@@ -731,8 +742,11 @@ int main()
 								{
 									User_operation = CLICKNUT2_P2;
 									Tik_Nut = true;
-									Tik_Dice = false;
-									Tik_Player = true;
+									if (player_Turn == P2)
+									{
+										Tik_Dice = false;
+										Tik_Player = true;
+									}
 								}
 					}
 				}

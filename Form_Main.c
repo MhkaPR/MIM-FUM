@@ -6,6 +6,12 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+
+#define DOORCLOSED 0
+#define COEF 1
+#define LIMIT 2
+#define DICEAGAIN 3
+
 #pragma region ENUMS
 enum Dice {
 	DiceM3,
@@ -134,47 +140,47 @@ enum Position_YesInMenuMessageInTheBoard
 	PYIMMIB_R = 882,
 	PYIMMIB_B = 580,
 };
-enum zarib_card_p1
+enum coef_card_p1
 {
-	zcp1_L=227,
-	zcp1_R=350,
-	zcp1_T=341,
-	zcp1_B=411,
+	zcp1_L = 227,
+	zcp1_R = 350,
+	zcp1_T = 430,
+	zcp1_B = 500,
 };
-enum dice_card_p1
+enum diceAgain_card_p1
 {
 	dcp1_L = 227,
 	dcp1_R = 350,
-	dcp1_T = 431,
-	dcp1_B = 500,
+	dcp1_T = 610,
+	dcp1_B = 680,
 };
 enum limit_card_p1
 {
 	lcp1_L = 227,
 	lcp1_R = 350,
 	lcp1_T = 520,
-	lcp1_B = 589,
+	lcp1_B = 590,
 };
 enum closeDoor_card_p1
 {
 	cdcp1_L = 227,
 	cdcp1_R = 350,
-	cdcp1_T = 610,
-	cdcp1_B = 679,
+	cdcp1_T = 340,
+	cdcp1_B = 410,
 };
-enum zarib_card_p2
+enum coef_card_p2
 {
 	zcp2_L = 950,
 	zcp2_R = 1072,
-	zcp2_T = 121,
-	zcp2_B = 190,
+	zcp2_T = 210,
+	zcp2_B = 280,
 };
-enum dice_card_p2
+enum diceAgain_card_p2
 {
 	dcp2_L = 950,
 	dcp2_R = 1072,
-	dcp2_T = 210,
-	dcp2_B = 279,
+	dcp2_T = 390,
+	dcp2_B = 460,
 };
 enum limit_card_p2
 {
@@ -187,8 +193,8 @@ enum closeDoor_card_p2
 {
 	cdcp2_L = 950,
 	cdcp2_R = 1072,
-	cdcp2_T = 388,
-	cdcp2_B = 457,
+	cdcp2_T = 120,
+	cdcp2_B = 190,
 };
 #pragma endregion
 #pragma region STRUCTS
@@ -257,7 +263,7 @@ int main()
 	al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
 	al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
 	al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
-	
+
 	ALLEGRO_DISPLAY* disp = al_create_display(1300, 810);
 	must_init(disp, "Window");
 
@@ -283,17 +289,20 @@ int main()
 	bool Tik_Dice = false;
 	bool Tik_Nut = false;
 	bool Tik_Player = true;
-	
+
 	bool P1N1_IsLive = true;
 	bool P1N2_IsLive = true;
 	bool P2N1_IsLive = true;
 	bool P2N2_IsLive = true;
 
+	bool one_click_btn_DICEAGAIN_CARD_p1 = true;
+	bool one_click_btn_DICEAGAIN_CARD_p2 = true;
+
 	bool sw_Show_MessageBoxMenu = false;
 
 	bool menu_massage_display = false;
 	int turn = 1;
-	enum Pages pages_sw = Board_Form;
+	enum Pages pages_sw = FristMenu;
 	//variable LOGIC-------------------------
 	bool player_Turn = P1;//turn of players
 
@@ -406,57 +415,57 @@ int main()
 	struct button btn_closeDoor_card_p1;
 	btn_closeDoor_card_p1.X_frist = cdcp1_L;
 	btn_closeDoor_card_p1.Y_frist = cdcp1_T;
-	btn_closeDoor_card_p1.X_end =   cdcp1_R;
-	btn_closeDoor_card_p1.Y_end =   cdcp1_B;
+	btn_closeDoor_card_p1.X_end = cdcp1_R;
+	btn_closeDoor_card_p1.Y_end = cdcp1_B;
 	btn_closeDoor_card_p1.sw_Link = Board_Form;
 
-	struct button btn_coef_card_p1;                                                               
+	struct button btn_coef_card_p1;
 	btn_coef_card_p1.X_frist = zcp1_L;
 	btn_coef_card_p1.Y_frist = zcp1_T;
-	btn_coef_card_p1.X_end   = zcp1_R;
-	btn_coef_card_p1.Y_end   = zcp1_B;
+	btn_coef_card_p1.X_end = zcp1_R;
+	btn_coef_card_p1.Y_end = zcp1_B;
 	btn_coef_card_p1.sw_Link = Board_Form;
 
 	struct button btn_limit_card_p1;
 	btn_limit_card_p1.X_frist = lcp1_L;
 	btn_limit_card_p1.Y_frist = lcp1_T;
-	btn_limit_card_p1.X_end   = lcp1_R;
-	btn_limit_card_p1.Y_end   = lcp1_B;
+	btn_limit_card_p1.X_end = lcp1_R;
+	btn_limit_card_p1.Y_end = lcp1_B;
 	btn_limit_card_p1.sw_Link = Board_Form;
 
 	struct button btn_diceAgain_card_p1;
 	btn_diceAgain_card_p1.X_frist = dcp1_L;
 	btn_diceAgain_card_p1.Y_frist = dcp1_T;
-	btn_diceAgain_card_p1.X_end   = dcp1_R;
-	btn_diceAgain_card_p1.Y_end   = dcp1_B;
+	btn_diceAgain_card_p1.X_end = dcp1_R;
+	btn_diceAgain_card_p1.Y_end = dcp1_B;
 	btn_diceAgain_card_p1.sw_Link = Board_Form;
 	//p2
 	struct button btn_closeDoor_card_p2;
 	btn_closeDoor_card_p2.X_frist = cdcp2_L;
 	btn_closeDoor_card_p2.Y_frist = cdcp2_T;
-	btn_closeDoor_card_p2.X_end =   cdcp2_R;
-	btn_closeDoor_card_p2.Y_end =   cdcp2_B;
+	btn_closeDoor_card_p2.X_end = cdcp2_R;
+	btn_closeDoor_card_p2.Y_end = cdcp2_B;
 	btn_closeDoor_card_p2.sw_Link = Board_Form;
 
 	struct button btn_coef_card_p2;
 	btn_coef_card_p2.X_frist = zcp2_L;
 	btn_coef_card_p2.Y_frist = zcp2_T;
-	btn_coef_card_p2.X_end =   zcp2_R;
-	btn_coef_card_p2.Y_end =   zcp2_B;
+	btn_coef_card_p2.X_end = zcp2_R;
+	btn_coef_card_p2.Y_end = zcp2_B;
 	btn_coef_card_p2.sw_Link = Board_Form;
 
 	struct button btn_limit_card_p2;
 	btn_limit_card_p2.X_frist = lcp2_L;
 	btn_limit_card_p2.Y_frist = lcp2_T;
-	btn_limit_card_p2.X_end =   lcp2_R;
-	btn_limit_card_p2.Y_end =   lcp2_B;
+	btn_limit_card_p2.X_end = lcp2_R;
+	btn_limit_card_p2.Y_end = lcp2_B;
 	btn_limit_card_p2.sw_Link = Board_Form;
 
 	struct button btn_diceAgain_card_p2;
 	btn_diceAgain_card_p2.X_frist = dcp2_L;
 	btn_diceAgain_card_p2.Y_frist = dcp2_T;
-	btn_diceAgain_card_p2.X_end =   dcp2_R;
-	btn_diceAgain_card_p2.Y_end =   dcp2_B;
+	btn_diceAgain_card_p2.X_end = dcp2_R;
+	btn_diceAgain_card_p2.Y_end = dcp2_B;
 	btn_diceAgain_card_p2.sw_Link = Board_Form;
 
 	struct button btn_MenuInTheBoard;
@@ -596,7 +605,6 @@ int main()
 				count_startgame++;
 				break;
 			case Form_continue:
-				//al_draw_bitmap(Formcontinue_PIC, 0, 0, 0);
 				for (int i = 0; i < load_percent && load_percent <= 302; i++)
 				{
 					al_draw_filled_circle(500.4 + i, 692.6, 10.5, al_map_rgb(255, 255, 255));
@@ -707,23 +715,42 @@ int main()
 				al_draw_bitmap(lucky_CardP1_PIC[Place4], 227, 610, 0);
 				if (Tik_Dice)
 					if (player_Turn == P1)
-						if (sw_btn(&btn_closeDoor_card_p1, &mouseState))
+						if (sw_btn(&btn_diceAgain_card_p1, &mouseState))
 						{
-							if (al_mouse_button_down(&mouseState, 1))
+							if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p1)
 							{
-								if (CardsP1[0])
+								one_click_btn_DICEAGAIN_CARD_p1 = true;
+								printf("cardAgain1%\n");
+								if (CardsP1[DICEAGAIN])
 								{
-									CardsP1[0]--;
+									printf("dice Again:%d\n", CardsP1[DICEAGAIN]);
+									CardsP1[DICEAGAIN]--;
 									User_operation = CLICKDICE;
 								}
 							}
+							else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p1 = false;
 						}
 
 				al_draw_bitmap(lucky_CardP2_PIC[Place1], 949, 121, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place2], 949, 210, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place3], 949, 300, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place4], 949, 390, 0);
-
+				if (Tik_Dice)
+					if (player_Turn == P2)
+						if (sw_btn(&btn_diceAgain_card_p2, &mouseState))
+						{
+							if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p2)
+							{
+								one_click_btn_DICEAGAIN_CARD_p2 = true;
+								printf("cardAgain2%\n");
+								if (CardsP2[DICEAGAIN])
+								{
+									CardsP2[DICEAGAIN]--;
+									User_operation = CLICKDICE;
+								}
+							}
+							else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p2 = false;
+						}
 				al_draw_bitmap(Place_Start_Nuts_P1[Place1], 350, 692, 0);
 				al_draw_bitmap(Place_Start_Nuts_P1[Place2], 455, 692, 0);
 				al_draw_bitmap(Place_Start_Nuts_P2[Place1], 850, 80, 0);

@@ -1,7 +1,10 @@
 ﻿  Form_Main.c
-C:\MIM-FUM\Form_Main.c(226,25): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(176,6): warning C4101: 'ArrayCardsPlace': variabile locale senza riferimenti
-C:\MIM-FUM\Form_Main.c(181,6): warning C4101: 'CardChoosed': variabile locale senza riferimenti
-C:\MIM-FUM\logic_Form.h(537): warning C4716: 'MoveGraphic': deve restituire un valore
-  LINK : C:\MIM-FUM\x64\Debug\Meet_in_the_Middle.exe non trovato o non compilato dall'ultimo collegamento incrementale; verrà eseguito il collegamento completo
+C:\MIM-FUM\Form_Main.c(369,25): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(383,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(390,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(397,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(404,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(467,35): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(1222,5): warning C4809: l'etichetta 'default' dell'istruzione switch è ridondante. Le etichette 'case' coprono già tutti i casi possibili.
+C:\MIM-FUM\logic_Form.h(532): warning C4716: 'MoveGraphic': deve restituire un valore
   Meet_in_the_Middle.vcxproj -> C:\MIM-FUM\x64\Debug\Meet_in_the_Middle.exe

@@ -134,6 +134,62 @@ enum Position_YesInMenuMessageInTheBoard
 	PYIMMIB_R = 882,
 	PYIMMIB_B = 580,
 };
+enum zarib_card_p1
+{
+	zcp1_L=227,
+	zcp1_R=350,
+	zcp1_T=341,
+	zcp1_B=411,
+};
+enum dice_card_p1
+{
+	dcp1_L = 227,
+	dcp1_R = 350,
+	dcp1_T = 431,
+	dcp1_B = 500,
+};
+enum limit_card_p1
+{
+	lcp1_L = 227,
+	lcp1_R = 350,
+	lcp1_T = 520,
+	lcp1_B = 589,
+};
+enum closeDoor_card_p1
+{
+	cdcp1_L = 227,
+	cdcp1_R = 350,
+	cdcp1_T = 610,
+	cdcp1_B = 679,
+};
+enum zarib_card_p2
+{
+	zcp2_L = 950,
+	zcp2_R = 1072,
+	zcp2_T = 121,
+	zcp2_B = 190,
+};
+enum dice_card_p2
+{
+	dcp2_L = 950,
+	dcp2_R = 1072,
+	dcp2_T = 210,
+	dcp2_B = 279,
+};
+enum limit_card_p2
+{
+	lcp2_L = 950,
+	lcp2_R = 1072,
+	lcp2_T = 299,
+	lcp2_B = 368,
+};
+enum closeDoor_card_p2
+{
+	cdcp2_L = 950,
+	cdcp2_R = 1072,
+	cdcp2_T = 388,
+	cdcp2_B = 457,
+};
 #pragma endregion
 #pragma region STRUCTS
 struct POINT
@@ -152,7 +208,6 @@ struct NUT
 	int y;
 	ALLEGRO_BITMAP* picture;
 };
-
 #pragma endregion
 void must_init(bool check, const char* description)
 {
@@ -202,13 +257,11 @@ int main()
 	al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
 	al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
 	al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
+	
 	ALLEGRO_DISPLAY* disp = al_create_display(1300, 810);
 	must_init(disp, "Window");
 
 	ALLEGRO_FONT* font = al_create_builtin_font();
-	//ALLEGRO_FONT* font = al_load_font("8zw4l-9i9da.tga",30,2);
-	//ALLEGRO_FONT* font = al_load_ttf_font("C:\\Windows\\Fonts\\Arial\\Arial Italic.ttf", 10, ALLEGRO_TTF_NO_KERNING);
-	//ALLEGRO_FONT* font = al_load_ttf_font_stretch("C:\\Windows\\Fonts\\Arial\\Arial Italic.ttf", 10,20, ALLEGRO_TTF_NO_KERNING);
 
 	ALLEGRO_MOUSE_STATE mouseState;
 
@@ -230,7 +283,7 @@ int main()
 	bool Tik_Dice = false;
 	bool Tik_Nut = false;
 	bool Tik_Player = true;
-
+	
 	bool P1N1_IsLive = true;
 	bool P1N2_IsLive = true;
 	bool P2N1_IsLive = true;
@@ -238,15 +291,15 @@ int main()
 
 	bool sw_Show_MessageBoxMenu = false;
 
+	bool menu_massage_display = false;
 	int turn = 1;
 	enum Pages pages_sw = Board_Form;
 	//variable LOGIC-------------------------
 	bool player_Turn = P1;//turn of players
+
 	short int IsDoorClosed = 0;
 
 	short int CoefDice = 1;
-
-	short int Is_VETO = 0;
 
 	short int sw_AgainDice = 0;
 
@@ -270,9 +323,13 @@ int main()
 
 	int CardChoosed;
 
+	int count_startgame = 0;
+
 	enum Works_of_player User_operation = -1;
 
 	//-------------------------------------------
+	int load_percent = 1;
+
 	struct button btn_Guide;
 	btn_Guide.X_frist = PBG_L;
 	btn_Guide.Y_frist = PBG_T;
@@ -346,61 +403,61 @@ int main()
 	btn_P2Nut2.Y_end = PP2N2_T + PPNW;
 	btn_P2Nut2.sw_Link = NULL;
 	//Edit!!!
-	struct button btn_DoorClosedP1;
-	btn_DoorClosedP1.X_frist = PP2N2_L;
-	btn_DoorClosedP1.Y_frist = PP2N2_T;
-	btn_DoorClosedP1.X_end = PP2N2_L + PPNW;
-	btn_DoorClosedP1.Y_end = PP2N2_T + PPNW;
-	btn_DoorClosedP1.sw_Link = NULL;
+	struct button btn_closeDoor_card_p1;
+	btn_closeDoor_card_p1.X_frist = cdcp1_L;
+	btn_closeDoor_card_p1.Y_frist = cdcp1_T;
+	btn_closeDoor_card_p1.X_end =   cdcp1_R;
+	btn_closeDoor_card_p1.Y_end =   cdcp1_B;
+	btn_closeDoor_card_p1.sw_Link = Board_Form;
 
-	struct button btn_CoefP1;
-	btn_CoefP1.X_frist = PP2N2_L;
-	btn_CoefP1.Y_frist = PP2N2_T;
-	btn_CoefP1.X_end = PP2N2_L + PPNW;
-	btn_CoefP1.Y_end = PP2N2_T + PPNW;
-	btn_CoefP1.sw_Link = NULL;
+	struct button btn_coef_card_p1;                                                               
+	btn_coef_card_p1.X_frist = zcp1_L;
+	btn_coef_card_p1.Y_frist = zcp1_T;
+	btn_coef_card_p1.X_end   = zcp1_R;
+	btn_coef_card_p1.Y_end   = zcp1_B;
+	btn_coef_card_p1.sw_Link = Board_Form;
 
-	struct button btn_LimitP1;
-	btn_LimitP1.X_frist = PP2N2_L;
-	btn_LimitP1.Y_frist = PP2N2_T;
-	btn_LimitP1.X_end = PP2N2_L + PPNW;
-	btn_LimitP1.Y_end = PP2N2_T + PPNW;
-	btn_LimitP1.sw_Link = NULL;
+	struct button btn_limit_card_p1;
+	btn_limit_card_p1.X_frist = lcp1_L;
+	btn_limit_card_p1.Y_frist = lcp1_T;
+	btn_limit_card_p1.X_end   = lcp1_R;
+	btn_limit_card_p1.Y_end   = lcp1_B;
+	btn_limit_card_p1.sw_Link = Board_Form;
 
-	struct button btn_DiceAgainP1;
-	btn_DiceAgainP1.X_frist = PP2N2_L;
-	btn_DiceAgainP1.Y_frist = PP2N2_T;
-	btn_DiceAgainP1.X_end = PP2N2_L + PPNW;
-	btn_DiceAgainP1.Y_end = PP2N2_T + PPNW;
-	btn_DiceAgainP1.sw_Link = NULL;
+	struct button btn_diceAgain_card_p1;
+	btn_diceAgain_card_p1.X_frist = dcp1_L;
+	btn_diceAgain_card_p1.Y_frist = dcp1_T;
+	btn_diceAgain_card_p1.X_end   = dcp1_R;
+	btn_diceAgain_card_p1.Y_end   = dcp1_B;
+	btn_diceAgain_card_p1.sw_Link = Board_Form;
 	//p2
-	struct button btn_DoorClosedP2;
-	btn_DoorClosedP2.X_frist = PP2N2_L;
-	btn_DoorClosedP2.Y_frist = PP2N2_T;
-	btn_DoorClosedP2.X_end = PP2N2_L + PPNW;
-	btn_DoorClosedP2.Y_end = PP2N2_T + PPNW;
-	btn_DoorClosedP2.sw_Link = NULL;
+	struct button btn_closeDoor_card_p2;
+	btn_closeDoor_card_p2.X_frist = cdcp2_L;
+	btn_closeDoor_card_p2.Y_frist = cdcp2_T;
+	btn_closeDoor_card_p2.X_end =   cdcp2_R;
+	btn_closeDoor_card_p2.Y_end =   cdcp2_B;
+	btn_closeDoor_card_p2.sw_Link = Board_Form;
 
-	struct button btn_CoefP2;
-	btn_CoefP2.X_frist = PP2N2_L;
-	btn_CoefP2.Y_frist = PP2N2_T;
-	btn_CoefP2.X_end = PP2N2_L + PPNW;
-	btn_CoefP2.Y_end = PP2N2_T + PPNW;
-	btn_CoefP2.sw_Link = NULL;
+	struct button btn_coef_card_p2;
+	btn_coef_card_p2.X_frist = zcp2_L;
+	btn_coef_card_p2.Y_frist = zcp2_T;
+	btn_coef_card_p2.X_end =   zcp2_R;
+	btn_coef_card_p2.Y_end =   zcp2_B;
+	btn_coef_card_p2.sw_Link = Board_Form;
 
-	struct button btn_LimitP2;
-	btn_LimitP2.X_frist = PP2N2_L;
-	btn_LimitP2.Y_frist = PP2N2_T;
-	btn_LimitP2.X_end = PP2N2_L + PPNW;
-	btn_LimitP2.Y_end = PP2N2_T + PPNW;
-	btn_LimitP2.sw_Link = NULL;
+	struct button btn_limit_card_p2;
+	btn_limit_card_p2.X_frist = lcp2_L;
+	btn_limit_card_p2.Y_frist = lcp2_T;
+	btn_limit_card_p2.X_end =   lcp2_R;
+	btn_limit_card_p2.Y_end =   lcp2_B;
+	btn_limit_card_p2.sw_Link = Board_Form;
 
-	struct button btn_DiceAgainP2;
-	btn_DiceAgainP2.X_frist = PP2N2_L;
-	btn_DiceAgainP2.Y_frist = PP2N2_T;
-	btn_DiceAgainP2.X_end = PP2N2_L + PPNW;
-	btn_DiceAgainP2.Y_end = PP2N2_T + PPNW;
-	btn_DiceAgainP2.sw_Link = NULL;
+	struct button btn_diceAgain_card_p2;
+	btn_diceAgain_card_p2.X_frist = dcp2_L;
+	btn_diceAgain_card_p2.Y_frist = dcp2_T;
+	btn_diceAgain_card_p2.X_end =   dcp2_R;
+	btn_diceAgain_card_p2.Y_end =   dcp2_B;
+	btn_diceAgain_card_p2.sw_Link = Board_Form;
 
 	struct button btn_MenuInTheBoard;
 	btn_MenuInTheBoard.X_frist = PMBI_L;
@@ -410,13 +467,13 @@ int main()
 	btn_MenuInTheBoard.sw_Link = NULL;
 
 	//MenuMassage
-	struct button btn_YesInMenuMessageInTheBoard;
-	btn_YesInMenuMessageInTheBoard.X_frist = PYIMMIB_L;
-	btn_YesInMenuMessageInTheBoard.Y_frist = PYIMMIB_T;
-	btn_YesInMenuMessageInTheBoard.X_end = PYIMMIB_R;
-	btn_YesInMenuMessageInTheBoard.Y_end = PYIMMIB_B;
-	btn_YesInMenuMessageInTheBoard.sw_Link = NULL;
-	//------------------
+	// struct button btn_YesInMenuMessageInTheBoard;
+	// btn_YesInMenuMessageInTheBoard.X_frist = PYIMMIB_L;
+	// btn_YesInMenuMessageInTheBoard.Y_frist = PYIMMIB_T;
+	// btn_YesInMenuMessageInTheBoard.X_end = PYIMMIB_R;
+	// btn_YesInMenuMessageInTheBoard.Y_end = PYIMMIB_B;
+	// btn_YesInMenuMessageInTheBoard.sw_Link = NULL;
+	//---------------------------
 	struct NUT P1Nut1;
 	P1Nut1.x = PP1N1_L;
 	P1Nut1.y = PP1N1_T;
@@ -431,6 +488,7 @@ int main()
 
 	struct NUT P2Nut2;
 	P2Nut2.x = PP2N2_L;
+
 	P2Nut2.y = PP2N2_T;
 #pragma endregion
 	//Objects
@@ -490,10 +548,13 @@ int main()
 
 	ALLEGRO_BITMAP* CaractersP2_PIC = al_load_bitmap("Images/Caracters/strongMan.png");
 
-	//FristMenu
+	//Frist
 	ALLEGRO_BITMAP* FristMenu_Form_PIC = al_load_bitmap("Images/startMenu/Form.png");
+	ALLEGRO_BITMAP* startgame_PIC = al_load_bitmap("Images/startgame.png");
+	ALLEGRO_BITMAP* Formcontinue_PIC = al_load_bitmap("Images/Form_continue.png");
+	ALLEGRO_BITMAP* btn_menu_masage = al_load_bitmap("Images/massage_menu.png");
 
-	ALLEGRO_BITMAP* MenuInTheBoard_PIC = al_load_bitmap("Images/MessageMenu.png");
+	//ALLEGRO_BITMAP* MenuInTheBoard_PIC = al_load_bitmap("Images/MessageMenu.png");
 
 	ALLEGRO_BITMAP* Dice_PIC_VAR = Dice_PIC[DiceP3];
 
@@ -526,8 +587,23 @@ int main()
 			switch (pages_sw)
 			{
 			case StartGame:
+				al_clear_to_color(al_map_rgb(240, 240, 240));
+				al_draw_bitmap(startgame_PIC, 0, 0, 0);
+				if (count_startgame == 300)
+				{
+					pages_sw = Form_continue;
+				}
+				count_startgame++;
 				break;
 			case Form_continue:
+				//al_draw_bitmap(Formcontinue_PIC, 0, 0, 0);
+				for (int i = 0; i < load_percent && load_percent <= 302; i++)
+				{
+					al_draw_filled_circle(500.4 + i, 692.6, 10.5, al_map_rgb(255, 255, 255));
+
+				}
+				if (load_percent == 302)pages_sw = FristMenu;
+				load_percent++;
 				break;
 			case FristMenu:
 #pragma region Codes
@@ -573,7 +649,6 @@ int main()
 						}
 						printf("\n");
 					}
-
 				}
 				if (sw_btn(&btn_TWEPERSON_To_buttons_continueANDnew_Form[1], &mouseState) && mouseState.buttons == 1)
 				{
@@ -626,13 +701,13 @@ int main()
 				al_clear_to_color(al_map_rgb(240, 240, 240));
 				//Board & cards------------------------------
 				al_get_mouse_state(&mouseState);
-				al_draw_bitmap(lucky_CardP1_PIC[Place1], 340, 286, 0);
-				al_draw_bitmap(lucky_CardP1_PIC[Place2], 340, 391, 0);
-				al_draw_bitmap(lucky_CardP1_PIC[Place3], 340, 496, 0);
-				al_draw_bitmap(lucky_CardP1_PIC[Place4], 340, 601, 0);
+				al_draw_bitmap(lucky_CardP1_PIC[Place1], 227, 341, 0);
+				al_draw_bitmap(lucky_CardP1_PIC[Place2], 227, 431, 0);
+				al_draw_bitmap(lucky_CardP1_PIC[Place3], 227, 520, 0);
+				al_draw_bitmap(lucky_CardP1_PIC[Place4], 227, 610, 0);
 				if (Tik_Dice)
 					if (player_Turn == P1)
-						if (sw_btn(&btn_DoorClosedP1, &mouseState))
+						if (sw_btn(&btn_closeDoor_card_p1, &mouseState))
 						{
 							if (al_mouse_button_down(&mouseState, 1))
 							{
@@ -644,10 +719,10 @@ int main()
 							}
 						}
 
-				al_draw_bitmap(lucky_CardP2_PIC[Place1], 949, 100, 0);
-				al_draw_bitmap(lucky_CardP2_PIC[Place2], 949, 205, 0);
-				al_draw_bitmap(lucky_CardP2_PIC[Place3], 949, 310, 0);
-				al_draw_bitmap(lucky_CardP2_PIC[Place4], 949, 415, 0);
+				al_draw_bitmap(lucky_CardP2_PIC[Place1], 949, 121, 0);
+				al_draw_bitmap(lucky_CardP2_PIC[Place2], 949, 210, 0);
+				al_draw_bitmap(lucky_CardP2_PIC[Place3], 949, 300, 0);
+				al_draw_bitmap(lucky_CardP2_PIC[Place4], 949, 390, 0);
 
 				al_draw_bitmap(Place_Start_Nuts_P1[Place1], 350, 692, 0);
 				al_draw_bitmap(Place_Start_Nuts_P1[Place2], 455, 692, 0);
@@ -768,7 +843,10 @@ int main()
 				al_draw_bitmap(Menu_InTheBoard_Icon, 35, -5, 0);
 
 				al_get_mouse_state(&mouseState);
-				if (sw_btn(&btn_MenuInTheBoard, &mouseState))
+
+				//idea of menu Message
+				//******************************************************
+				/*if (sw_btn(&btn_MenuInTheBoard, &mouseState))
 				{
 					if (al_mouse_button_down(&mouseState, 1))
 					{
@@ -794,7 +872,8 @@ int main()
 							}
 						}
 					}
-				}
+				}*/
+				//********************************************************
 				al_draw_bitmap(RefreshIcon, 105, -5, 0);
 				al_draw_bitmap(GuideIcon, 170, -5, 0);
 				//-----------------------------------------
@@ -1143,7 +1222,6 @@ int main()
 				}
 
 #pragma endregion
-
 
 #pragma endregion
 				if (Player1[0] == 40)

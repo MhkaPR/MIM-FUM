@@ -46,8 +46,6 @@ void ConvertToDiceMIM(int* x)
 void CardPlacesRand(int ArrayCardsPlace[])
 //daryaftmohre()
 {
-
-
 	int min = 0;
 	for (int i = 0; i < 9; i++)
 	{
@@ -104,9 +102,11 @@ int IsCarridorPlace(int* Position, int CarridorArray[][2])
 		if (*Position == CarridorArray[i][0])
 		{
 			*Position = CarridorArray[i][1];
+			printf("??? 1");
 			return 1;
 		}
 	}
+	printf("??? 0");
 	return 0;
 }
 int Is_Any_Card(const int ArrCard[])
@@ -130,9 +130,8 @@ bool Is_DOORCLOSEDcard(const int CardsP1[])
 	if (CardsP1[0]) return true;
 	return false;
 }
-int MoveGraphic(int Corresponding_number, int* x, int* y)
+void MoveGraphic(const int Corresponding_number, int* x, int* y)
 {
-	int sign = 1;
 	switch (Corresponding_number)
 	{
 	case 0:

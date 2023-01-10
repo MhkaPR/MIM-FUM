@@ -242,6 +242,9 @@ bool sw_btn(struct button* btn, ALLEGRO_MOUSE_STATE* mouse)
 		return true;
 	else return false;
 }
+int ArrayCardsPlace[9];
+int ArrayCarridorsPlace[9][2] = { 0 };
+
 int main()
 {
 	srand(time(0));
@@ -316,9 +319,6 @@ int main()
 
 	short int IsLimitP1 = 0;
 	short int IsLimitP2 = 0;
-
-	int ArrayCardsPlace[9];
-	int ArrayCarridorsPlace[9][2] = { 0 };
 
 	int CardsP1[4] = { 0 }, CardsP2[4] = { 0 };
 
@@ -723,7 +723,7 @@ int main()
 								printf("cardAgain1%\n");
 								if (CardsP1[DICEAGAIN])
 								{
-									printf("dice Again:%d\n", CardsP1[DICEAGAIN]);
+									printf("dice Again:%d\n", CardsP1[DICEAGAIN]-1);
 									CardsP1[DICEAGAIN]--;
 									User_operation = CLICKDICE;
 								}
@@ -745,6 +745,7 @@ int main()
 								printf("cardAgain2%\n");
 								if (CardsP2[DICEAGAIN])
 								{
+									printf("dice Again:%d\n", CardsP2[DICEAGAIN]-1);
 									CardsP2[DICEAGAIN]--;
 									User_operation = CLICKDICE;
 								}
@@ -931,12 +932,12 @@ int main()
 						{
 							if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
 							{
+								//1-moving
 								Player1[0] += DiceVar;
-								//move with carridors
-								IsCarridorPlace(&Player1[0], ArrayCarridorsPlace);
-								//-------------------------------
 								MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
-								//Hitting
+								//---------------------------------------
+
+								//2-Hitting
 								if (Player1[0] == Player2[0]) {
 									Player2[0] = 80;
 									P2Nut1.x = PP2N1_L;
@@ -958,7 +959,8 @@ int main()
 									btn_P2Nut2.Y_end = PP2N2_T + PPNW;
 								}
 								//--------------------------------
-								//Become add a Lucky Card
+
+								//3-Become add a Lucky Card
 								if (IsLuckyCardPlace(Player1[0], ArrayCardsPlace))
 								{
 									CardChoosed = CardRand();
@@ -987,6 +989,69 @@ int main()
 								}
 								//--------------------------------------
 
+								//4-move with carridors
+								bool IsCarridor = false;
+								if (IsCarridorPlace(&Player1[0], ArrayCarridorsPlace))
+								{
+									printf("? %d", Player1[0]);
+									IsCarridor = true;
+
+									//2-Hitting
+									if (Player1[0] == Player2[0]) {
+										Player2[0] = 80;
+										P2Nut1.x = PP2N1_L;
+										P2Nut1.y = PP2N1_T;
+
+										btn_P2Nut1.X_frist = PP2N1_L;
+										btn_P2Nut1.Y_frist = PP2N1_T;
+										btn_P2Nut1.X_end = PP2N1_L + PPNW;
+										btn_P2Nut1.Y_end = PP2N1_T + PPNW;
+									}
+									if (Player1[0] == Player2[1]) {
+										Player2[1] = 80;
+										P2Nut1.x = PP2N2_L;
+										P2Nut1.y = PP2N2_T;
+
+										btn_P2Nut2.X_frist = PP2N2_L;
+										btn_P2Nut2.Y_frist = PP2N2_T;
+										btn_P2Nut2.X_end = PP2N2_L + PPNW;
+										btn_P2Nut2.Y_end = PP2N2_T + PPNW;
+									}
+									//--------------------------------
+
+									//3-Become add a Lucky Card
+									if (IsLuckyCardPlace(Player1[0], ArrayCardsPlace))
+									{
+										CardChoosed = CardRand();
+										CardsP1[CardChoosed]++;
+										switch (CardChoosed)
+										{
+										case DOORCLOSED:
+											printf("a DOOR_CLOSED card added.\n");
+
+											break;
+										case COEF:
+											printf("a COEF card added.\n");
+											break;
+										case LIMIT:
+											printf("a LIMIT card added.\n");
+											break;
+										case DICEAGAIN:
+											printf("a DICE_AGAIN card added.\n");
+
+											break;
+										}
+										for (int i = 0; i < 4; i++)
+										{
+											printf("%d ", CardsP1[i]);
+										}
+									}
+									//--------------------------------------
+
+								}
+								if (IsCarridor) MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
+								//-------------------------------
+
 								btn_P1Nut1.X_frist = P1Nut1.x;
 								btn_P1Nut1.Y_frist = P1Nut1.y;
 								btn_P1Nut1.X_end = P1Nut1.x + PPNW;
@@ -1004,12 +1069,12 @@ int main()
 							printf("yesP1N2\n\n");
 							if ((Player1[1] + DiceVar) > -1 && (Player1[1] + DiceVar) < 81)//check for Being to period
 							{
+								//1-moving
 								Player1[1] += DiceVar;
-								//move with carridors
-								IsCarridorPlace(&Player1[1], ArrayCarridorsPlace);
-								//-------------------------------
 								MoveGraphic(Player1[1], &(P1Nut2.x), &(P1Nut2.y));
-								//Hitting
+								//-----------------------------------
+
+								//2-Hitting
 								if (Player1[1] == Player2[0]) {
 									Player2[0] = 80;
 									P2Nut1.x = PP2N1_L;
@@ -1031,7 +1096,8 @@ int main()
 									btn_P2Nut2.Y_end = PP2N2_T + PPNW;
 								}
 								//--------------------------------
-								//Become add a Lucky Card
+
+								//3-Become add a Lucky Card
 								if (IsLuckyCardPlace(Player1[1], ArrayCardsPlace))
 								{
 									CardChoosed = CardRand();
@@ -1057,6 +1123,66 @@ int main()
 									}
 								}
 								//--------------------------------------
+
+								//4-move with carridors
+								bool IsCarridor = false;
+								if (IsCarridorPlace(&Player1[1], ArrayCarridorsPlace))
+								{
+									printf("? %d", Player1[1]);
+									IsCarridor = true;
+
+									//2-Hitting
+									if (Player1[1] == Player2[0]) {
+										Player2[0] = 80;
+										P2Nut1.x = PP2N1_L;
+										P2Nut1.y = PP2N1_T;
+
+										btn_P2Nut1.X_frist = PP2N1_L;
+										btn_P2Nut1.Y_frist = PP2N1_T;
+										btn_P2Nut1.X_end = PP2N1_L + PPNW;
+										btn_P2Nut1.Y_end = PP2N1_T + PPNW;
+									}
+									if (Player1[1] == Player2[1]) {
+										Player2[1] = 80;
+										P2Nut2.x = PP2N2_L;
+										P2Nut2.y = PP2N2_T;
+
+										btn_P2Nut2.X_frist = PP2N2_L;
+										btn_P2Nut2.Y_frist = PP2N2_T;
+										btn_P2Nut2.X_end = PP2N2_L + PPNW;
+										btn_P2Nut2.Y_end = PP2N2_T + PPNW;
+									}
+									//--------------------------------
+
+									//3-Become add a Lucky Card
+									if (IsLuckyCardPlace(Player1[1], ArrayCardsPlace))
+									{
+										CardChoosed = CardRand();
+										CardsP1[CardChoosed]++;
+										switch (CardChoosed)
+										{
+										case DOORCLOSED:
+											printf("a DOOR_CLOSED card added.\n");
+											break;
+										case COEF:
+											printf("a COEF card added.\n");
+											break;
+										case LIMIT:
+											printf("a LIMIT card added.\n");
+											break;
+										case DICEAGAIN:
+											printf("a DICE_AGAIN card added.\n");
+											break;
+										}
+										for (int i = 0; i < 4; i++)
+										{
+											printf("%d ", CardsP1[i]);
+										}
+									}
+									//--------------------------------------
+								}
+								if (IsCarridor) MoveGraphic(Player1[1], &(P1Nut2.x), &(P1Nut2.y));								//-------------------------------
+								//-------------------------------------------
 								btn_P1Nut2.X_frist = P1Nut2.x;
 								btn_P1Nut2.Y_frist = P1Nut2.y;
 								btn_P1Nut2.X_end = P1Nut2.x + PPNW;
@@ -1103,12 +1229,12 @@ int main()
 
 							if ((Player2[0] + DiceVar) > -1 && (Player2[0] + DiceVar) < 81)//check for Being to period
 							{
+								//1-moving
 								Player2[0] += DiceVar;
-								//move with carridors
-								IsCarridorPlace(&Player2[0], ArrayCarridorsPlace);
-								//-------------------------------
 								MoveGraphic(Player2[0], &(P2Nut1.x), &(P2Nut1.y));
-								//Hitting
+								//------------------------------------
+
+								//2-Hitting
 								if (Player2[0] == Player1[0]) {
 									Player1[0] = 0;
 									P1Nut1.x = PP1N1_L;
@@ -1130,7 +1256,8 @@ int main()
 									btn_P1Nut2.Y_end = PP1N2_T + PPNW;
 								}
 								//--------------------------------
-								//Become add a Lucky Card
+
+								//3-Become add a Lucky Card
 								if (IsLuckyCardPlace(Player2[0], ArrayCardsPlace))
 								{
 									CardChoosed = CardRand();
@@ -1156,6 +1283,67 @@ int main()
 									}
 								}
 								//--------------------------------------
+
+								//4-move with carridors
+								bool IsCarridor = false;
+								if (IsCarridorPlace(&Player2[0], ArrayCarridorsPlace))
+								{
+									printf("? %d", Player2[0]);
+									IsCarridor = true;
+
+									//2-Hitting
+									if (Player2[0] == Player1[0]) {
+										Player1[0] = 0;
+										P1Nut1.x = PP1N1_L;
+										P1Nut1.y = PP1N1_T;
+
+										btn_P1Nut1.X_frist = PP1N1_L;
+										btn_P1Nut1.Y_frist = PP1N1_T;
+										btn_P1Nut1.X_end = PP1N1_L + PPNW;
+										btn_P1Nut1.Y_end = PP1N1_T + PPNW;
+									}
+									if (Player2[0] == Player1[1]) {
+										Player1[1] = 0;
+										P1Nut2.x = PP1N2_L;
+										P1Nut2.y = PP1N2_T;
+
+										btn_P1Nut2.X_frist = PP1N2_L;
+										btn_P1Nut2.Y_frist = PP1N2_T;
+										btn_P1Nut2.X_end = PP1N2_L + PPNW;
+										btn_P1Nut2.Y_end = PP1N2_T + PPNW;
+									}
+									//--------------------------------
+
+									//3-Become add a Lucky Card
+									if (IsLuckyCardPlace(Player2[0], ArrayCardsPlace))
+									{
+										CardChoosed = CardRand();
+										CardsP2[CardChoosed]++;
+										switch (CardChoosed)
+										{
+										case DOORCLOSED:
+											printf("a DOOR_CLOSED card added.\n");
+											break;
+										case COEF:
+											printf("a COEF card added.\n");
+											break;
+										case LIMIT:
+											printf("a LIMIT card added.\n");
+											break;
+										case DICEAGAIN:
+											printf("a DICE_AGAIN card added.\n");
+											break;
+										}
+										for (int i = 0; i < 4; i++)
+										{
+											printf("%d ", CardsP2[i]);
+										}
+									}
+									//--------------------------------------
+
+								}
+								//------------------------------------
+								if (IsCarridor) MoveGraphic(Player2[0], &(P2Nut1.x), &(P2Nut1.y));
 								btn_P2Nut1.X_frist = P2Nut1.x;
 								btn_P2Nut1.Y_frist = P2Nut1.y;
 								btn_P2Nut1.X_end = P2Nut1.x + PPNW;
@@ -1172,12 +1360,12 @@ int main()
 
 							if ((Player2[1] + DiceVar) > -1 && (Player2[1] + DiceVar) < 81)//check for Being to period
 							{
+								//1-moving
 								Player2[1] += DiceVar;
-								//move with carridors
-								IsCarridorPlace(&Player2[1], ArrayCarridorsPlace);
-								//-------------------------------
 								MoveGraphic(Player2[1], &(P2Nut2.x), &(P2Nut2.y));
-								//Hitting
+								//----------------------------------------------
+
+								//2-Hitting
 								if (Player2[1] == Player1[0]) {
 									Player1[0] = 0;
 									P1Nut1.x = PP1N1_L;
@@ -1199,7 +1387,8 @@ int main()
 									btn_P1Nut2.Y_end = PP1N2_T + PPNW;
 								}
 								//-----------------------------------------
-								//Become add a Lucky Card
+
+								//3-Become add a Lucky Card
 								if (IsLuckyCardPlace(Player2[1], ArrayCardsPlace))
 								{
 									CardChoosed = CardRand();
@@ -1225,6 +1414,70 @@ int main()
 									}
 								}
 								//--------------------------------------
+
+								//4-move with carridors
+								bool IsCarridor = false;
+								if (IsCarridorPlace(&Player2[1], ArrayCarridorsPlace))
+								{
+									printf("? %d", Player2[1]);
+									IsCarridor = true;
+								}
+								if (IsCarridor)
+								{
+									MoveGraphic(Player2[1], &(P2Nut2.x), &(P2Nut2.y));
+
+
+									//2-Hitting
+									if (Player2[1] == Player1[0]) {
+										Player1[0] = 0;
+										P1Nut1.x = PP1N1_L;
+										P1Nut1.y = PP1N1_T;
+
+										btn_P1Nut1.X_frist = PP1N1_L;
+										btn_P1Nut1.Y_frist = PP1N1_T;
+										btn_P1Nut1.X_end = PP1N1_L + PPNW;
+										btn_P1Nut1.Y_end = PP1N1_T + PPNW;
+									}
+									if (Player2[1] == Player1[1]) {
+										Player1[1] = 0;
+										P1Nut2.x = PP1N2_L;
+										P1Nut2.y = PP1N2_T;
+
+										btn_P1Nut2.X_frist = PP1N2_L;
+										btn_P1Nut2.Y_frist = PP1N2_T;
+										btn_P1Nut2.X_end = PP1N2_L + PPNW;
+										btn_P1Nut2.Y_end = PP1N2_T + PPNW;
+									}
+									//-----------------------------------------
+
+									//3-Become add a Lucky Card
+									if (IsLuckyCardPlace(Player2[1], ArrayCardsPlace))
+									{
+										CardChoosed = CardRand();
+										CardsP2[CardChoosed]++;
+										switch (CardChoosed)
+										{
+										case DOORCLOSED:
+											printf("a DOOR_CLOSED card added.\n");
+											break;
+										case COEF:
+											printf("a COEF card added.\n");
+											break;
+										case LIMIT:
+											printf("a LIMIT card added.\n");
+											break;
+										case DICEAGAIN:
+											printf("a DICE_AGAIN card added.\n");
+											break;
+										}
+										for (int i = 0; i < 4; i++)
+										{
+											printf("%d ", CardsP2[i]);
+										}
+									}
+									//--------------------------------------
+								}
+								//-------------------------------
 								btn_P2Nut2.X_frist = P2Nut2.x;
 								btn_P2Nut2.Y_frist = P2Nut2.y;
 								btn_P2Nut2.X_end = P2Nut2.x + PPNW;

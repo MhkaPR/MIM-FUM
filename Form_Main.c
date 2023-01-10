@@ -239,7 +239,7 @@ int main()
 	bool sw_Show_MessageBoxMenu = false;
 
 	int turn = 1;
-	enum Pages pages_sw = FristMenu;
+	enum Pages pages_sw = Board_Form;
 	//variable LOGIC-------------------------
 	bool player_Turn = P1;//turn of players
 	short int IsDoorClosed = 0;
@@ -456,16 +456,16 @@ int main()
 	P2Nut2.picture = al_load_bitmap("Images/MOHRE2.png");
 
 	ALLEGRO_BITMAP* lucky_CardP1_PIC[4];
-	lucky_CardP1_PIC[Place1] = al_load_bitmap("Images/BLOCK_cart.png");
-	lucky_CardP1_PIC[Place2] = al_load_bitmap("Images/BLOCK_cart.png");
-	lucky_CardP1_PIC[Place3] = al_load_bitmap("Images/BLOCK_cart.png");
-	lucky_CardP1_PIC[Place4] = al_load_bitmap("Images/BLOCK_cart.png");
+	lucky_CardP1_PIC[Place1] = al_load_bitmap("Images/Cards/closeDoor_cart_p1.png");
+	lucky_CardP1_PIC[Place2] = al_load_bitmap("Images/Cards/zarib_cart_p1.png");
+	lucky_CardP1_PIC[Place3] = al_load_bitmap("Images/Cards/limit_cart_p1.png");
+	lucky_CardP1_PIC[Place4] = al_load_bitmap("Images/Cards/diceagain_cart_p1.png");
 
 	ALLEGRO_BITMAP* lucky_CardP2_PIC[4];
-	lucky_CardP2_PIC[Place1] = al_load_bitmap("Images/BLOCK_cart.png");
-	lucky_CardP2_PIC[Place2] = al_load_bitmap("Images/BLOCK_cart.png");
-	lucky_CardP2_PIC[Place3] = al_load_bitmap("Images/BLOCK_cart.png");
-	lucky_CardP2_PIC[Place4] = al_load_bitmap("Images/BLOCK_cart.png");
+	lucky_CardP2_PIC[Place1] = al_load_bitmap("Images/Cards/closeDoor_cart_p2.png");
+	lucky_CardP2_PIC[Place2] = al_load_bitmap("Images/Cards/zarib_cart_p2.png");
+	lucky_CardP2_PIC[Place3] = al_load_bitmap("Images/Cards/limit_cart_p2.png");
+	lucky_CardP2_PIC[Place4] = al_load_bitmap("Images/Cards/diceagain_cart_p2.png");
 
 	ALLEGRO_BITMAP* Place_Start_Nuts_P1[2];
 	Place_Start_Nuts_P1[Place1] = al_load_bitmap("Images/BLOCK_player1.png");
@@ -624,24 +624,30 @@ int main()
 				}
 				al_get_mouse_state(&mouseState);
 				al_clear_to_color(al_map_rgb(240, 240, 240));
-				//Board Frame------------------------------
+				//Board & cards------------------------------
+				al_get_mouse_state(&mouseState);
 				al_draw_bitmap(lucky_CardP1_PIC[Place1], 340, 286, 0);
 				al_draw_bitmap(lucky_CardP1_PIC[Place2], 340, 391, 0);
 				al_draw_bitmap(lucky_CardP1_PIC[Place3], 340, 496, 0);
 				al_draw_bitmap(lucky_CardP1_PIC[Place4], 340, 601, 0);
-				al_draw_text(font, al_map_rgb(0, 0, 0), 250, 286, 0, "Door Closed");
-				al_draw_text(font, al_map_rgb(0, 0, 0), 250, 391, 0, "Coef");
-				al_draw_text(font, al_map_rgb(0, 0, 0), 250, 496, 0, "Limit");
-				al_draw_text(font, al_map_rgb(0, 0, 0), 250, 601, 0, "Again Dice");
+				if (Tik_Dice)
+					if (player_Turn == P1)
+						if (sw_btn(&btn_DoorClosedP1, &mouseState))
+						{
+							if (al_mouse_button_down(&mouseState, 1))
+							{
+								if (CardsP1[0])
+								{
+									CardsP1[0]--;
+									User_operation = CLICKDICE;
+								}
+							}
+						}
 
-				al_draw_bitmap(lucky_CardP2_PIC[Place1], 936, 100, 0);
-				al_draw_bitmap(lucky_CardP2_PIC[Place2], 936, 205, 0);
-				al_draw_bitmap(lucky_CardP2_PIC[Place3], 936, 310, 0);
-				al_draw_bitmap(lucky_CardP2_PIC[Place4], 936, 415, 0);
-				al_draw_text(font, al_map_rgb(0, 0, 0), 960, 100, 0, "Door Closed");
-				al_draw_text(font, al_map_rgb(0, 0, 0), 960, 205, 0, "Coef");
-				al_draw_text(font, al_map_rgb(0, 0, 0), 960, 310, 0, "Limit");
-				al_draw_text(font, al_map_rgb(0, 0, 0), 960, 415, 0, "Again Dice");
+				al_draw_bitmap(lucky_CardP2_PIC[Place1], 949, 100, 0);
+				al_draw_bitmap(lucky_CardP2_PIC[Place2], 949, 205, 0);
+				al_draw_bitmap(lucky_CardP2_PIC[Place3], 949, 310, 0);
+				al_draw_bitmap(lucky_CardP2_PIC[Place4], 949, 415, 0);
 
 				al_draw_bitmap(Place_Start_Nuts_P1[Place1], 350, 692, 0);
 				al_draw_bitmap(Place_Start_Nuts_P1[Place2], 455, 692, 0);
@@ -695,7 +701,7 @@ int main()
 								{
 									User_operation = CLICKNUT1_P1;
 									Tik_Nut = true;
-									
+
 									if (player_Turn == P1)
 									{
 										Tik_Dice = false;
@@ -711,7 +717,7 @@ int main()
 								{
 									User_operation = CLICKNUT2_P1;
 									Tik_Nut = true;
-									
+
 									if (player_Turn == P1)
 									{
 										Tik_Dice = false;
@@ -787,7 +793,6 @@ int main()
 								break;
 							}
 						}
-						printf("Yes\n");
 					}
 				}
 				al_draw_bitmap(RefreshIcon, 105, -5, 0);
@@ -856,6 +861,7 @@ int main()
 									{
 									case DOORCLOSED:
 										printf("a DOOR_CLOSED card added.\n");
+
 										break;
 									case COEF:
 										printf("a COEF card added.\n");
@@ -865,6 +871,7 @@ int main()
 										break;
 									case DICEAGAIN:
 										printf("a DICE_AGAIN card added.\n");
+
 										break;
 									}
 									for (int i = 0; i < 4; i++)

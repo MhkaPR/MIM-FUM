@@ -11,7 +11,6 @@
 #define COEF 1
 #define LIMIT 2
 #define DICEAGAIN 3
-
 #pragma region ENUMS
 enum Dice {
 	DiceM3,
@@ -140,6 +139,21 @@ enum Position_YesInMenuMessageInTheBoard
 	PYIMMIB_R = 882,
 	PYIMMIB_B = 580,
 };
+enum Position_CANCELbtn_NoticeToCarridor
+{
+	PCbNC_L = 867,
+	PCbNC_T = 746,
+	PCbNC_R = 1041,
+	PCbNC_B = 791,
+};
+enum Position_OKbtn_NoticeToCarridor
+{
+	PObNC_L = 1072,
+	PObNC_T = 746,
+	PObNC_R = 1240,
+	PObNC_B = 791,
+};
+
 enum coef_card_p1
 {
 	zcp1_L = 227,
@@ -213,6 +227,7 @@ struct NUT
 	int x;
 	int y;
 	ALLEGRO_BITMAP* picture;
+	ALLEGRO_BITMAP* picture_Carridor;
 };
 #pragma endregion
 void must_init(bool check, const char* description)
@@ -239,8 +254,15 @@ bool sw_btn(struct button* btn, ALLEGRO_MOUSE_STATE* mouse)
 		mouse->y > btn->Y_frist &&
 		mouse->x < btn->X_end &&
 		mouse->y < btn->Y_end)
+	{
+		printf("checked swbtn");
 		return true;
-	else return false;
+	}
+	else
+	{
+		//printf("checked swbtn false");
+		return false;
+	}
 }
 int ArrayCardsPlace[9];
 int ArrayCarridorsPlace[9][2] = { 0 };
@@ -304,6 +326,9 @@ int main()
 	bool sw_Show_MessageBoxMenu = false;
 
 	bool menu_massage_display = false;
+
+	bool Tik_Opinion_ForCarridor = true;
+
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
 	//variable LOGIC-------------------------
@@ -320,7 +345,7 @@ int main()
 	short int IsLimitP1 = 0;
 	short int IsLimitP2 = 0;
 
-	int CardsP1[4] = { 0 }, CardsP2[4] = { 0 };
+	int CardsP1[4] = { 1 }, CardsP2[4] = { 0 };
 
 	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
 
@@ -333,6 +358,8 @@ int main()
 	int CardChoosed;
 
 	int count_startgame = 0;
+
+	float X_ProgressBar = 800;
 
 	enum Works_of_player User_operation = -1;
 
@@ -482,6 +509,22 @@ int main()
 	// btn_YesInMenuMessageInTheBoard.X_end = PYIMMIB_R;
 	// btn_YesInMenuMessageInTheBoard.Y_end = PYIMMIB_B;
 	// btn_YesInMenuMessageInTheBoard.sw_Link = NULL;
+
+	//Notifiction of Carriddor
+	struct button btn_CANCEL_NoticeToCarridor;
+	btn_CANCEL_NoticeToCarridor.X_frist = PCbNC_L;
+	btn_CANCEL_NoticeToCarridor.Y_frist = PCbNC_T;
+	btn_CANCEL_NoticeToCarridor.X_end = PCbNC_R;
+	btn_CANCEL_NoticeToCarridor.Y_end = PCbNC_B;
+	btn_CANCEL_NoticeToCarridor.sw_Link = NULL;
+
+	struct button btn_OK_NoticeToCarridor;
+	btn_OK_NoticeToCarridor.X_frist = PObNC_L;
+	btn_OK_NoticeToCarridor.Y_frist = PObNC_T;
+	btn_OK_NoticeToCarridor.X_end = PObNC_R;
+	btn_OK_NoticeToCarridor.Y_end = PObNC_B;
+	btn_OK_NoticeToCarridor.sw_Link = NULL;
+
 	//---------------------------
 	struct NUT P1Nut1;
 	P1Nut1.x = PP1N1_L;
@@ -514,16 +557,20 @@ int main()
 	Dice_PIC[DiceM2] = al_load_bitmap("Images/Dice/TAS_mine2.png");
 	Dice_PIC[DiceM1] = al_load_bitmap("Images/Dice/TAS_mine1.png");
 
-	ALLEGRO_BITMAP* NutsP1_PIC[2];
+	ALLEGRO_BITMAP* NutsP1_PIC[3];
 	P1Nut1.picture = al_load_bitmap("Images/MOHRE1.png");
+	P1Nut1.picture_Carridor = al_load_bitmap("Images/MOHRE1_1.png");
 	P1Nut2.picture = al_load_bitmap("Images/MOHRE1.png");
 
-	ALLEGRO_BITMAP* NutsP2_PIC[2];
+	ALLEGRO_BITMAP* NutsP2_PIC[3];
 	P2Nut1.picture = al_load_bitmap("Images/MOHRE2.png");
 	P2Nut2.picture = al_load_bitmap("Images/MOHRE2.png");
+	P2Nut2.picture_Carridor = al_load_bitmap("Images/MOHRE2_2.png");
 
 	ALLEGRO_BITMAP* lucky_CardP1_PIC[4];
 	lucky_CardP1_PIC[Place1] = al_load_bitmap("Images/Cards/closeDoor_cart_p1.png");
+	ALLEGRO_BITMAP* NoticeToCarridor = al_load_bitmap("Images/NoticeToEnterTheCarridor.png");
+	ALLEGRO_BITMAP* NoticeToCarridor_ProgressBar = al_load_bitmap("Images/ScrollBar.png");
 	lucky_CardP1_PIC[Place2] = al_load_bitmap("Images/Cards/zarib_cart_p1.png");
 	lucky_CardP1_PIC[Place3] = al_load_bitmap("Images/Cards/limit_cart_p1.png");
 	lucky_CardP1_PIC[Place4] = al_load_bitmap("Images/Cards/diceagain_cart_p1.png");
@@ -563,12 +610,14 @@ int main()
 	ALLEGRO_BITMAP* Formcontinue_PIC = al_load_bitmap("Images/Form_continue.png");
 	ALLEGRO_BITMAP* btn_menu_masage = al_load_bitmap("Images/massage_menu.png");
 
+
 	//ALLEGRO_BITMAP* MenuInTheBoard_PIC = al_load_bitmap("Images/MessageMenu.png");
 
 	ALLEGRO_BITMAP* Dice_PIC_VAR = Dice_PIC[DiceP3];
 
 	ALLEGRO_COLOR NutActiveColorP2 = al_map_rgb(145, 216, 247);
 	ALLEGRO_COLOR NutActiveColorP1 = al_map_rgb(247, 173, 175);
+
 
 
 #pragma endregion
@@ -723,14 +772,13 @@ int main()
 								printf("cardAgain1%\n");
 								if (CardsP1[DICEAGAIN])
 								{
-									printf("dice Again:%d\n", CardsP1[DICEAGAIN]-1);
+									printf("dice Again:%d\n", CardsP1[DICEAGAIN] - 1);
 									CardsP1[DICEAGAIN]--;
 									User_operation = CLICKDICE;
 								}
 							}
 							else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p1 = false;
 						}
-
 				al_draw_bitmap(lucky_CardP2_PIC[Place1], 949, 121, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place2], 949, 210, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place3], 949, 300, 0);
@@ -745,7 +793,7 @@ int main()
 								printf("cardAgain2%\n");
 								if (CardsP2[DICEAGAIN])
 								{
-									printf("dice Again:%d\n", CardsP2[DICEAGAIN]-1);
+									printf("dice Again:%d\n", CardsP2[DICEAGAIN] - 1);
 									CardsP2[DICEAGAIN]--;
 									User_operation = CLICKDICE;
 								}
@@ -990,72 +1038,125 @@ int main()
 								//--------------------------------------
 
 								//4-move with carridors
-								bool IsCarridor = false;
-								if (IsCarridorPlace(&Player1[0], ArrayCarridorsPlace))
+
+								if (CardsP1[DOORCLOSED])
 								{
-									printf("? %d", Player1[0]);
-									IsCarridor = true;
-
-									//2-Hitting
-									if (Player1[0] == Player2[0]) {
-										Player2[0] = 80;
-										P2Nut1.x = PP2N1_L;
-										P2Nut1.y = PP2N1_T;
-
-										btn_P2Nut1.X_frist = PP2N1_L;
-										btn_P2Nut1.Y_frist = PP2N1_T;
-										btn_P2Nut1.X_end = PP2N1_L + PPNW;
-										btn_P2Nut1.Y_end = PP2N1_T + PPNW;
-									}
-									if (Player1[0] == Player2[1]) {
-										Player2[1] = 80;
-										P2Nut1.x = PP2N2_L;
-										P2Nut1.y = PP2N2_T;
-
-										btn_P2Nut2.X_frist = PP2N2_L;
-										btn_P2Nut2.Y_frist = PP2N2_T;
-										btn_P2Nut2.X_end = PP2N2_L + PPNW;
-										btn_P2Nut2.Y_end = PP2N2_T + PPNW;
-									}
-									//--------------------------------
-
-									//3-Become add a Lucky Card
-									if (IsLuckyCardPlace(Player1[0], ArrayCardsPlace))
+									//	printf("check while1");
+									if (IsCarridorPlace(&Player1[0], ArrayCarridorsPlace, false))
 									{
-										CardChoosed = CardRand();
-										CardsP1[CardChoosed]++;
-										switch (CardChoosed)
+										al_draw_bitmap(P1Nut1.picture_Carridor, P1Nut1.x, P1Nut1.y, 0);
+										al_flip_display();
+										while (1)
 										{
-										case DOORCLOSED:
-											printf("a DOOR_CLOSED card added.\n");
-
-											break;
-										case COEF:
-											printf("a COEF card added.\n");
-											break;
-										case LIMIT:
-											printf("a LIMIT card added.\n");
-											break;
-										case DICEAGAIN:
-											printf("a DICE_AGAIN card added.\n");
-
-											break;
-										}
-										for (int i = 0; i < 4; i++)
-										{
-											printf("%d ", CardsP1[i]);
+											if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) exit(0);
+											al_wait_for_event(queue, &event);
+											if (al_is_event_queue_empty(queue))
+											{
+												al_draw_bitmap(NoticeToCarridor, 800, 730, 0);
+												al_draw_bitmap(NoticeToCarridor_ProgressBar, X_ProgressBar, 801, 0);
+												al_get_mouse_state(&mouseState);
+												if (sw_btn(&btn_CANCEL_NoticeToCarridor, &mouseState))
+												{
+													printf("check cancel btn 2");
+													if (al_mouse_button_down(&mouseState, 1)) break;
+												}
+												if (sw_btn(&btn_OK_NoticeToCarridor, &mouseState) || sw_btn(&btn_closeDoor_card_p1, &mouseState))
+												{
+													if (al_mouse_button_down(&mouseState, 1))
+													{
+														printf("check OK btn 2");
+														Tik_Opinion_ForCarridor = false;
+														break;
+													}
+												}
+												if (X_ProgressBar < 1300)
+												{
+													X_ProgressBar += (1);
+													printf("%f\n", X_ProgressBar);
+												}
+												else
+												{
+													X_ProgressBar = 1300;
+													break;
+												}
+												al_flip_display();
+											}
 										}
 									}
-									//--------------------------------------
-
 								}
+
+								bool IsCarridor = false;
+								if (Tik_Opinion_ForCarridor)
+									if (IsCarridorPlace(&Player1[0], ArrayCarridorsPlace, true))
+									{
+										Tik_Opinion_ForCarridor = true;
+
+										printf("? %d", Player1[0]);
+										IsCarridor = true;
+
+										//2-Hitting
+										if (Player1[0] == Player2[0]) {
+											Player2[0] = 80;
+											P2Nut1.x = PP2N1_L;
+											P2Nut1.y = PP2N1_T;
+
+											btn_P2Nut1.X_frist = PP2N1_L;
+											btn_P2Nut1.Y_frist = PP2N1_T;
+											btn_P2Nut1.X_end = PP2N1_L + PPNW;
+											btn_P2Nut1.Y_end = PP2N1_T + PPNW;
+										}
+										if (Player1[0] == Player2[1]) {
+											Player2[1] = 80;
+											P2Nut1.x = PP2N2_L;
+											P2Nut1.y = PP2N2_T;
+
+											btn_P2Nut2.X_frist = PP2N2_L;
+											btn_P2Nut2.Y_frist = PP2N2_T;
+											btn_P2Nut2.X_end = PP2N2_L + PPNW;
+											btn_P2Nut2.Y_end = PP2N2_T + PPNW;
+										}
+										//--------------------------------
+
+										//3-Become add a Lucky Card
+										if (IsLuckyCardPlace(Player1[0], ArrayCardsPlace))
+										{
+											CardChoosed = CardRand();
+											CardsP1[CardChoosed]++;
+											switch (CardChoosed)
+											{
+											case DOORCLOSED:
+												printf("a DOOR_CLOSED card added.\n");
+
+												break;
+											case COEF:
+												printf("a COEF card added.\n");
+												break;
+											case LIMIT:
+												printf("a LIMIT card added.\n");
+												break;
+											case DICEAGAIN:
+												printf("a DICE_AGAIN card added.\n");
+
+												break;
+											}
+											for (int i = 0; i < 4; i++)
+											{
+												printf("%d ", CardsP1[i]);
+											}
+										}
+										//--------------------------------------
+
+									}
 								if (IsCarridor) MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
+
+
 								//-------------------------------
 
 								btn_P1Nut1.X_frist = P1Nut1.x;
 								btn_P1Nut1.Y_frist = P1Nut1.y;
 								btn_P1Nut1.X_end = P1Nut1.x + PPNW;
 								btn_P1Nut1.Y_end = P1Nut1.y + PPNW;
+
 							}
 							User_operation = -1;
 							player_Turn = P2;
@@ -1126,7 +1227,7 @@ int main()
 
 								//4-move with carridors
 								bool IsCarridor = false;
-								if (IsCarridorPlace(&Player1[1], ArrayCarridorsPlace))
+								if (IsCarridorPlace(&Player1[1], ArrayCarridorsPlace, true))
 								{
 									printf("? %d", Player1[1]);
 									IsCarridor = true;
@@ -1286,7 +1387,7 @@ int main()
 
 								//4-move with carridors
 								bool IsCarridor = false;
-								if (IsCarridorPlace(&Player2[0], ArrayCarridorsPlace))
+								if (IsCarridorPlace(&Player2[0], ArrayCarridorsPlace, true))
 								{
 									printf("? %d", Player2[0]);
 									IsCarridor = true;
@@ -1417,7 +1518,7 @@ int main()
 
 								//4-move with carridors
 								bool IsCarridor = false;
-								if (IsCarridorPlace(&Player2[1], ArrayCarridorsPlace))
+								if (IsCarridorPlace(&Player2[1], ArrayCarridorsPlace, true))
 								{
 									printf("? %d", Player2[1]);
 									IsCarridor = true;

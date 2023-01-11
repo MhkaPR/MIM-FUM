@@ -95,13 +95,14 @@ void CarridorPlacesRand(int ArrayCarridorsPlace[][2])
 		}
 	}
 }
-int IsCarridorPlace(int* Position, int CarridorArray[][2])
+int IsCarridorPlace(int* Position, int CarridorArray[][2],bool Apply_Changes)
 {
 	for (int i = 0; i < 8; i++)
 	{
 		if (*Position == CarridorArray[i][0])
 		{
-			*Position = CarridorArray[i][1];
+			printf("check if2");
+			if(Apply_Changes) *Position = CarridorArray[i][1];
 			printf("??? 1");
 			return 1;
 		}

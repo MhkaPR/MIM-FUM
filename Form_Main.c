@@ -344,7 +344,7 @@ int main()
 	short int IsLimitP1 = 0;
 	short int IsLimitP2 = 0;
 
-	int CardsP1[4] = { 1 }, CardsP2[4] = { 0 };
+	int CardsP1[4] = { 0,0,0,0 }, CardsP2[4] = { 0 };
 
 	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
 
@@ -628,6 +628,8 @@ int main()
 	{
 		//spitual Vars
 		float X_ProgressBar = 800;
+		Tik_Opinion_ForCarridor = true;
+		//---------------------------------
 		al_wait_for_event(queue, &event);
 		switch (event.type)
 		{
@@ -1070,6 +1072,7 @@ int main()
 													if (al_mouse_button_down(&mouseState, 1))
 													{
 														printf("check OK btn 2");
+														CardsP1[DOORCLOSED]--;
 														Tik_Opinion_ForCarridor = false;
 														break;
 													}
@@ -1260,6 +1263,7 @@ int main()
 													if (al_mouse_button_down(&mouseState, 1))
 													{
 														printf("check OK btn 2");
+														CardsP1[DOORCLOSED]--;
 														Tik_Opinion_ForCarridor = false;
 														break;
 													}
@@ -1479,6 +1483,7 @@ int main()
 													if (al_mouse_button_down(&mouseState, 1))
 													{
 														printf("check OK btn 2");
+														CardsP2[DOORCLOSED]--;
 														Tik_Opinion_ForCarridor = false;
 														break;
 													}
@@ -1668,6 +1673,7 @@ int main()
 													if (al_mouse_button_down(&mouseState, 1))
 													{
 														printf("check OK btn 2");
+														CardsP2[DOORCLOSED]--;
 														Tik_Opinion_ForCarridor = false;
 														break;
 													}

@@ -1076,7 +1076,7 @@ int main()
 												}
 												else
 												{
-													X_ProgressBar = 1300;
+													X_ProgressBar = 800;
 													break;
 												}
 												al_flip_display();

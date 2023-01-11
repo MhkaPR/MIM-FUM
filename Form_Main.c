@@ -153,6 +153,13 @@ enum Position_OKbtn_NoticeToCarridor
 	PObNC_R = 1240,
 	PObNC_B = 791,
 };
+enum Position_OKbtn_NoticeToCarridor
+{
+	PObNC_L = 1072,
+	PObNC_T = 746,
+	PObNC_R = 1240,
+	PObNC_B = 791,
+};
 
 enum coef_card_p1
 {
@@ -327,6 +334,8 @@ int main()
 	bool menu_massage_display = false;
 
 	bool Tik_Opinion_ForCarridor = true;
+
+	bool CoefCard_Operated = false;
 
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
@@ -555,6 +564,9 @@ int main()
 	Dice_PIC[DiceM3] = al_load_bitmap("Images/Dice/TAS_mine3.png");
 	Dice_PIC[DiceM2] = al_load_bitmap("Images/Dice/TAS_mine2.png");
 	Dice_PIC[DiceM1] = al_load_bitmap("Images/Dice/TAS_mine1.png");
+
+	ALLEGRO_BITMAP* PIC_2X_forDice= al_load_bitmap("Images/Dice/pic_2x.png");
+
 
 	ALLEGRO_BITMAP* NutsP1_PIC[3];
 	P1Nut1.picture = al_load_bitmap("Images/MOHRE1.png");
@@ -965,8 +977,14 @@ int main()
 					case CLICKDICE:
 						sw_btnDown = true;
 						DiceVar = DiceRand();
-						Dice_PIC_VAR = Dice_PIC[DiceVar];
+						
 						ConvertToDiceMIM(&DiceVar);
+						if (CoefCard_Operated)
+						{
+							DiceVar *= 2;
+							Dice_PIC_VAR=
+						}
+						else Dice_PIC_VAR = Dice_PIC[DiceVar];
 						User_operation = -1;
 						break;
 					case CLICKCARD_doorclosed:

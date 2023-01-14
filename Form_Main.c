@@ -13,6 +13,18 @@
 #define LIMIT 2
 #define DICEAGAIN 3
 #pragma region ENUMS
+enum Number_of_Cards
+{
+	Y_NOCP1_DOORCLOSED=365,
+	Y_NOCP1_COEF=455,
+	Y_NOCP1_LIMIT=544,
+	Y_NOCP1_DICEAGAIN=634,
+
+	Y_NOCP2_DOORCLOSED = 145,
+	Y_NOCP2_COEF = 234,
+	Y_NOCP2_LIMIT = 324,
+	Y_NOCP2_DICEAGAIN = 414,
+};
 enum Dice {
 	DiceM3,
 	DiceM2,
@@ -279,6 +291,7 @@ int main()
 	must_init(al_init_image_addon(), "Image Load");
 	must_init(al_install_keyboard(), "Key Board");
 	must_init(al_install_mouse(), "Mouse");
+	must_init(al_init_ttf_addon(), "Font");
 
 	ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
 	must_init(timer, "timer");
@@ -291,8 +304,9 @@ int main()
 
 	ALLEGRO_DISPLAY* disp = al_create_display(1300, 810);
 	must_init(disp, "Window");
-
-	ALLEGRO_FONT* font = al_load_ttf_font("Fonts/Autentica.ttf",10,2);
+	
+	
+	ALLEGRO_FONT* font = al_load_ttf_font("Fonts/Autentica.otf", 30, 1);
 
 	ALLEGRO_MOUSE_STATE mouseState;
 
@@ -353,7 +367,7 @@ int main()
 	short int IsLimitP1 = 0;
 	short int IsLimitP2 = 0;
 
-	int CardsP1[4] = { 10,10,0,2 }, CardsP2[4] = { 10,10,10,2 };
+	int CardsP1[4] = {9,9,9,9 }, CardsP2[4] = { 9,9,9,9};
 
 	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
 
@@ -1021,7 +1035,17 @@ int main()
 					al_draw_bitmap(PIC_2X_forDice, 613, 410, 0);
 				}
 				//--------------------------------
-				//-----------------------------------------
+				//Number of cards
+				al_draw_textf(font, al_map_rgb(240, 240, 240), 245, Y_NOCP1_DOORCLOSED, 0, "%d", CardsP1[DOORCLOSED]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), 245, Y_NOCP1_COEF, 0, "%d", CardsP1[COEF]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), 245, Y_NOCP1_LIMIT, 0, "%d", CardsP1[LIMIT]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), 245, Y_NOCP1_DICEAGAIN, 0, "%d", CardsP1[DICEAGAIN]);
+
+				al_draw_textf(font, al_map_rgb(240, 240, 240), 1038, Y_NOCP2_DOORCLOSED, 0, "%d", CardsP2[DOORCLOSED]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), 1038, Y_NOCP2_COEF, 0, "%d", CardsP2[COEF]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), 1038, Y_NOCP2_LIMIT, 0, "%d", CardsP2[LIMIT]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), 1038, Y_NOCP2_DICEAGAIN, 0, "%d", CardsP2[DICEAGAIN]);
+				//----------------------------------------------------------------------------------------------------
 #pragma region LOGIC
 				switch (player_Turn)
 				{
@@ -1903,7 +1927,7 @@ int main()
 			default:
 				break;
 			}
-			al_draw_textf(font, al_map_rgb(0, 12, 100), 0, 0, 0, "text");
+			
 			//Build Window-----------------------------
 			al_flip_display();
 			//-----------------------------------------

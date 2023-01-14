@@ -1,24 +1,20 @@
-Graphic:
+﻿Graphic:
     *Pages
-        +StartGame
-        +Form_continue
-        +FristMenu
+        +StartGame✓
+        +Form_continue✓
+        +FristMenu✓
             +buttons_continueANDnew_Form
                 +Template_Form
-                    -FristMenu
+                    -FristMenu✓
                     +appointment_Form
                         +Board_Form
                             +Messages_To_Menu
-                                -FristMenu
+                                -FristMenu✓
                                -Board_Form
                             +Messages_To_Refresh
                                -Board_Form
-                            +Messages_New_Card
-                                -Board_Form
-                            +Messages_Choose_Card
-                                -Board_Form
                             +Messages_Sucsess
-                                -FristMenu
+                                -FristMenu✓
                             -Guide
                                 -Board_Form
             +Setting

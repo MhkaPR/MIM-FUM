@@ -1,6 +1,7 @@
 #include "logic_Form.h"
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdio.h>
@@ -153,13 +154,6 @@ enum Position_OKbtn_NoticeToCarridor
 	PObNC_R = 1240,
 	PObNC_B = 791,
 };
-enum Position_OKbtn_NoticeToCarridor
-{
-	PObNC_L = 1072,
-	PObNC_T = 746,
-	PObNC_R = 1240,
-	PObNC_B = 791,
-};
 
 enum coef_card_p1
 {
@@ -298,7 +292,7 @@ int main()
 	ALLEGRO_DISPLAY* disp = al_create_display(1300, 810);
 	must_init(disp, "Window");
 
-	ALLEGRO_FONT* font = al_create_builtin_font();
+	ALLEGRO_FONT* font = al_load_ttf_font("Fonts/Autentica.ttf",10,2);
 
 	ALLEGRO_MOUSE_STATE mouseState;
 
@@ -321,6 +315,9 @@ int main()
 	bool Tik_Nut = false;
 	bool Tik_Player = true;
 
+	bool Tik_AGAINDICE = false;
+	bool Tik_COEF = false;
+
 	bool P1N1_IsLive = true;
 	bool P1N2_IsLive = true;
 	bool P2N1_IsLive = true;
@@ -328,6 +325,9 @@ int main()
 
 	bool one_click_btn_DICEAGAIN_CARD_p1 = true;
 	bool one_click_btn_DICEAGAIN_CARD_p2 = true;
+
+	bool one_click_btn_COEF_CARD_p1 = true;
+	bool one_click_btn_COEF_CARD_p2 = true;
 
 	bool sw_Show_MessageBoxMenu = false;
 
@@ -353,7 +353,7 @@ int main()
 	short int IsLimitP1 = 0;
 	short int IsLimitP2 = 0;
 
-	int CardsP1[4] = { 0,0,0,0 }, CardsP2[4] = { 0 };
+	int CardsP1[4] = { 10,10,0,2 }, CardsP2[4] = { 10,10,10,2 };
 
 	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
 
@@ -565,7 +565,7 @@ int main()
 	Dice_PIC[DiceM2] = al_load_bitmap("Images/Dice/TAS_mine2.png");
 	Dice_PIC[DiceM1] = al_load_bitmap("Images/Dice/TAS_mine1.png");
 
-	ALLEGRO_BITMAP* PIC_2X_forDice= al_load_bitmap("Images/Dice/pic_2x.png");
+	ALLEGRO_BITMAP* PIC_2X_forDice = al_load_bitmap("Images/Dice/pic_2x.png");
 
 
 	ALLEGRO_BITMAP* NutsP1_PIC[3];
@@ -769,52 +769,97 @@ int main()
 					al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 					Permission_change_mouse = false;
 				}
+				al_draw_text(font, al_map_rgb(5, 100, 12), 0, 0, 0, "0");
 				al_get_mouse_state(&mouseState);
 				al_clear_to_color(al_map_rgb(240, 240, 240));
 				//Board & cards------------------------------
 				al_get_mouse_state(&mouseState);
+
 				al_draw_bitmap(lucky_CardP1_PIC[Place1], 227, 341, 0);
 				al_draw_bitmap(lucky_CardP1_PIC[Place2], 227, 431, 0);
+				if (Tik_Dice)
+					if (!Tik_COEF)
+						if (player_Turn == P1)
+							if (sw_btn(&btn_coef_card_p1, &mouseState))
+							{
+								printf("%d", one_click_btn_COEF_CARD_p1);
+								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_COEF_CARD_p1)
+								{
+									if (CardsP1[COEF])
+									{
+										one_click_btn_COEF_CARD_p1 = true;
+										printf("dice Again:%d\n", CardsP1[COEF] - 1);
+										CardsP1[COEF]--;
+										Tik_COEF = true;
+										User_operation = CLICKDICE;
+									}
+								}
+								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p1 = false;
+							}
+
+
 				al_draw_bitmap(lucky_CardP1_PIC[Place3], 227, 520, 0);
 				al_draw_bitmap(lucky_CardP1_PIC[Place4], 227, 610, 0);
 				if (Tik_Dice)
-					if (player_Turn == P1)
-						if (sw_btn(&btn_diceAgain_card_p1, &mouseState))
-						{
-							if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p1)
+					if (!Tik_AGAINDICE)
+						if (player_Turn == P1)
+							if (sw_btn(&btn_diceAgain_card_p1, &mouseState))
 							{
-								one_click_btn_DICEAGAIN_CARD_p1 = true;
-								printf("cardAgain1%\n");
-								if (CardsP1[DICEAGAIN])
+								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p1)
 								{
-									printf("dice Again:%d\n", CardsP1[DICEAGAIN] - 1);
-									CardsP1[DICEAGAIN]--;
-									User_operation = CLICKDICE;
+									one_click_btn_DICEAGAIN_CARD_p1 = true;
+									printf("cardAgain1%\n");
+									if (CardsP1[DICEAGAIN])
+									{
+										printf("dice Again:%d\n", CardsP1[DICEAGAIN] - 1);
+										CardsP1[DICEAGAIN]--;
+										Tik_AGAINDICE = true;
+										User_operation = CLICKDICE;
+									}
 								}
+								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p1 = false;
 							}
-							else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p1 = false;
-						}
 				al_draw_bitmap(lucky_CardP2_PIC[Place1], 949, 121, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place2], 949, 210, 0);
+				if (Tik_Dice)
+					if (!Tik_COEF)
+						if (player_Turn == P2)
+							if (sw_btn(&btn_coef_card_p2, &mouseState))
+							{
+								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_COEF_CARD_p2)
+								{
+									if (CardsP2[COEF])
+									{
+										one_click_btn_COEF_CARD_p2 = true;
+										printf("coef:%d\n", CardsP2[COEF] - 1);
+										CardsP2[COEF]--;
+										Tik_COEF = true;
+										User_operation = CLICKDICE;
+									}
+								}
+								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p2 = false;
+							}
 				al_draw_bitmap(lucky_CardP2_PIC[Place3], 949, 300, 0);
 				al_draw_bitmap(lucky_CardP2_PIC[Place4], 949, 390, 0);
 				if (Tik_Dice)
-					if (player_Turn == P2)
-						if (sw_btn(&btn_diceAgain_card_p2, &mouseState))
-						{
-							if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p2)
+					if (!Tik_AGAINDICE)
+						if (player_Turn == P2)
+							if (sw_btn(&btn_diceAgain_card_p2, &mouseState))
 							{
-								one_click_btn_DICEAGAIN_CARD_p2 = true;
-								printf("cardAgain2%\n");
-								if (CardsP2[DICEAGAIN])
+								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p2)
 								{
-									printf("dice Again:%d\n", CardsP2[DICEAGAIN] - 1);
-									CardsP2[DICEAGAIN]--;
-									User_operation = CLICKDICE;
+									one_click_btn_DICEAGAIN_CARD_p2 = true;
+									printf("cardAgain2%\n");
+									if (CardsP2[DICEAGAIN])
+									{
+										printf("dice Again:%d\n", CardsP2[DICEAGAIN] - 1);
+										CardsP2[DICEAGAIN]--;
+										Tik_AGAINDICE = true;
+										User_operation = CLICKDICE;
+									}
 								}
+								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p2 = false;
 							}
-							else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p2 = false;
-						}
 				al_draw_bitmap(Place_Start_Nuts_P1[Place1], 350, 692, 0);
 				al_draw_bitmap(Place_Start_Nuts_P1[Place2], 455, 692, 0);
 				al_draw_bitmap(Place_Start_Nuts_P2[Place1], 850, 80, 0);
@@ -847,7 +892,7 @@ int main()
 				//Nuts-------------------------------------
 				if (IsLimitP1 == 0)if (player_Turn == P1)al_draw_circle(P1Nut1.x + PPNW / 2 - 1, P1Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
 				al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
-
+				
 				if (IsLimitP1 == 0)if (player_Turn == P1)al_draw_circle(P1Nut2.x + PPNW / 2 - 1, P1Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
 				al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
 
@@ -967,6 +1012,15 @@ int main()
 				//********************************************************
 				al_draw_bitmap(RefreshIcon, 105, -5, 0);
 				al_draw_bitmap(GuideIcon, 170, -5, 0);
+
+				//2x pic
+				if (Tik_COEF)
+				{
+
+					printf("******77");
+					al_draw_bitmap(PIC_2X_forDice, 613, 410, 0);
+				}
+				//--------------------------------
 				//-----------------------------------------
 #pragma region LOGIC
 				switch (player_Turn)
@@ -975,16 +1029,14 @@ int main()
 					switch (User_operation)
 					{
 					case CLICKDICE:
-						sw_btnDown = true;
-						DiceVar = DiceRand();
-						
-						ConvertToDiceMIM(&DiceVar);
-						if (CoefCard_Operated)
+						if (Tik_COEF) DiceVar *= 2;
+						else
 						{
-							DiceVar *= 2;
-							Dice_PIC_VAR=
+							sw_btnDown = true;
+							DiceVar = DiceRand();
+							Dice_PIC_VAR = Dice_PIC[DiceVar];
+							ConvertToDiceMIM(&DiceVar);
 						}
-						else Dice_PIC_VAR = Dice_PIC[DiceVar];
 						User_operation = -1;
 						break;
 					case CLICKCARD_doorclosed:
@@ -1182,6 +1234,8 @@ int main()
 								btn_P1Nut1.Y_end = P1Nut1.y + PPNW;
 
 							}
+							Tik_AGAINDICE = false;
+							Tik_COEF = false;
 							User_operation = -1;
 							player_Turn = P2;
 
@@ -1374,6 +1428,8 @@ int main()
 								btn_P1Nut2.Y_end = P1Nut2.y + PPNW;
 
 							}
+							Tik_AGAINDICE = false;
+							Tik_COEF = false;
 							User_operation = -1;
 							player_Turn = P2;
 
@@ -1392,11 +1448,14 @@ int main()
 					switch (User_operation)
 					{
 					case CLICKDICE:
-						sw_btnDown = true;
-						DiceVar = DiceRand();
-						Dice_PIC_VAR = Dice_PIC[DiceVar];
-						ConvertToDiceMIM(&DiceVar);
-
+						if (Tik_COEF) DiceVar *= 2;
+						else
+						{
+							sw_btnDown = true;
+							DiceVar = DiceRand();
+							Dice_PIC_VAR = Dice_PIC[DiceVar];
+							ConvertToDiceMIM(&DiceVar);
+						}
 						User_operation = -1;
 						break;
 					case CLICKCARD_doorclosed:
@@ -1593,6 +1652,8 @@ int main()
 								btn_P2Nut1.X_end = P2Nut1.x + PPNW;
 								btn_P2Nut1.Y_end = P2Nut1.y + PPNW;
 							}
+							Tik_AGAINDICE = false;
+							Tik_COEF = false;
 							User_operation = -1;
 							player_Turn = P1;
 						}
@@ -1783,6 +1844,8 @@ int main()
 								btn_P2Nut2.X_end = P2Nut2.x + PPNW;
 								btn_P2Nut2.Y_end = P2Nut2.y + PPNW;
 							}
+							Tik_AGAINDICE = false;
+							Tik_COEF = false;
 							User_operation = -1;
 							player_Turn = P1;
 
@@ -1840,20 +1903,22 @@ int main()
 			default:
 				break;
 			}
-
+			al_draw_textf(font, al_map_rgb(0, 12, 100), 0, 0, 0, "text");
 			//Build Window-----------------------------
 			al_flip_display();
 			//-----------------------------------------
 			sw = false;
 
 		}
-		if (Player1[0] == 40 && Player1[1] == 40)
+		if (Player1[0] == -1 && Player1[1] == -1)
 		{
-			printf("***************************   Hoora P1   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+			printf("***************************   Hoora P1   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+			pages_sw = FristMenu;
 		}
-		else if (Player2[0] == 40 && Player2[1] == 40)
+		else if (Player2[0] == -1 && Player2[1] == -1)
 		{
-			printf("***************************   Hoora P2   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+			printf("***************************   Hoora P2   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!22");
+			pages_sw = FristMenu;
 		}
 	}
 #pragma region Destroying
@@ -1902,5 +1967,5 @@ int main()
 
 	al_destroy_bitmap(FristMenu_Form_PIC);
 #pragma endregion
-	return 0;
+	exit(0);
 }

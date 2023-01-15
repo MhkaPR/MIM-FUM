@@ -1,4 +1,4 @@
-#include "logic_Form.h"
+﻿#include "logic_Form.h"
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -15,15 +15,25 @@
 #pragma region ENUMS
 enum Number_of_Cards
 {
-	Y_NOCP1_DOORCLOSED=365,
-	Y_NOCP1_COEF=455,
-	Y_NOCP1_LIMIT=544,
-	Y_NOCP1_DICEAGAIN=634,
+	Y_NOCP1_DOORCLOSED = 365,
+	Y_NOCP1_COEF = 455,
+	Y_NOCP1_LIMIT = 544,
+	Y_NOCP1_DICEAGAIN = 634,
 
 	Y_NOCP2_DOORCLOSED = 145,
 	Y_NOCP2_COEF = 234,
 	Y_NOCP2_LIMIT = 324,
 	Y_NOCP2_DICEAGAIN = 414,
+};
+enum Distances_for_Centering
+{
+	P1_SINGLE_DIGIT = 246,
+	P1_DOUBLE_DIGIT = 236,
+	P1_THREE_DIGIT = 226,
+
+	P2_SINGLE_DIGIT = 1040,
+	P2_DOUBLE_DIGIT = 1030,
+	P2_THREE_DIGIT = 1020,
 };
 enum Dice {
 	DiceM3,
@@ -304,9 +314,10 @@ int main()
 
 	ALLEGRO_DISPLAY* disp = al_create_display(1300, 810);
 	must_init(disp, "Window");
-	
-	
-	ALLEGRO_FONT* font = al_load_ttf_font("Fonts/Autentica.otf", 30, 1);
+
+
+	ALLEGRO_FONT* font = al_load_ttf_font("Fonts/Montserrat-Regular.ttf", 30, 1);
+	ALLEGRO_FONT* fontText = al_load_ttf_font("Fonts/Montserrat-Regular.ttf", 20, 10);
 
 	ALLEGRO_MOUSE_STATE mouseState;
 
@@ -331,6 +342,7 @@ int main()
 
 	bool Tik_AGAINDICE = false;
 	bool Tik_COEF = false;
+	bool Tik_LIMIT = false;
 
 	bool P1N1_IsLive = true;
 	bool P1N2_IsLive = true;
@@ -342,6 +354,9 @@ int main()
 
 	bool one_click_btn_COEF_CARD_p1 = true;
 	bool one_click_btn_COEF_CARD_p2 = true;
+
+	bool one_click_btn_LIMIT_CARD_p1 = true;
+	bool one_click_btn_LIMIT_CARD_p2 = true;
 
 	bool sw_Show_MessageBoxMenu = false;
 
@@ -367,7 +382,19 @@ int main()
 	short int IsLimitP1 = 0;
 	short int IsLimitP2 = 0;
 
-	int CardsP1[4] = {9,9,9,9 }, CardsP2[4] = { 9,9,9,9};
+	int CardsP1[4] = { 9,10,2,102 }, CardsP2[4] = { 9,9,9,9 };
+
+	int CardsP1DistanceFromLeft[4] = { 246,246,246,246 };
+	int CardsP2DistanceFromLeft[4] = { 1040,1040,1040,1040 };
+
+	int CriterionOfDistanceP1[3] =
+	{ P1_SINGLE_DIGIT,
+	P1_DOUBLE_DIGIT,
+	P1_THREE_DIGIT, };
+	int CriterionOfDistanceP2[3] =
+	{ P2_SINGLE_DIGIT,
+	P2_DOUBLE_DIGIT,
+	P2_THREE_DIGIT, };
 
 	int Player1[2] = { 0 }, Player2[2] = { 80,80 };
 
@@ -599,6 +626,7 @@ int main()
 	lucky_CardP1_PIC[Place2] = al_load_bitmap("Images/Cards/zarib_cart_p1.png");
 	lucky_CardP1_PIC[Place3] = al_load_bitmap("Images/Cards/limit_cart_p1.png");
 	lucky_CardP1_PIC[Place4] = al_load_bitmap("Images/Cards/diceagain_cart_p1.png");
+	ALLEGRO_BITMAP* MassageForLimitation = al_load_bitmap("Images/MassageForLimitation.png");
 
 	ALLEGRO_BITMAP* lucky_CardP2_PIC[4];
 	lucky_CardP2_PIC[Place1] = al_load_bitmap("Images/Cards/closeDoor_cart_p2.png");
@@ -811,8 +839,27 @@ int main()
 								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p1 = false;
 							}
 
-
+				al_get_mouse_state(&mouseState);
 				al_draw_bitmap(lucky_CardP1_PIC[Place3], 227, 520, 0);
+				if (Tik_Dice)
+					if (!Tik_LIMIT)
+						if (player_Turn == P1)
+							if (sw_btn(&btn_limit_card_p1, &mouseState))
+							{
+								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_LIMIT_CARD_p1)
+								{
+									if (CardsP1[LIMIT])
+									{
+										one_click_btn_LIMIT_CARD_p1 = true;
+										printf("LIMITATION:%d\n", CardsP1[LIMIT] - 1);
+										CardsP1[LIMIT]--;
+										Tik_LIMIT = true;
+										User_operation = CLICKCARD_limit;
+									}
+								}
+								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_LIMIT_CARD_p1 = false;
+
+							}
 				al_draw_bitmap(lucky_CardP1_PIC[Place4], 227, 610, 0);
 				if (Tik_Dice)
 					if (!Tik_AGAINDICE)
@@ -854,6 +901,25 @@ int main()
 								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p2 = false;
 							}
 				al_draw_bitmap(lucky_CardP2_PIC[Place3], 949, 300, 0);
+				if (Tik_Dice)
+					if (!Tik_LIMIT)
+						if (player_Turn == P2)
+							if (sw_btn(&btn_limit_card_p2, &mouseState))
+							{
+								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_LIMIT_CARD_p2)
+								{
+									if (CardsP2[LIMIT])
+									{
+										one_click_btn_LIMIT_CARD_p2 = true;
+										printf("LIMITATION:%d\n", CardsP2[LIMIT] - 1);
+										CardsP2[LIMIT]--;
+										Tik_LIMIT = true;
+										User_operation = CLICKCARD_limit;
+									}
+								}
+								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_LIMIT_CARD_p2 = false;
+
+							}
 				al_draw_bitmap(lucky_CardP2_PIC[Place4], 949, 390, 0);
 				if (Tik_Dice)
 					if (!Tik_AGAINDICE)
@@ -904,26 +970,29 @@ int main()
 				//-----------------------------------------
 
 				//Nuts-------------------------------------
-				if (IsLimitP1 == 0)if (player_Turn == P1)al_draw_circle(P1Nut1.x + PPNW / 2 - 1, P1Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
+				if (IsLimitP1 != 1)if (player_Turn == P1)al_draw_circle(P1Nut1.x + PPNW / 2 - 1, P1Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
 				al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
-				
-				if (IsLimitP1 == 0)if (player_Turn == P1)al_draw_circle(P1Nut2.x + PPNW / 2 - 1, P1Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
+
+				if (IsLimitP1 != 2)if (player_Turn == P1)al_draw_circle(P1Nut2.x + PPNW / 2 - 1, P1Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
 				al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
 
-				if (IsLimitP2 == 0)if (player_Turn == P2)al_draw_circle(P2Nut1.x + PPNW / 2 - 1, P2Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
+				if (IsLimitP2 != 1)if (player_Turn == P2)al_draw_circle(P2Nut1.x + PPNW / 2 - 1, P2Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
 				al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
 
-				if (IsLimitP2 == 0)if (player_Turn == P2)al_draw_circle(P2Nut2.x + PPNW / 2 - 1, P2Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
+				if (IsLimitP2 != 2)if (player_Turn == P2)al_draw_circle(P2Nut2.x + PPNW / 2 - 1, P2Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
 				al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
 				if (Tik_Dice)
 				{
+					//click nuts
+
 					al_get_mouse_state(&mouseState);
 					if (sw_btn(&btn_P1Nut1, &mouseState))
 					{
-						if (IsLimitP1 == 0)
+						if (IsLimitP1 != 1)
 							if (P1N1_IsLive)
 								if (al_mouse_button_down(&mouseState, 1))
 								{
+									IsLimitP1 = 0;
 									User_operation = CLICKNUT1_P1;
 									Tik_Nut = true;
 
@@ -936,10 +1005,11 @@ int main()
 					}
 					else if (sw_btn(&btn_P1Nut2, &mouseState))
 					{
-						if (IsLimitP1 == 0)
+						if (IsLimitP1 != 2)
 							if (P1N2_IsLive)
 								if (al_mouse_button_down(&mouseState, 1))
 								{
+									IsLimitP1 = 0;
 									User_operation = CLICKNUT2_P1;
 									Tik_Nut = true;
 
@@ -952,10 +1022,11 @@ int main()
 					}
 					else if (sw_btn(&btn_P2Nut1, &mouseState))
 					{
-						if (IsLimitP2 == 0)
+						if (IsLimitP2 != 1)
 							if (P2N1_IsLive)
 								if (al_mouse_button_down(&mouseState, 1))
 								{
+									IsLimitP2 = 0;
 									User_operation = CLICKNUT1_P2;
 									Tik_Nut = true;
 									if (player_Turn == P2)
@@ -967,10 +1038,11 @@ int main()
 					}
 					else if (sw_btn(&btn_P2Nut2, &mouseState))
 					{
-						if (IsLimitP2 == 0)
+						if (IsLimitP2 != 2)
 							if (P2N2_IsLive)
 								if (al_mouse_button_down(&mouseState, 1))
 								{
+									IsLimitP2 = 0;
 									User_operation = CLICKNUT2_P2;
 									Tik_Nut = true;
 									if (player_Turn == P2)
@@ -1036,16 +1108,20 @@ int main()
 				}
 				//--------------------------------
 				//Number of cards
-				al_draw_textf(font, al_map_rgb(240, 240, 240), 245, Y_NOCP1_DOORCLOSED, 0, "%d", CardsP1[DOORCLOSED]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), 245, Y_NOCP1_COEF, 0, "%d", CardsP1[COEF]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), 245, Y_NOCP1_LIMIT, 0, "%d", CardsP1[LIMIT]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), 245, Y_NOCP1_DICEAGAIN, 0, "%d", CardsP1[DICEAGAIN]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[DOORCLOSED], Y_NOCP1_DOORCLOSED, 0, "%d", CardsP1[DOORCLOSED]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[COEF], Y_NOCP1_COEF, 0, "%d", CardsP1[COEF]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[LIMIT], Y_NOCP1_LIMIT, 0, "%d", CardsP1[LIMIT]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[DICEAGAIN], Y_NOCP1_DICEAGAIN, 0, "%d", CardsP1[DICEAGAIN]);
 
-				al_draw_textf(font, al_map_rgb(240, 240, 240), 1038, Y_NOCP2_DOORCLOSED, 0, "%d", CardsP2[DOORCLOSED]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), 1038, Y_NOCP2_COEF, 0, "%d", CardsP2[COEF]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), 1038, Y_NOCP2_LIMIT, 0, "%d", CardsP2[LIMIT]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), 1038, Y_NOCP2_DICEAGAIN, 0, "%d", CardsP2[DICEAGAIN]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[DOORCLOSED], Y_NOCP2_DOORCLOSED, 0, "%d", CardsP2[DOORCLOSED]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[COEF], Y_NOCP2_COEF, 0, "%d", CardsP2[COEF]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[LIMIT], Y_NOCP2_LIMIT, 0, "%d", CardsP2[LIMIT]);
+				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[DICEAGAIN], Y_NOCP2_DICEAGAIN, 0, "%d", CardsP2[DICEAGAIN]);
+
+				KeepCenterNUMBER(CardsP1DistanceFromLeft, CriterionOfDistanceP1, CardsP1);
+				KeepCenterNUMBER(CardsP2DistanceFromLeft, CriterionOfDistanceP2, CardsP2);
 				//----------------------------------------------------------------------------------------------------
+
 #pragma region LOGIC
 				switch (player_Turn)
 				{
@@ -1068,6 +1144,36 @@ int main()
 					case CLICKCARD_coef:
 						break;
 					case CLICKCARD_limit:
+						al_flip_display();
+						while (1)
+						{
+							if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) exit(0);
+							al_wait_for_event(queue, &event);
+							if (al_is_event_queue_empty(queue))
+							{
+								al_get_mouse_state(&mouseState);
+
+								al_draw_bitmap(MassageForLimitation, 341, 16, 0);
+								if (sw_btn(&btn_P2Nut1, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1))
+									{
+										IsLimitP2 = 1;
+										break;
+									}
+								}
+								if (sw_btn(&btn_P2Nut2, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1))
+									{
+										IsLimitP2 = 2;
+										break;
+									}
+								}
+								al_flip_display();
+							}
+						}
+						User_operation = -1;
 						break;
 					case CLICKCARD_diceagain:
 						break;
@@ -1260,6 +1366,7 @@ int main()
 							}
 							Tik_AGAINDICE = false;
 							Tik_COEF = false;
+							Tik_LIMIT = false;
 							User_operation = -1;
 							player_Turn = P2;
 
@@ -1454,6 +1561,7 @@ int main()
 							}
 							Tik_AGAINDICE = false;
 							Tik_COEF = false;
+							Tik_LIMIT = false;
 							User_operation = -1;
 							player_Turn = P2;
 
@@ -1487,6 +1595,37 @@ int main()
 					case CLICKCARD_coef:
 						break;
 					case CLICKCARD_limit:
+						al_flip_display();
+						while (1)
+						{
+							if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) exit(0);
+							al_wait_for_event(queue, &event);
+							if (al_is_event_queue_empty(queue))
+							{
+								al_get_mouse_state(&mouseState);
+
+								al_draw_bitmap(MassageForLimitation, 564, 727, 0);
+								if (sw_btn(&btn_P1Nut1, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1))
+									{
+										IsLimitP1 = 1;
+										break;
+									}
+								}
+								if (sw_btn(&btn_P1Nut2, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1))
+									{
+										IsLimitP1 = 2;
+										break;
+									}
+								}
+								al_flip_display();
+							}
+						}
+						User_operation = -1;
+
 						break;
 					case CLICKCARD_diceagain:
 						break;
@@ -1678,6 +1817,7 @@ int main()
 							}
 							Tik_AGAINDICE = false;
 							Tik_COEF = false;
+							Tik_LIMIT = false;
 							User_operation = -1;
 							player_Turn = P1;
 						}
@@ -1870,6 +2010,7 @@ int main()
 							}
 							Tik_AGAINDICE = false;
 							Tik_COEF = false;
+							Tik_LIMIT = false;
 							User_operation = -1;
 							player_Turn = P1;
 
@@ -1889,7 +2030,6 @@ int main()
 				}
 
 #pragma endregion
-
 #pragma endregion
 				if (Player1[0] == 40)
 				{
@@ -1927,7 +2067,7 @@ int main()
 			default:
 				break;
 			}
-			
+
 			//Build Window-----------------------------
 			al_flip_display();
 			//-----------------------------------------
@@ -1937,15 +2077,36 @@ int main()
 		if (Player1[0] == -1 && Player1[1] == -1)
 		{
 			printf("***************************   Hoora P1   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+			Player1[0] = 0;
+			Player1[1] = 0;
+			Player2[0] = 80;
+			Player1[1] = 80;
+			P1Nut1.x = PP1N1_L;
+			P1Nut1.y = PP1N1_T;
+			P1Nut2.x = PP1N2_L;
+			P1Nut2.y = PP1N2_T;
+
+			P2Nut1.x = PP2N1_L;
+			P2Nut1.y = PP2N1_T;
+			P2Nut2.x = PP2N2_L;
+			P2Nut2.y = PP2N2_T;
 			pages_sw = FristMenu;
 		}
 		else if (Player2[0] == -1 && Player2[1] == -1)
 		{
 			printf("***************************   Hoora P2   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!22");
+			Player1[0] = 0;
+			Player1[1] = 0;
+			Player2[0] = 80;
+			Player1[1] = 80;
 			pages_sw = FristMenu;
 		}
 	}
 #pragma region Destroying
+	al_uninstall_keyboard();
+	al_uninstall_mouse();
+	al_uninstall_system();
+
 	al_destroy_display(disp);
 	al_destroy_font(font);
 	al_destroy_timer(timer);

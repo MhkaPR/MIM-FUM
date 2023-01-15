@@ -95,14 +95,14 @@ void CarridorPlacesRand(int ArrayCarridorsPlace[][2])
 		}
 	}
 }
-int IsCarridorPlace(int* Position, int CarridorArray[][2],bool Apply_Changes)
+int IsCarridorPlace(int* Position, int CarridorArray[][2], bool Apply_Changes)
 {
 	for (int i = 0; i < 8; i++)
 	{
 		if (*Position == CarridorArray[i][0])
 		{
 			printf("check if2");
-			if(Apply_Changes) *Position = CarridorArray[i][1];
+			if (Apply_Changes) *Position = CarridorArray[i][1];
 			printf("??? 1");
 			return 1;
 		}
@@ -442,32 +442,32 @@ void MoveGraphic(const int Corresponding_number, int* x, int* y)
 
 		break;
 	case 64:
-		*x = Player1PlaceFrist_X + 7* Direction;
+		*x = Player1PlaceFrist_X + 7 * Direction;
 		*y = Player1PlaceFrist_Y + -7 * Direction;
 
 		break;
 	case 65:
-		*x = Player1PlaceFrist_X + 6* Direction;
+		*x = Player1PlaceFrist_X + 6 * Direction;
 		*y = Player1PlaceFrist_Y + -7 * Direction;
 
 		break;
 	case 66:
-		*x = Player1PlaceFrist_X + 5* Direction;
+		*x = Player1PlaceFrist_X + 5 * Direction;
 		*y = Player1PlaceFrist_Y + -7 * Direction;
 
 		break;
 	case 67:
-		*x = Player1PlaceFrist_X + 4* Direction;
+		*x = Player1PlaceFrist_X + 4 * Direction;
 		*y = Player1PlaceFrist_Y + -7 * Direction;
 
 		break;
 	case 68:
-		*x = Player1PlaceFrist_X + 3* Direction;
+		*x = Player1PlaceFrist_X + 3 * Direction;
 		*y = Player1PlaceFrist_Y + -7 * Direction;
 
 		break;
 	case 69:
-		*x = Player1PlaceFrist_X + 2* Direction;
+		*x = Player1PlaceFrist_X + 2 * Direction;
 		*y = Player1PlaceFrist_Y + -7 * Direction;
 
 		break;
@@ -492,32 +492,32 @@ void MoveGraphic(const int Corresponding_number, int* x, int* y)
 
 		break;
 	case 74:
-		*x = Player1PlaceFrist_X + 2* Direction;
+		*x = Player1PlaceFrist_X + 2 * Direction;
 		*y = Player1PlaceFrist_Y + -8 * Direction;
 
 		break;
 	case 75:
-		*x = Player1PlaceFrist_X + 3* Direction;
+		*x = Player1PlaceFrist_X + 3 * Direction;
 		*y = Player1PlaceFrist_Y + -8 * Direction;
 
 		break;
 	case 76:
-		*x = Player1PlaceFrist_X + 4* Direction;
+		*x = Player1PlaceFrist_X + 4 * Direction;
 		*y = Player1PlaceFrist_Y + -8 * Direction;
 
 		break;
 	case 77:
-		*x = Player1PlaceFrist_X + 5* Direction;
+		*x = Player1PlaceFrist_X + 5 * Direction;
 		*y = Player1PlaceFrist_Y + -8 * Direction;
 
 		break;
 	case 78:
-		*x = Player1PlaceFrist_X + 6* Direction;
+		*x = Player1PlaceFrist_X + 6 * Direction;
 		*y = Player1PlaceFrist_Y + -8 * Direction;
 
 		break;
 	case 79:
-		*x = Player1PlaceFrist_X + 7* Direction;
+		*x = Player1PlaceFrist_X + 7 * Direction;
 		*y = Player1PlaceFrist_Y + -8 * Direction;
 
 		break;
@@ -530,8 +530,16 @@ void MoveGraphic(const int Corresponding_number, int* x, int* y)
 		break;
 	}
 }
-//Hello Mahdi
-//aleik hello .
-
+int KeepCenterNUMBER(int DistanceFromLeft[], int ArrayOfCriterion[], int Cards[])//array of MeYar
+{
+	int count;
+	for (int i = 0; i < 4; i++)
+	{
+		if (Cards[i] < 10)count = 0;
+		else if (Cards[i] < 100)count = 1;
+		else count = 2;
+		DistanceFromLeft[i] = ArrayOfCriterion[count];
+	}
+}
 
 //Logic Branch added

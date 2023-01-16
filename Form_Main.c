@@ -162,6 +162,13 @@ enum Position_YesInMenuMessageInTheBoard
 	PYIMMIB_R = 882,
 	PYIMMIB_B = 580,
 };
+enum Position_NoInMenuMessageInTheBoard
+{
+	PNIMMIB_L = 442,
+	PNIMMIB_T = 517,
+	PNIMMIB_R = 617,
+	PNIMMIB_B = 603,
+};
 enum Position_CANCELbtn_NoticeToCarridor
 {
 	PCbNC_L = 867,
@@ -349,6 +356,8 @@ int main()
 	bool P2N1_IsLive = true;
 	bool P2N2_IsLive = true;
 
+	bool one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form = false;
+
 	bool one_click_btn_DICEAGAIN_CARD_p1 = true;
 	bool one_click_btn_DICEAGAIN_CARD_p2 = true;
 
@@ -366,6 +375,7 @@ int main()
 
 	bool CoefCard_Operated = false;
 
+	bool Frist_Entrance = true;
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
 	//variable LOGIC-------------------------
@@ -552,12 +562,19 @@ int main()
 	btn_MenuInTheBoard.sw_Link = NULL;
 
 	//MenuMassage
-	// struct button btn_YesInMenuMessageInTheBoard;
-	// btn_YesInMenuMessageInTheBoard.X_frist = PYIMMIB_L;
-	// btn_YesInMenuMessageInTheBoard.Y_frist = PYIMMIB_T;
-	// btn_YesInMenuMessageInTheBoard.X_end = PYIMMIB_R;
-	// btn_YesInMenuMessageInTheBoard.Y_end = PYIMMIB_B;
-	// btn_YesInMenuMessageInTheBoard.sw_Link = NULL;
+	struct button btn_YesInMenuMessageInTheBoard;
+	btn_YesInMenuMessageInTheBoard.X_frist = PYIMMIB_L;
+	btn_YesInMenuMessageInTheBoard.Y_frist = PYIMMIB_T;
+	btn_YesInMenuMessageInTheBoard.X_end = PYIMMIB_R;
+	btn_YesInMenuMessageInTheBoard.Y_end = PYIMMIB_B;
+	btn_YesInMenuMessageInTheBoard.sw_Link = NULL;
+
+	struct button btn_NoInMenuMessageInTheBoard;
+	btn_NoInMenuMessageInTheBoard.X_frist = PNIMMIB_L;
+	btn_NoInMenuMessageInTheBoard.Y_frist = PNIMMIB_T;
+	btn_NoInMenuMessageInTheBoard.X_end = PNIMMIB_R;
+	btn_NoInMenuMessageInTheBoard.Y_end = PNIMMIB_B;
+	btn_NoInMenuMessageInTheBoard.sw_Link = NULL;
 
 	//Notifiction of Carriddor
 	struct button btn_CANCEL_NoticeToCarridor;
@@ -664,12 +681,13 @@ int main()
 	ALLEGRO_BITMAP* btn_menu_masage = al_load_bitmap("Images/massage_menu.png");
 
 
-	//ALLEGRO_BITMAP* MenuInTheBoard_PIC = al_load_bitmap("Images/MessageMenu.png");
+	ALLEGRO_BITMAP* MenuInTheBoard_PIC = al_load_bitmap("Images/MessageMenu.png");
 
 	ALLEGRO_BITMAP* Dice_PIC_VAR = Dice_PIC[DiceP3];
 
-	ALLEGRO_COLOR NutActiveColorP2 = al_map_rgb(145, 216, 247);
-	ALLEGRO_COLOR NutActiveColorP1 = al_map_rgb(247, 173, 175);
+	ALLEGRO_COLOR NutActiveColorP1 = al_map_rgb(200, 191, 231);
+	ALLEGRO_COLOR NutActiveColorP2 = al_map_rgb(200, 191, 231);
+
 
 
 
@@ -747,41 +765,58 @@ int main()
 					//Permission_change_mouse = true;
 
 				}
-				if (sw_btn(&btn_TWEPERSON_To_buttons_continueANDnew_Form[0], &mouseState) && mouseState.buttons == 1)
-				{
-					pages_sw = Board_Form;
-					Permission_change_mouse = true;
-					CardPlacesRand(ArrayCardsPlace);
-					CarridorPlacesRand(ArrayCarridorsPlace);
-					//print in console information of cards and Carridors
-					for (int i = 0; i < 9; i++) printf("%d\n", ArrayCardsPlace[i] + 1);
-					for (int i = 0; i < 8; i++)
+				if (sw_btn(&btn_TWEPERSON_To_buttons_continueANDnew_Form[0], &mouseState))
+					if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form)
 					{
-						for (int j = 0; j < 2; j++)
+						one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form = true;
+						pages_sw = Board_Form;
+						Permission_change_mouse = true;
+						if (Frist_Entrance)
 						{
-							printf("%d ", ArrayCarridorsPlace[i][j] + 1);
-						}
-						printf("\n");
-					}
-				}
-				if (sw_btn(&btn_TWEPERSON_To_buttons_continueANDnew_Form[1], &mouseState) && mouseState.buttons == 1)
-				{
-					pages_sw = Board_Form;
-					Permission_change_mouse = true;
-					CardPlacesRand(ArrayCardsPlace);
-					CarridorPlacesRand(ArrayCarridorsPlace);
-					//print in console information of cards and Carridors
-					for (int i = 0; i < 9; i++) printf("%d\n", ArrayCardsPlace[i] + 1);
-					for (int i = 0; i < 8; i++)
-					{
-						for (int j = 0; j < 2; j++)
-						{
-							printf("%d ", ArrayCarridorsPlace[i][j] + 1);
-						}
-						printf("\n");
-					}
+							CardPlacesRand(ArrayCardsPlace);
+							CarridorPlacesRand(ArrayCarridorsPlace);
+							Frist_Entrance = false;
+							for (int i = 0; i < 9; i++) printf("%d\n", ArrayCardsPlace[i] + 1);
+							for (int i = 0; i < 8; i++)
+							{
+								for (int j = 0; j < 2; j++)
+								{
+									printf("%d ", ArrayCarridorsPlace[i][j] + 1);
+								}
+								printf("\n");
+							}
 
-				}
+						}
+						//print in console information of cards and Carridors
+					}
+					else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form = false;
+
+				if (sw_btn(&btn_TWEPERSON_To_buttons_continueANDnew_Form[1], &mouseState))
+					if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form)
+					{
+						one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form = true;
+						pages_sw = Board_Form;
+						Permission_change_mouse = true;
+						if (Frist_Entrance)
+						{
+							CardPlacesRand(ArrayCardsPlace);
+							CarridorPlacesRand(ArrayCarridorsPlace);
+							Frist_Entrance = false;
+							for (int i = 0; i < 9; i++) printf("%d\n", ArrayCardsPlace[i] + 1);
+							for (int i = 0; i < 8; i++)
+							{
+								for (int j = 0; j < 2; j++)
+								{
+									printf("%d ", ArrayCarridorsPlace[i][j] + 1);
+								}
+								printf("\n");
+							}
+						}
+						//print in console information of cards and Carridors
+
+
+					}
+					else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form = false;
 
 				if (sw_btn(&btn_aboutUs, &mouseState))
 				{
@@ -961,17 +996,38 @@ int main()
 				//-----------------------------------------
 
 				//Nuts-------------------------------------
-				if (IsLimitP1 != 1)if (player_Turn == P1)al_draw_circle(P1Nut1.x + PPNW / 2 - 1, P1Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
+				if (IsLimitP1 != 1)if (player_Turn == P1)
+				{
+					if (Tik_Dice) NutActiveColorP1 = al_map_rgb(247, 173, 175);
+					else NutActiveColorP1 = al_map_rgb(200, 191, 231);
+					al_draw_circle(P1Nut1.x + PPNW / 2 - 1, P1Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
+				}
 				al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
 
-				if (IsLimitP1 != 2)if (player_Turn == P1)al_draw_circle(P1Nut2.x + PPNW / 2 - 1, P1Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
+				if (IsLimitP1 != 2)if (player_Turn == P1)
+				{
+					if (Tik_Dice) NutActiveColorP1 = al_map_rgb(247, 173, 175);
+					else NutActiveColorP1 = al_map_rgb(200, 191, 231);
+					al_draw_circle(P1Nut2.x + PPNW / 2 - 1, P1Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
+				}
 				al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
 
-				if (IsLimitP2 != 1)if (player_Turn == P2)al_draw_circle(P2Nut1.x + PPNW / 2 - 1, P2Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
+				if (IsLimitP2 != 1)if (player_Turn == P2)
+				{
+					if (Tik_Dice) NutActiveColorP2 = al_map_rgb(145, 216, 247);
+					else NutActiveColorP2 = al_map_rgb(200, 191, 231);
+					al_draw_circle(P2Nut1.x + PPNW / 2 - 1, P2Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
+				}
 				al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
 
-				if (IsLimitP2 != 2)if (player_Turn == P2)al_draw_circle(P2Nut2.x + PPNW / 2 - 1, P2Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
+				if (IsLimitP2 != 2)if (player_Turn == P2)
+				{
+					if (Tik_Dice) NutActiveColorP2 = al_map_rgb(145, 216, 247);
+					else NutActiveColorP2 = al_map_rgb(200, 191, 231);
+					al_draw_circle(P2Nut2.x + PPNW / 2 - 1, P2Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
+				}
 				al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
+
 				if (Tik_Dice)
 				{
 					//click nuts
@@ -1059,6 +1115,42 @@ int main()
 
 				//idea of menu Message
 				//******************************************************
+				if (sw_btn(&btn_MenuInTheBoard, &mouseState))
+				{
+					if (al_mouse_button_down(&mouseState, 1))
+					{
+						sw_Show_MessageBoxMenu = true;
+					}
+				}
+				if (sw_Show_MessageBoxMenu)
+				{
+
+					al_draw_bitmap(MenuInTheBoard_PIC, 0, 0, 0);
+					al_flip_display();
+					while (1)
+					{
+						al_wait_for_event(queue, &event);
+						al_get_mouse_state(&mouseState);
+						if (sw_btn(&btn_YesInMenuMessageInTheBoard, &mouseState))
+						{
+							if (al_mouse_button_down(&mouseState, 1))
+							{
+								sw_Show_MessageBoxMenu = false;
+								break;
+							}
+						}
+						else if (sw_btn(&btn_NoInMenuMessageInTheBoard, &mouseState))
+						{
+							if (al_mouse_button_down(&mouseState, 1))
+							{
+								sw_Show_MessageBoxMenu = false;
+								pages_sw = FristMenu;
+								break;
+							}
+						}
+
+					}
+				}
 				/*if (sw_btn(&btn_MenuInTheBoard, &mouseState))
 				{
 					if (al_mouse_button_down(&mouseState, 1))

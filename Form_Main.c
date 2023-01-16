@@ -15,25 +15,25 @@
 #pragma region ENUMS
 enum Number_of_Cards
 {
-	Y_NOCP1_DOORCLOSED = 365,
-	Y_NOCP1_COEF = 455,
-	Y_NOCP1_LIMIT = 544,
-	Y_NOCP1_DICEAGAIN = 634,
+	Y_NOCP1_DOORCLOSED = 358,
+	Y_NOCP1_COEF = 448,
+	Y_NOCP1_LIMIT = 538,
+	Y_NOCP1_DICEAGAIN = 628,
 
-	Y_NOCP2_DOORCLOSED = 145,
-	Y_NOCP2_COEF = 234,
-	Y_NOCP2_LIMIT = 324,
-	Y_NOCP2_DICEAGAIN = 414,
+	Y_NOCP2_DOORCLOSED = 138,
+	Y_NOCP2_COEF = 228,
+	Y_NOCP2_LIMIT = 318,
+	Y_NOCP2_DICEAGAIN = 408,
 };
 enum Distances_for_Centering
 {
-	P1_SINGLE_DIGIT = 246,
-	P1_DOUBLE_DIGIT = 236,
-	P1_THREE_DIGIT = 226,
+	P1_SINGLE_DIGIT = 244,
+	P1_DOUBLE_DIGIT = 237,
+	P1_THREE_DIGIT = 228,
 
-	P2_SINGLE_DIGIT = 1040,
+	P2_SINGLE_DIGIT = 1038,
 	P2_DOUBLE_DIGIT = 1030,
-	P2_THREE_DIGIT = 1020,
+	P2_THREE_DIGIT = 1022,
 };
 enum Dice {
 	DiceM3,
@@ -382,7 +382,7 @@ int main()
 	short int IsLimitP1 = 0;
 	short int IsLimitP2 = 0;
 
-	int CardsP1[4] = { 9,10,2,102 }, CardsP2[4] = { 9,9,9,9 };
+	int CardsP1[4] = { 9,10,2,100 }, CardsP2[4] = { 10,9,100,9 };
 
 	int CardsP1DistanceFromLeft[4] = { 246,246,246,246 };
 	int CardsP2DistanceFromLeft[4] = { 1040,1040,1040,1040 };
@@ -824,13 +824,11 @@ int main()
 						if (player_Turn == P1)
 							if (sw_btn(&btn_coef_card_p1, &mouseState))
 							{
-								printf("%d", one_click_btn_COEF_CARD_p1);
 								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_COEF_CARD_p1)
 								{
 									if (CardsP1[COEF])
 									{
 										one_click_btn_COEF_CARD_p1 = true;
-										printf("dice Again:%d\n", CardsP1[COEF] - 1);
 										CardsP1[COEF]--;
 										Tik_COEF = true;
 										User_operation = CLICKDICE;
@@ -851,7 +849,6 @@ int main()
 									if (CardsP1[LIMIT])
 									{
 										one_click_btn_LIMIT_CARD_p1 = true;
-										printf("LIMITATION:%d\n", CardsP1[LIMIT] - 1);
 										CardsP1[LIMIT]--;
 										Tik_LIMIT = true;
 										User_operation = CLICKCARD_limit;
@@ -869,10 +866,8 @@ int main()
 								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p1)
 								{
 									one_click_btn_DICEAGAIN_CARD_p1 = true;
-									printf("cardAgain1%\n");
 									if (CardsP1[DICEAGAIN])
 									{
-										printf("dice Again:%d\n", CardsP1[DICEAGAIN] - 1);
 										CardsP1[DICEAGAIN]--;
 										Tik_AGAINDICE = true;
 										User_operation = CLICKDICE;
@@ -892,7 +887,6 @@ int main()
 									if (CardsP2[COEF])
 									{
 										one_click_btn_COEF_CARD_p2 = true;
-										printf("coef:%d\n", CardsP2[COEF] - 1);
 										CardsP2[COEF]--;
 										Tik_COEF = true;
 										User_operation = CLICKDICE;
@@ -911,7 +905,6 @@ int main()
 									if (CardsP2[LIMIT])
 									{
 										one_click_btn_LIMIT_CARD_p2 = true;
-										printf("LIMITATION:%d\n", CardsP2[LIMIT] - 1);
 										CardsP2[LIMIT]--;
 										Tik_LIMIT = true;
 										User_operation = CLICKCARD_limit;
@@ -929,10 +922,8 @@ int main()
 								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p2)
 								{
 									one_click_btn_DICEAGAIN_CARD_p2 = true;
-									printf("cardAgain2%\n");
 									if (CardsP2[DICEAGAIN])
 									{
-										printf("dice Again:%d\n", CardsP2[DICEAGAIN] - 1);
 										CardsP2[DICEAGAIN]--;
 										Tik_AGAINDICE = true;
 										User_operation = CLICKDICE;
@@ -1101,11 +1092,7 @@ int main()
 
 				//2x pic
 				if (Tik_COEF)
-				{
-
-					printf("******77");
 					al_draw_bitmap(PIC_2X_forDice, 613, 410, 0);
-				}
 				//--------------------------------
 				//Number of cards
 				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[DOORCLOSED], Y_NOCP1_DOORCLOSED, 0, "%d", CardsP1[DOORCLOSED]);
@@ -1136,6 +1123,18 @@ int main()
 							DiceVar = DiceRand();
 							Dice_PIC_VAR = Dice_PIC[DiceVar];
 							ConvertToDiceMIM(&DiceVar);
+							if (P1Nut1.y == PP1N1_T && P1Nut2.y == PP1N2_T && DiceVar != 3)
+							{
+								player_Turn = P2;
+								User_operation = -1;
+								Tik_Dice = false;;
+								Tik_Player = true;
+								al_flip_display();
+								continue;
+							}
+							else if (P1Nut1.y == PP1N1_T && DiceVar != 3) IsLimitP1 = 1;
+							else if (P1Nut2.y == PP1N2_T && DiceVar != 3) IsLimitP1 = 2;
+
 						}
 						User_operation = -1;
 						break;
@@ -1184,6 +1183,7 @@ int main()
 							if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
 							{
 								//1-moving
+								if (P1Nut1.y == PP1N1_T) DiceVar = 0;
 								Player1[0] += DiceVar;
 								MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
 								//---------------------------------------
@@ -1201,8 +1201,8 @@ int main()
 								}
 								if (Player1[0] == Player2[1]) {
 									Player2[1] = 80;
-									P2Nut1.x = PP2N2_L;
-									P2Nut1.y = PP2N2_T;
+									P2Nut2.x = PP2N2_L;
+									P2Nut2.y = PP2N2_T;
 
 									btn_P2Nut2.X_frist = PP2N2_L;
 									btn_P2Nut2.Y_frist = PP2N2_T;
@@ -1216,27 +1216,6 @@ int main()
 								{
 									CardChoosed = CardRand();
 									CardsP1[CardChoosed]++;
-									switch (CardChoosed)
-									{
-									case DOORCLOSED:
-										printf("a DOOR_CLOSED card added.\n");
-
-										break;
-									case COEF:
-										printf("a COEF card added.\n");
-										break;
-									case LIMIT:
-										printf("a LIMIT card added.\n");
-										break;
-									case DICEAGAIN:
-										printf("a DICE_AGAIN card added.\n");
-
-										break;
-									}
-									for (int i = 0; i < 4; i++)
-									{
-										printf("%d ", CardsP1[i]);
-									}
 								}
 								//--------------------------------------
 
@@ -1260,7 +1239,6 @@ int main()
 												al_get_mouse_state(&mouseState);
 												if (sw_btn(&btn_CANCEL_NoticeToCarridor, &mouseState))
 												{
-													printf("check cancel btn 2");
 													if (al_mouse_button_down(&mouseState, 1))
 													{
 														Tik_Opinion_ForCarridor = true;
@@ -1271,7 +1249,6 @@ int main()
 												{
 													if (al_mouse_button_down(&mouseState, 1))
 													{
-														printf("check OK btn 2");
 														CardsP1[DOORCLOSED]--;
 														Tik_Opinion_ForCarridor = false;
 														break;
@@ -1280,7 +1257,6 @@ int main()
 												if (X_ProgressBar < 1300)
 												{
 													X_ProgressBar += (0.5);
-													printf("%f\n", X_ProgressBar);
 												}
 												else
 												{
@@ -1300,7 +1276,6 @@ int main()
 									{
 										Tik_Opinion_ForCarridor = true;
 
-										printf("? %d", Player1[0]);
 										IsCarridor = true;//for move Graphic
 
 										//2-Hitting
@@ -1331,27 +1306,6 @@ int main()
 										{
 											CardChoosed = CardRand();
 											CardsP1[CardChoosed]++;
-											switch (CardChoosed)
-											{
-											case DOORCLOSED:
-												printf("a DOOR_CLOSED card added.\n");
-
-												break;
-											case COEF:
-												printf("a COEF card added.\n");
-												break;
-											case LIMIT:
-												printf("a LIMIT card added.\n");
-												break;
-											case DICEAGAIN:
-												printf("a DICE_AGAIN card added.\n");
-
-												break;
-											}
-											for (int i = 0; i < 4; i++)
-											{
-												printf("%d ", CardsP1[i]);
-											}
 										}
 										//--------------------------------------
 									}
@@ -1380,6 +1334,7 @@ int main()
 							if ((Player1[1] + DiceVar) > -1 && (Player1[1] + DiceVar) < 81)//check for Being to period
 							{
 								//1-moving
+								if (P1Nut2.y == PP1N2_T) DiceVar = 0;
 								Player1[1] += DiceVar;
 								MoveGraphic(Player1[1], &(P1Nut2.x), &(P1Nut2.y));
 								//-----------------------------------
@@ -1412,25 +1367,6 @@ int main()
 								{
 									CardChoosed = CardRand();
 									CardsP1[CardChoosed]++;
-									switch (CardChoosed)
-									{
-									case DOORCLOSED:
-										printf("a DOOR_CLOSED card added.\n");
-										break;
-									case COEF:
-										printf("a COEF card added.\n");
-										break;
-									case LIMIT:
-										printf("a LIMIT card added.\n");
-										break;
-									case DICEAGAIN:
-										printf("a DICE_AGAIN card added.\n");
-										break;
-									}
-									for (int i = 0; i < 4; i++)
-									{
-										printf("%d ", CardsP1[i]);
-									}
 								}
 								//--------------------------------------
 
@@ -1494,7 +1430,6 @@ int main()
 									{
 										Tik_Opinion_ForCarridor = true;
 
-										printf("? %d", Player1[1]);
 										IsCarridor = true;//for move Graphic
 
 										//2-Hitting
@@ -1525,27 +1460,6 @@ int main()
 										{
 											CardChoosed = CardRand();
 											CardsP1[CardChoosed]++;
-											switch (CardChoosed)
-											{
-											case DOORCLOSED:
-												printf("a DOOR_CLOSED card added.\n");
-
-												break;
-											case COEF:
-												printf("a COEF card added.\n");
-												break;
-											case LIMIT:
-												printf("a LIMIT card added.\n");
-												break;
-											case DICEAGAIN:
-												printf("a DICE_AGAIN card added.\n");
-
-												break;
-											}
-											for (int i = 0; i < 4; i++)
-											{
-												printf("%d ", CardsP1[i]);
-											}
 										}
 										//--------------------------------------
 
@@ -1587,6 +1501,18 @@ int main()
 							DiceVar = DiceRand();
 							Dice_PIC_VAR = Dice_PIC[DiceVar];
 							ConvertToDiceMIM(&DiceVar);
+							if (P2Nut1.y == PP2N1_T && P2Nut2.y == PP2N2_T && DiceVar != -3)
+							{
+								player_Turn = P1;
+								User_operation = -1;
+								Tik_Dice = false;;
+								Tik_Player = true;
+								al_flip_display();
+								continue;
+							}
+							else if (P2Nut1.y == PP2N1_T && DiceVar != -3) IsLimitP2 = 1;
+							else if (P2Nut2.y == PP2N2_T && DiceVar != -3) IsLimitP2 = 2;
+
 						}
 						User_operation = -1;
 						break;
@@ -1637,6 +1563,7 @@ int main()
 							if ((Player2[0] + DiceVar) > -1 && (Player2[0] + DiceVar) < 81)//check for Being to period
 							{
 								//1-moving
+								if (P2Nut1.y == PP2N1_T) DiceVar = 0;
 								Player2[0] += DiceVar;
 								MoveGraphic(Player2[0], &(P2Nut1.x), &(P2Nut1.y));
 								//------------------------------------
@@ -1669,25 +1596,6 @@ int main()
 								{
 									CardChoosed = CardRand();
 									CardsP2[CardChoosed]++;
-									switch (CardChoosed)
-									{
-									case DOORCLOSED:
-										printf("a DOOR_CLOSED card added.\n");
-										break;
-									case COEF:
-										printf("a COEF card added.\n");
-										break;
-									case LIMIT:
-										printf("a LIMIT card added.\n");
-										break;
-									case DICEAGAIN:
-										printf("a DICE_AGAIN card added.\n");
-										break;
-									}
-									for (int i = 0; i < 4; i++)
-									{
-										printf("%d ", CardsP2[i]);
-									}
 								}
 								//--------------------------------------
 
@@ -1711,7 +1619,6 @@ int main()
 												al_get_mouse_state(&mouseState);
 												if (sw_btn(&btn_CANCEL_NoticeToCarridor, &mouseState))
 												{
-													printf("check cancel btn 2");
 													if (al_mouse_button_down(&mouseState, 1))
 													{
 														Tik_Opinion_ForCarridor = true;
@@ -1722,7 +1629,6 @@ int main()
 												{
 													if (al_mouse_button_down(&mouseState, 1))
 													{
-														printf("check OK btn 2");
 														CardsP2[DOORCLOSED]--;
 														Tik_Opinion_ForCarridor = false;
 														break;
@@ -1731,7 +1637,6 @@ int main()
 												if (X_ProgressBar < 1300)
 												{
 													X_ProgressBar += (0.5);
-													printf("%f\n", X_ProgressBar);
 												}
 												else
 												{
@@ -1751,7 +1656,6 @@ int main()
 									{
 										Tik_Opinion_ForCarridor = true;
 
-										printf("? %d", Player2[0]);
 										IsCarridor = true;//for move Graphic
 
 										//2-Hitting
@@ -1782,27 +1686,6 @@ int main()
 										{
 											CardChoosed = CardRand();
 											CardsP2[CardChoosed]++;
-											switch (CardChoosed)
-											{
-											case DOORCLOSED:
-												printf("a DOOR_CLOSED card added.\n");
-
-												break;
-											case COEF:
-												printf("a COEF card added.\n");
-												break;
-											case LIMIT:
-												printf("a LIMIT card added.\n");
-												break;
-											case DICEAGAIN:
-												printf("a DICE_AGAIN card added.\n");
-
-												break;
-											}
-											for (int i = 0; i < 4; i++)
-											{
-												printf("%d ", CardsP2[i]);
-											}
 										}
 										//--------------------------------------
 
@@ -1830,6 +1713,7 @@ int main()
 							if ((Player2[1] + DiceVar) > -1 && (Player2[1] + DiceVar) < 81)//check for Being to period
 							{
 								//1-moving
+								if (P2Nut2.y == PP2N2_T) DiceVar = 0;
 								Player2[1] += DiceVar;
 								MoveGraphic(Player2[1], &(P2Nut2.x), &(P2Nut2.y));
 								//----------------------------------------------
@@ -1862,25 +1746,6 @@ int main()
 								{
 									CardChoosed = CardRand();
 									CardsP2[CardChoosed]++;
-									switch (CardChoosed)
-									{
-									case DOORCLOSED:
-										printf("a DOOR_CLOSED card added.\n");
-										break;
-									case COEF:
-										printf("a COEF card added.\n");
-										break;
-									case LIMIT:
-										printf("a LIMIT card added.\n");
-										break;
-									case DICEAGAIN:
-										printf("a DICE_AGAIN card added.\n");
-										break;
-									}
-									for (int i = 0; i < 4; i++)
-									{
-										printf("%d ", CardsP2[i]);
-									}
 								}
 								//--------------------------------------
 
@@ -1904,7 +1769,6 @@ int main()
 												al_get_mouse_state(&mouseState);
 												if (sw_btn(&btn_CANCEL_NoticeToCarridor, &mouseState))
 												{
-													printf("check cancel btn 2");
 													if (al_mouse_button_down(&mouseState, 1))
 													{
 														Tik_Opinion_ForCarridor = true;
@@ -1915,7 +1779,6 @@ int main()
 												{
 													if (al_mouse_button_down(&mouseState, 1))
 													{
-														printf("check OK btn 2");
 														CardsP2[DOORCLOSED]--;
 														Tik_Opinion_ForCarridor = false;
 														break;
@@ -1924,7 +1787,6 @@ int main()
 												if (X_ProgressBar < 1300)
 												{
 													X_ProgressBar += (0.5);
-													printf("%f\n", X_ProgressBar);
 												}
 												else
 												{
@@ -1944,7 +1806,6 @@ int main()
 									{
 										Tik_Opinion_ForCarridor = true;
 
-										printf("? %d", Player2[1]);
 										IsCarridor = true;//for move Graphic
 
 										//2-Hitting
@@ -1975,27 +1836,6 @@ int main()
 										{
 											CardChoosed = CardRand();
 											CardsP2[CardChoosed]++;
-											switch (CardChoosed)
-											{
-											case DOORCLOSED:
-												printf("a DOOR_CLOSED card added.\n");
-
-												break;
-											case COEF:
-												printf("a COEF card added.\n");
-												break;
-											case LIMIT:
-												printf("a LIMIT card added.\n");
-												break;
-											case DICEAGAIN:
-												printf("a DICE_AGAIN card added.\n");
-
-												break;
-											}
-											for (int i = 0; i < 4; i++)
-											{
-												printf("%d ", CardsP2[i]);
-											}
 										}
 										//--------------------------------------
 

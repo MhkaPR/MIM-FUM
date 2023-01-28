@@ -12,6 +12,24 @@
 #define COEF 1
 #define LIMIT 2
 #define DICEAGAIN 3
+
+#define SIMPLE -1
+#define LIMIT_1_AND_COEF 211
+#define LIMIT_2_AND_COEF 221
+#define SIMPLE_AND_LIMIT_1 -121
+#define SIMPLE_AND_LIMIT_2 -122
+
+#define Direction 66
+#define Player1PlaceFrist_X 355
+#define Player1PlaceFrist_Y 630
+
+#define Target 40
+#define BestScore1 100000000
+#define BetterScore2 10000000
+
+#define Enemy1 1
+#define Enemy2 2
+
 #pragma region ENUMS
 enum Number_of_Cards
 {
@@ -103,7 +121,7 @@ enum Position_Block_TwePesonE
 	TwBB = 781,
 
 };
-enum GuideForms { P1, P2, P3, P4, P5 };
+enum GuideForms { P1, P2 };
 enum aboutus
 {
 	auL = 385,
@@ -305,6 +323,13 @@ enum Guids
 	guid5,
 	guid6,
 };
+enum DutiesAI
+{
+	Dice,
+	ChooseNut1,
+	ChooseNut2,
+	checkCarridor
+};
 #pragma endregion
 #pragma region STRUCTS
 struct POINT
@@ -333,8 +358,8 @@ void must_init(bool check, const char* description)
 }
 bool is_Position_btn(ALLEGRO_MOUSE_STATE mouseState)
 {
-	if (/*(mouseState.x > OLT && mouseState.x < ORT && mouseState.y>OTT && mouseState.y < OBT) ||
-		(mouseState.x > OLB && mouseState.x < ORB && mouseState.y>OTB && mouseState.y < OBB) ||*/
+	if ((mouseState.x > OLT && mouseState.x < ORT && mouseState.y>OTT && mouseState.y < OBT) ||
+		(mouseState.x > OLB && mouseState.x < ORB && mouseState.y>OTB && mouseState.y < OBB) ||
 		(mouseState.x > TwLT && mouseState.x < TwRT && mouseState.y>TwTT && mouseState.y < TwBT) ||
 		(mouseState.x > TwLB && mouseState.x < TwRB && mouseState.y>TwTB && mouseState.y < TwBB) ||
 		(mouseState.x > PBG_L && mouseState.x < PBG_R && mouseState.y>PBG_T && mouseState.y < PBG_B))
@@ -462,9 +487,16 @@ int main()
 	bool Frist_Entrance = true;
 	bool Is_StartOfBackToMenu = false;
 	bool UnLocked_FORDISPLAY_Card_OR_Carridor_Place = false;
+
+	//Single Player----------------------------------------------------------------------
+	bool IS_Single_Player = false;
+	bool From_ONEPERSON = false;
+	bool one_click_btn_ONEPERSON_To_buttons_continueANDnew_Form = false;
+	enum DutiesAI Duties = Dice;
+
+	//---------------------------------------------------------------------------
 	int turn = 1;
 	enum Pages pages_sw = FristMenu;
-
 	//variable LOGIC-------------------------
 	bool player_Turn = P1;//turn of players
 
@@ -479,6 +511,35 @@ int main()
 	short int NextPage = 1;
 
 	short int IsBeforeWndow = FristMenu;
+
+	int ANIMATION_Move_V_Up[9][2];
+
+	ANIMATION_Move_V_Up[0][0] = Player1PlaceFrist_X + 8 * Direction; ANIMATION_Move_V_Up[0][1] = Player1PlaceFrist_Y + 0 * Direction;
+	ANIMATION_Move_V_Up[4][0] = Player1PlaceFrist_X + 0 * Direction; ANIMATION_Move_V_Up[4][1] = Player1PlaceFrist_Y + -1 * Direction;
+
+	ANIMATION_Move_V_Up[1][0] = Player1PlaceFrist_X + 8 * Direction; ANIMATION_Move_V_Up[1][1] = Player1PlaceFrist_Y + -2 * Direction;
+	ANIMATION_Move_V_Up[5][0] = Player1PlaceFrist_X + 0 * Direction; ANIMATION_Move_V_Up[5][1] = Player1PlaceFrist_Y + -3 * Direction;
+
+	ANIMATION_Move_V_Up[2][0] = Player1PlaceFrist_X + 8 * Direction; ANIMATION_Move_V_Up[2][1] = Player1PlaceFrist_Y + -4 * Direction;
+	ANIMATION_Move_V_Up[6][0] = Player1PlaceFrist_X + 0 * Direction; ANIMATION_Move_V_Up[6][1] = Player1PlaceFrist_Y + -5 * Direction;
+
+	ANIMATION_Move_V_Up[3][0] = Player1PlaceFrist_X + 8 * Direction; ANIMATION_Move_V_Up[3][1] = Player1PlaceFrist_Y + -6 * Direction;
+	ANIMATION_Move_V_Up[7][0] = Player1PlaceFrist_X + 0 * Direction; ANIMATION_Move_V_Up[7][1] = Player1PlaceFrist_Y + -7 * Direction;
+
+
+	int ANIMATION_Move_V_Down[9][2];
+
+	ANIMATION_Move_V_Down[0][0] = Player1PlaceFrist_X + 8 * Direction; ANIMATION_Move_V_Down[0][1] = Player1PlaceFrist_Y + -1 * Direction;
+	ANIMATION_Move_V_Down[4][0] = Player1PlaceFrist_X + 0 * Direction; ANIMATION_Move_V_Down[4][1] = Player1PlaceFrist_Y + -2 * Direction;
+
+	ANIMATION_Move_V_Down[1][0] = Player1PlaceFrist_X + 8 * Direction; ANIMATION_Move_V_Down[1][1] = Player1PlaceFrist_Y + -3 * Direction;
+	ANIMATION_Move_V_Down[5][0] = Player1PlaceFrist_X + 0 * Direction; ANIMATION_Move_V_Down[5][1] = Player1PlaceFrist_Y + -4 * Direction;
+
+	ANIMATION_Move_V_Down[2][0] = Player1PlaceFrist_X + 8 * Direction; ANIMATION_Move_V_Down[2][1] = Player1PlaceFrist_Y + -5 * Direction;
+	ANIMATION_Move_V_Down[6][0] = Player1PlaceFrist_X + 0 * Direction; ANIMATION_Move_V_Down[6][1] = Player1PlaceFrist_Y + -6 * Direction;
+
+	ANIMATION_Move_V_Down[3][0] = Player1PlaceFrist_X + 8 * Direction; ANIMATION_Move_V_Down[3][1] = Player1PlaceFrist_Y + -7 * Direction;
+	ANIMATION_Move_V_Down[7][0] = Player1PlaceFrist_X + 0 * Direction; ANIMATION_Move_V_Down[7][1] = Player1PlaceFrist_Y + -8 * Direction;
 
 	int CardsP1[4] = { CardsP1_Assumption[0],CardsP1_Assumption[1],CardsP1_Assumption[2],CardsP1_Assumption[3] };
 	int CardsP2[4] = { CardsP2_Assumption[0],CardsP2_Assumption[1],CardsP2_Assumption[2],CardsP2_Assumption[3] };
@@ -671,7 +732,6 @@ int main()
 	btn_RefreshInTheBoard.X_end = PRBI_R;
 	btn_RefreshInTheBoard.Y_end = PRBI_B;
 	btn_RefreshInTheBoard.sw_Link = NULL;
-
 
 	struct button btn_QuestionInTheBoard;
 	btn_QuestionInTheBoard.X_frist = PQBI_L;
@@ -974,13 +1034,17 @@ int main()
 				}
 				if (sw_btn(&btn_ONEPERSON_To_buttons_continueANDnew_Form[0], &mouseState) && mouseState.buttons == 1)
 				{
-					//pages_sw = Board_Form;
-					//Permission_change_mouse = true;
+					From_ONEPERSON = true;
+					one_click_btn_ONEPERSON_To_buttons_continueANDnew_Form = true;
+					pages_sw = buttons_continueANDnew_Form;
+					Permission_change_mouse = true;
 				}
 				if (sw_btn(&btn_ONEPERSON_To_buttons_continueANDnew_Form[1], &mouseState) && mouseState.buttons == 1)
 				{
-					//pages_sw = Board_Form;
-					//Permission_change_mouse = true;
+					From_ONEPERSON = true;
+					one_click_btn_ONEPERSON_To_buttons_continueANDnew_Form = true;
+					pages_sw = buttons_continueANDnew_Form;
+					Permission_change_mouse = true;
 
 				}
 				if (sw_btn(&btn_TWEPERSON_To_buttons_continueANDnew_Form[0], &mouseState))
@@ -1168,6 +1232,7 @@ int main()
 								iP1 = 0;
 								iP2 = 0;
 
+								for (int i = 0; i < 8; i++) ArrayCarridorsPlace[i][1] = 0;
 								User_operation = -1;
 								//---------------------------
 								//structs
@@ -1212,11 +1277,16 @@ int main()
 								//End////////////////////////////////////////////////////////////////////////
 #pragma endregion
 								pages_sw = Board_Form;
+								if (From_ONEPERSON)
+								{
+									IS_Single_Player = true;
+									From_ONEPERSON = false;
+								}
 								//Random Carridors & Cards
 								CardPlacesRand(ArrayCardsPlace);
 								CarridorPlacesRand(ArrayCarridorsPlace);
 								for (int i = 0; i < 9; i++) MoveGraphic(ArrayCardsPlace[i], &(CardPlace[i].x), &(CardPlace[i].y));
-								printf("1166\n");
+
 								for (int i = 0; i < 8; i++) MoveGraphic(ArrayCarridorsPlace[i][0], &(CarridorPlace[i].x), &(CarridorPlace[i].y));
 								UnLocked_FORDISPLAY_Card_OR_Carridor_Place = true;
 								for (int i = 0; i < 9; i++) printf("%d\n", ArrayCardsPlace[i] + 1);
@@ -1234,7 +1304,7 @@ int main()
 							}
 
 						}
-						//Seved Game
+						//Seved Game Wihtout Single Player
 						else if (sw_btn(&btn_YesInMenuMessageInTheBoard, &mouseState))
 						{
 							if (al_mouse_button_down(&mouseState, 1))
@@ -1476,745 +1546,898 @@ int main()
 					al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 					Permission_change_mouse = false;
 				}
-
-				al_draw_text(font, al_map_rgb(5, 100, 12), 0, 0, 0, "0");
-				al_get_mouse_state(&mouseState);
-				al_clear_to_color(al_map_rgb(240, 240, 240));
-				//Board & cards------------------------------
-				al_get_mouse_state(&mouseState);
-
-				al_draw_bitmap(lucky_CardP1_PIC[Place1], cdcp1_L, cdcp1_T, 0);
-				al_draw_bitmap(lucky_CardP1_PIC[Place2], zcp1_L, zcp1_T, 0);
-
-				if (Tik_Dice)
-					if (!Tik_COEF)
-						if (player_Turn == P1)
-							if (sw_btn(&btn_coef_card_p1, &mouseState))
-							{
-								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_COEF_CARD_p1)
-								{
-									if (CardsP1[COEF])
-									{
-										one_click_btn_COEF_CARD_p1 = true;
-										CardsP1[COEF]--;
-										Tik_COEF = true;
-										User_operation = CLICKDICE;
-									}
-								}
-								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p1 = false;
-							}
-				al_get_mouse_state(&mouseState);
-				al_draw_bitmap(lucky_CardP1_PIC[Place3], lcp1_L, lcp1_T, 0);
-				if (Tik_Dice)
-					if (!Tik_LIMIT)
-						if (player_Turn == P1)
-							if (sw_btn(&btn_limit_card_p1, &mouseState))
-							{
-								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_LIMIT_CARD_p1)
-								{
-									if (CardsP1[LIMIT])
-									{
-										one_click_btn_LIMIT_CARD_p1 = true;
-										CardsP1[LIMIT]--;
-										Tik_LIMIT = true;
-										User_operation = CLICKCARD_limit;
-									}
-								}
-								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_LIMIT_CARD_p1 = false;
-
-							}
-				al_draw_bitmap(lucky_CardP1_PIC[Place4], dcp1_L, dcp1_T, 0);
-				if (Tik_Dice)
-					if (!Tik_AGAINDICE)
-						if (player_Turn == P1)
-							if (sw_btn(&btn_diceAgain_card_p1, &mouseState))
-							{
-								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p1)
-								{
-									one_click_btn_DICEAGAIN_CARD_p1 = true;
-									if (CardsP1[DICEAGAIN])
-									{
-										CardsP1[DICEAGAIN]--;
-										Tik_AGAINDICE = true;
-										User_operation = CLICKDICE;
-									}
-								}
-								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p1 = false;
-							}
-				al_draw_bitmap(lucky_CardP2_PIC[Place1], cdcp2_L, cdcp2_T, 0);
-				al_draw_bitmap(lucky_CardP2_PIC[Place2], zcp2_L, zcp2_T, 0);
-				if (Tik_Dice)
-					if (!Tik_COEF)
-						if (player_Turn == P2)
-							if (sw_btn(&btn_coef_card_p2, &mouseState))
-							{
-								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_COEF_CARD_p2)
-								{
-									if (CardsP2[COEF])
-									{
-										one_click_btn_COEF_CARD_p2 = true;
-										CardsP2[COEF]--;
-										Tik_COEF = true;
-										User_operation = CLICKDICE;
-									}
-								}
-								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p2 = false;
-							}
-				al_draw_bitmap(lucky_CardP2_PIC[Place3], lcp2_L, lcp2_T, 0);
-				if (Tik_Dice)
-					if (!Tik_LIMIT)
-						if (player_Turn == P2)
-							if (sw_btn(&btn_limit_card_p2, &mouseState))
-							{
-								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_LIMIT_CARD_p2)
-								{
-									if (CardsP2[LIMIT])
-									{
-										one_click_btn_LIMIT_CARD_p2 = true;
-										CardsP2[LIMIT]--;
-										Tik_LIMIT = true;
-										User_operation = CLICKCARD_limit;
-									}
-								}
-								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_LIMIT_CARD_p2 = false;
-
-							}
-				al_draw_bitmap(lucky_CardP2_PIC[Place4], dcp2_L, dcp2_T, 0);
-				if (Tik_Dice)
-					if (!Tik_AGAINDICE)
-						if (player_Turn == P2)
-							if (sw_btn(&btn_diceAgain_card_p2, &mouseState))
-							{
-								if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p2)
-								{
-									one_click_btn_DICEAGAIN_CARD_p2 = true;
-									if (CardsP2[DICEAGAIN])
-									{
-										CardsP2[DICEAGAIN]--;
-										Tik_AGAINDICE = true;
-										User_operation = CLICKDICE;
-									}
-								}
-								else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p2 = false;
-							}
-				al_draw_bitmap(Place_Start_Nuts_P1[Place1], 350, 692, 0);
-				al_draw_bitmap(Place_Start_Nuts_P1[Place2], 455, 692, 0);
-				al_draw_bitmap(Place_Start_Nuts_P2[Place1], 850, 80, 0);
-				al_draw_bitmap(Place_Start_Nuts_P2[Place2], 745, 80, 0);
-
-				al_draw_bitmap(Board_PIC, 350, 100, 0);
-				//-----------------------------------------
-
-				//Carridors & Card Place PIC
-				for (int i = 0; i < 9; i++)
-					al_draw_bitmap(CardLuckPlace_PIC, CardPlace[i].x, CardPlace[i].y, 0);
-				for (int i = 0; i < 8; i++)
-					al_draw_bitmap(CarridorPlace_PIC, CarridorPlace[i].x, CarridorPlace[i].y, 0);
-
-				//Dice-------------------------------------
-				al_get_mouse_state(&mouseState);
-				al_draw_bitmap(Dice_PIC_VAR, DICE_L, DICE_T, 0);
-
-				if (sw_btn(&btn_Dice, &mouseState))
+				//AI
+				if (IS_Single_Player)
 				{
-					if (Tik_Player)
+					int LimitationPlaseNut1 = 0;
+					int LimitationPlaseNut2 = 0;
+					if (player_Turn == P2)
 					{
-						al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
-						if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
+						int State_Nut1 = -1;
+						int State_Nut2 = -1;
+
+						switch (Duties)
 						{
-							printf("hh\n");
-							User_operation = CLICKDICE;
-							Tik_Dice = true;
-							Tik_Player = false;
-						}
-						if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
-					}
-				}
-				else al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
-				//-----------------------------------------
+						case Dice:
 
-				//Nuts-------------------------------------
-				if (!IsLimitP1N1)if (player_Turn == P1)
-				{
-					if (Tik_Dice) NutActiveColorP1 = al_map_rgb(247, 173, 175);
-					else NutActiveColorP1 = al_map_rgb(200, 191, 231);
-					al_draw_circle(P1Nut1.x + PPNW / 2 - 1, P1Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
-				}
-				al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
+							if (Tik_Player)
+							{
+								printf("\nhh AI\n");
+								printf("\n@1\n");
+								Tik_Dice = true;
+								Tik_Player = false;
 
-				if (!IsLimitP1N2)if (player_Turn == P1)
-				{
-					if (Tik_Dice) NutActiveColorP1 = al_map_rgb(247, 173, 175);
-					else NutActiveColorP1 = al_map_rgb(200, 191, 231);
-					al_draw_circle(P1Nut2.x + PPNW / 2 - 1, P1Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
-				}
-				al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
-
-				if (!IsLimitP2N1)if (player_Turn == P2)
-				{
-					if (Tik_Dice) NutActiveColorP2 = al_map_rgb(145, 216, 247);
-					else NutActiveColorP2 = al_map_rgb(200, 191, 231);
-					al_draw_circle(P2Nut1.x + PPNW / 2 - 1, P2Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
-				}
-				al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
-
-				if (!IsLimitP2N2)if (player_Turn == P2)
-				{
-					if (Tik_Dice) NutActiveColorP2 = al_map_rgb(145, 216, 247);
-					else NutActiveColorP2 = al_map_rgb(200, 191, 231);
-					al_draw_circle(P2Nut2.x + PPNW / 2 - 1, P2Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
-				}
-				al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
-
-				if (Tik_Dice)
-				{
-					//click nuts
-
-					al_get_mouse_state(&mouseState);
-					if (sw_btn(&btn_P1Nut1, &mouseState))
-					{
-						if (!IsLimitP1N1)
-							if (P1N1_IsLive)
-								if (al_mouse_button_down(&mouseState, 1))
+								//Dice Doing---------------
+								sw_btnDown = true;
+								al_rest(0.1);
+								DiceVar = DiceRand();
+								Dice_PIC_VAR = Dice_PIC[DiceVar];
+								ConvertToDiceMIM(&DiceVar);
+								if (DiceVar != 3)
 								{
-									IsLimitP1N2 = false;
-									User_operation = CLICKNUT1_P1;
-									Tik_Nut = true;
-
-									if (player_Turn == P1)
+									if ((P1Nut1.y == PP1N1_T))IsLimitP1N1 = true;
+									if ((P1Nut2.y == PP1N2_T))IsLimitP1N2 = true;
+									if ((P1Nut1.y == PP1N1_T && P1Nut2.y == PP1N2_T) ||
+										(P1Nut1.y == PP1N1_T && IsLimitP1N2) ||
+										(P1Nut2.y == PP1N2_T && IsLimitP1N1))
 									{
+										player_Turn = P2;
 										Tik_Dice = false;
 										Tik_Player = true;
+										IsLimitP1N1 = false;
+										IsLimitP1N2 = false;
+										User_operation = -1;
 									}
 								}
-					}
-					else if (sw_btn(&btn_P1Nut2, &mouseState))
-					{
-						if (!IsLimitP1N2)
-							if (P1N2_IsLive)
-								if (al_mouse_button_down(&mouseState, 1))
+								if ((IsLimitP1N1 && IsLimitP1N2) || (!P1N1_IsLive && IsLimitP1N2) || (!P1N2_IsLive && IsLimitP1N1))
 								{
+									player_Turn = P2;
+									User_operation = -1;
+									Tik_Dice = false;
+									Tik_Player = true;
 									IsLimitP1N1 = false;
-									User_operation = CLICKNUT2_P1;
-									Tik_Nut = true;
-
-									if (player_Turn == P1)
-									{
-										Tik_Dice = false;
-										Tik_Player = true;
-									}
+									IsLimitP1N2 = false;
 								}
-					}
-					else if (sw_btn(&btn_P2Nut1, &mouseState))
-					{
-						if (!IsLimitP2N1)
-							if (P2N1_IsLive)
-								if (al_mouse_button_down(&mouseState, 1))
+								//---------------
+
+								State_Nut1 = MaxScore(&LimitationPlaseNut1, DiceVar, Player2[0], Player1, ArrayCardsPlace, ArrayCarridorsPlace, CardsP2, CardsP1);
+								State_Nut2 = MaxScore(&LimitationPlaseNut2, DiceVar, Player2[1], Player1, ArrayCardsPlace, ArrayCarridorsPlace, CardsP2, CardsP1);
+
+								if (State_Nut1 == State_Nut2)Duties = rand() % 2 + 1;
+								else if (State_Nut1 > State_Nut2)
+								{
+									if (!IsLimitP2N1) Duties = ChooseNut1;
+									else Duties = ChooseNut2;
+								}
+								else Duties = ChooseNut2;
+								Duties = ChooseNut1;
+							}
+							break;
+						case ChooseNut1:
+							printf("\n@3\n");
+
+							if (!IsLimitP2N1)
+							{
+								printf("\n\n** 1: %d %d **\n\n", State_Nut1, LimitationPlaseNut1);
+								switch (State_Nut1)
+								{
+								case COEF:
+									CardsP2[COEF]--;
+									DiceVar *= 2;
+									break;
+								default:
+									break;
+								}
+								if (P2N1_IsLive)
 								{
 									IsLimitP2N2 = false;
 									User_operation = CLICKNUT1_P2;
 									Tik_Nut = true;
+
 									if (player_Turn == P2)
 									{
 										Tik_Dice = false;
 										Tik_Player = true;
 									}
+
+									if (LimitationPlaseNut1 == Enemy1)
+									{
+										CardsP2[LIMIT]--;
+										IsLimitP1N1 = true;
+									}
+									else if (LimitationPlaseNut1 == Enemy2)
+									{
+										CardsP2[LIMIT]--;
+										IsLimitP1N2 = true;
+									}
 								}
-					}
-					else if (sw_btn(&btn_P2Nut2, &mouseState))
-					{
-						if (!IsLimitP2N2)
-							if (P2N2_IsLive)
-								if (al_mouse_button_down(&mouseState, 1))
+							}
+							Duties = Dice;
+							break;
+						case ChooseNut2:
+							printf("\n@3\n");
+							if (!IsLimitP2N2)
+							{
+								printf("\n\n** 2: %d %d **\n\n", State_Nut1, LimitationPlaseNut2);
+								switch (State_Nut2)
 								{
-									IsLimitP2N1 = false;
+								case COEF:
+									CardsP2[COEF]--;
+									DiceVar *= 2;
+									break;
+								default:
+									break;
+								}
+								if (P2N2_IsLive)
+								{
+									IsLimitP2N2 = false;
 									User_operation = CLICKNUT2_P2;
 									Tik_Nut = true;
+
 									if (player_Turn == P2)
 									{
 										Tik_Dice = false;
 										Tik_Player = true;
 									}
+
+									if (LimitationPlaseNut2 == Enemy1)
+									{
+										CardsP2[LIMIT]--;
+										IsLimitP1N1 = true;
+									}
+									else if (LimitationPlaseNut2 == Enemy2)
+									{
+										CardsP2[LIMIT]--;
+										IsLimitP1N2 = true;
+									}
 								}
+							}
+							Duties = Dice;
+							break;
+						case checkCarridor:
+						default:
+							break;
+						}
 					}
 				}
-				//-----------------------------------------
-
-				//Caracters--------------------------------
-				al_draw_bitmap(char_frame_p1, 95, 536, 0);
-				al_draw_bitmap(char_frame_p2, 1000, 76, 0);
-				al_draw_bitmap(charactors_PIC[char3], 115, 568, 0);
-				al_draw_bitmap(charactors_PIC[char1], 1020, 108, 0);
-
-				//-----------------------------------------
-
-				//Menu Frame-------------------------------
-				al_draw_bitmap(MenuFramePic, 25, -12, 0);
-				al_draw_bitmap(Menu_InTheBoard_Icon, 35, -5, 0);
-				al_draw_bitmap(RefreshIcon, 105, -5, 0);
-				al_draw_bitmap(GuideIcon, 170, -5, 0);
-				al_draw_bitmap(Save_Icon, 240, -5, 0);
-
-				al_get_mouse_state(&mouseState);
-
-				//idea of menu Message
-				//******************************************************
-				if (sw_btn(&btn_MenuInTheBoard, &mouseState))
+				if (1)
 				{
-					if (al_mouse_button_down(&mouseState, 1))
+					al_get_mouse_state(&mouseState);
+					al_clear_to_color(al_map_rgb(240, 240, 240));
+					//Board & cards------------------------------
+					al_get_mouse_state(&mouseState);
+
+					al_draw_bitmap(lucky_CardP1_PIC[Place1], cdcp1_L, cdcp1_T, 0);
+					al_draw_bitmap(lucky_CardP1_PIC[Place2], zcp1_L, zcp1_T, 0);
+
+					if (Tik_Dice)
+						if (!Tik_COEF)
+							if (player_Turn == P1)
+								if (sw_btn(&btn_coef_card_p1, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_COEF_CARD_p1)
+									{
+										if (CardsP1[COEF])
+										{
+											one_click_btn_COEF_CARD_p1 = true;
+											CardsP1[COEF]--;
+											Tik_COEF = true;
+											User_operation = CLICKCARD_coef;
+										}
+									}
+									else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p1 = false;
+								}
+					al_get_mouse_state(&mouseState);
+					al_draw_bitmap(lucky_CardP1_PIC[Place3], lcp1_L, lcp1_T, 0);
+					if (Tik_Dice)
+						if (!Tik_LIMIT)
+							if (player_Turn == P1)
+								if (sw_btn(&btn_limit_card_p1, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_LIMIT_CARD_p1)
+									{
+										if (CardsP1[LIMIT])
+										{
+											one_click_btn_LIMIT_CARD_p1 = true;
+											CardsP1[LIMIT]--;
+											Tik_LIMIT = true;
+											User_operation = CLICKCARD_limit;
+										}
+									}
+									else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_LIMIT_CARD_p1 = false;
+
+								}
+					al_draw_bitmap(lucky_CardP1_PIC[Place4], dcp1_L, dcp1_T, 0);
+					if (Tik_Dice)
+						if (!Tik_AGAINDICE)
+							if (player_Turn == P1)
+								if (sw_btn(&btn_diceAgain_card_p1, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p1)
+									{
+										one_click_btn_DICEAGAIN_CARD_p1 = true;
+										if (CardsP1[DICEAGAIN])
+										{
+											CardsP1[DICEAGAIN]--;
+											Tik_AGAINDICE = true;
+											User_operation = CLICKDICE;
+										}
+									}
+									else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p1 = false;
+								}
+					al_draw_bitmap(lucky_CardP2_PIC[Place1], cdcp2_L, cdcp2_T, 0);
+					al_draw_bitmap(lucky_CardP2_PIC[Place2], zcp2_L, zcp2_T, 0);
+					if (Tik_Dice)
+						if (!Tik_COEF)
+							if (player_Turn == P2)
+								if (sw_btn(&btn_coef_card_p2, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_COEF_CARD_p2)
+									{
+										if (CardsP2[COEF])
+										{
+											one_click_btn_COEF_CARD_p2 = true;
+											CardsP2[COEF]--;
+											Tik_COEF = true;
+											User_operation = CLICKCARD_coef;
+										}
+									}
+									else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p2 = false;
+								}
+					al_draw_bitmap(lucky_CardP2_PIC[Place3], lcp2_L, lcp2_T, 0);
+					if (Tik_Dice)
+						if (!Tik_LIMIT)
+							if (player_Turn == P2)
+								if (sw_btn(&btn_limit_card_p2, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_LIMIT_CARD_p2)
+									{
+										if (CardsP2[LIMIT])
+										{
+											one_click_btn_LIMIT_CARD_p2 = true;
+											CardsP2[LIMIT]--;
+											Tik_LIMIT = true;
+											User_operation = CLICKCARD_limit;
+										}
+									}
+									else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_LIMIT_CARD_p2 = false;
+
+								}
+					al_draw_bitmap(lucky_CardP2_PIC[Place4], dcp2_L, dcp2_T, 0);
+					if (Tik_Dice)
+						if (!Tik_AGAINDICE)
+							if (player_Turn == P2)
+								if (sw_btn(&btn_diceAgain_card_p2, &mouseState))
+								{
+									if (al_mouse_button_down(&mouseState, 1) && !one_click_btn_DICEAGAIN_CARD_p2)
+									{
+										one_click_btn_DICEAGAIN_CARD_p2 = true;
+										if (CardsP2[DICEAGAIN])
+										{
+											CardsP2[DICEAGAIN]--;
+											Tik_AGAINDICE = true;
+											User_operation = CLICKDICE;
+										}
+									}
+									else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_DICEAGAIN_CARD_p2 = false;
+								}
+					al_draw_bitmap(Place_Start_Nuts_P1[Place1], 350, 692, 0);
+					al_draw_bitmap(Place_Start_Nuts_P1[Place2], 455, 692, 0);
+					al_draw_bitmap(Place_Start_Nuts_P2[Place1], 850, 80, 0);
+					al_draw_bitmap(Place_Start_Nuts_P2[Place2], 745, 80, 0);
+
+					al_draw_bitmap(Board_PIC, 350, 100, 0);
+					//-----------------------------------------
+
+					//Carridors & Card Place PIC
+					for (int i = 0; i < 9; i++)
+						al_draw_bitmap(CardLuckPlace_PIC, CardPlace[i].x, CardPlace[i].y, 0);
+					for (int i = 0; i < 8; i++)
+						al_draw_bitmap(CarridorPlace_PIC, CarridorPlace[i].x, CarridorPlace[i].y, 0);
+
+					//Dice-------------------------------------
+					al_get_mouse_state(&mouseState);
+					al_draw_bitmap(Dice_PIC_VAR, DICE_L, DICE_T, 0);
+					if (sw_btn(&btn_Dice, &mouseState))
 					{
-						sw_Show_MessageBoxMenu = true;
+						if (Tik_Player)
+						{
+							al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_LINK);
+							if (!sw_btnDown) if (al_mouse_button_down(&mouseState, 1))
+							{
+								printf("hh\n");
+								User_operation = CLICKDICE;
+								Tik_Dice = true;
+								Tik_Player = false;
+							}
+							if (!al_mouse_button_down(&mouseState, 1)) sw_btnDown = false;
+						}
 					}
-				}
-				//Menu Button
-				if (sw_Show_MessageBoxMenu)
-				{
+					else al_set_system_mouse_cursor(disp, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+					//-----------------------------------------
 
-					al_draw_bitmap(MenuInTheBoard_PIC, 0, 0, 0);
-					al_flip_display();
-					while (1)
+					//Nuts-------------------------------------
+					if (!IsLimitP1N1)if (player_Turn == P1)
 					{
-						al_wait_for_event(queue, &event);
+						if (Tik_Dice) NutActiveColorP1 = al_map_rgb(247, 173, 175);
+						else NutActiveColorP1 = al_map_rgb(200, 191, 231);
+						al_draw_circle(P1Nut1.x + PPNW / 2 - 1, P1Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
+					}
+					al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
+
+					if (!IsLimitP1N2)if (player_Turn == P1)
+					{
+						if (Tik_Dice) NutActiveColorP1 = al_map_rgb(247, 173, 175);
+						else NutActiveColorP1 = al_map_rgb(200, 191, 231);
+						al_draw_circle(P1Nut2.x + PPNW / 2 - 1, P1Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP1, 5);
+					}
+					al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
+
+					if (!IsLimitP2N1)if (player_Turn == P2)
+					{
+						if (Tik_Dice) NutActiveColorP2 = al_map_rgb(145, 216, 247);
+						else NutActiveColorP2 = al_map_rgb(200, 191, 231);
+						al_draw_circle(P2Nut1.x + PPNW / 2 - 1, P2Nut1.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
+					}
+					al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
+
+					if (!IsLimitP2N2)if (player_Turn == P2)
+					{
+						if (Tik_Dice) NutActiveColorP2 = al_map_rgb(145, 216, 247);
+						else NutActiveColorP2 = al_map_rgb(200, 191, 231);
+						al_draw_circle(P2Nut2.x + PPNW / 2 - 1, P2Nut2.y + PPNW / 2, PPNW / 2, NutActiveColorP2, 5);
+					}
+					al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
+
+					if (Tik_Dice)
+					{
+						//click nuts
+
 						al_get_mouse_state(&mouseState);
-						//NO
-						if (sw_btn(&btn_YesInMenuMessageInTheBoard, &mouseState))
+						if (player_Turn == P1)
 						{
-							if (al_mouse_button_down(&mouseState, 1))
+							if (sw_btn(&btn_P1Nut1, &mouseState))
 							{
-								sw_Show_MessageBoxMenu = false;
-								break;
+								if (!IsLimitP1N1)
+									if (P1N1_IsLive)
+										if (al_mouse_button_down(&mouseState, 1))
+										{
+
+											IsLimitP1N2 = false;
+											User_operation = CLICKNUT1_P1;
+											Tik_Nut = true;
+											Tik_Dice = false;
+											Tik_Player = true;
+
+										}
+							}
+							else if (sw_btn(&btn_P1Nut2, &mouseState))
+							{
+								if (!IsLimitP1N2)
+									if (P1N2_IsLive)
+										if (al_mouse_button_down(&mouseState, 1))
+										{
+											IsLimitP1N1 = false;
+											User_operation = CLICKNUT2_P1;
+											Tik_Nut = true;
+											Tik_Dice = false;
+											Tik_Player = true;
+
+										}
 							}
 						}
-						//YES
-						else if (sw_btn(&btn_NoInMenuMessageInTheBoard, &mouseState))
+						else if (player_Turn == P2)
 						{
-							if (al_mouse_button_down(&mouseState, 1))
+							if (sw_btn(&btn_P2Nut1, &mouseState))
 							{
-								fopen_s(&FileOfBoard, "FOB.MiM", "wb");
-								//SAVE Information---------------------------------------------------------
-								//fseek(FileOfBoard, 0, SEEK_SET);
+								if (!IsLimitP2N1)
+									if (P2N1_IsLive)
+										if (al_mouse_button_down(&mouseState, 1))
+										{
+											IsLimitP2N2 = false;
+											User_operation = CLICKNUT1_P2;
+											Tik_Nut = true;
 
-								fwrite(&Permission_change_mouse, sizeof(bool), 1, FileOfBoard);
-								fwrite(&sw_btnDown, sizeof(bool), 1, FileOfBoard);
-
-								printf("%d", sw_btnDown);
-
-
-								fwrite(Player1, sizeof(int), 2, FileOfBoard);
-								fwrite(Player2, sizeof(int), 2, FileOfBoard);
-
-								fwrite(CardsP1, sizeof(int), 4, FileOfBoard);
-								fwrite(CardsP2, sizeof(int), 4, FileOfBoard);
-
-								fwrite(&Tik_Dice, sizeof(bool), 1, FileOfBoard);
-								fwrite(&Tik_Nut, sizeof(bool), 1, FileOfBoard);
-								fwrite(&Tik_Player, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&Tik_AGAINDICE, sizeof(bool), 1, FileOfBoard);
-								fwrite(&Tik_COEF, sizeof(bool), 1, FileOfBoard);
-								fwrite(&Tik_LIMIT, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&P1N1_IsLive, sizeof(bool), 1, FileOfBoard);
-								fwrite(&P1N2_IsLive, sizeof(bool), 1, FileOfBoard);
-								fwrite(&P2N1_IsLive, sizeof(bool), 1, FileOfBoard);
-								fwrite(&P2N2_IsLive, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&one_click_btn_DICEAGAIN_CARD_p1, sizeof(bool), 1, FileOfBoard);
-								fwrite(&one_click_btn_DICEAGAIN_CARD_p2, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&one_click_btn_COEF_CARD_p1, sizeof(bool), 1, FileOfBoard);
-								fwrite(&one_click_btn_COEF_CARD_p2, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&one_click_btn_LIMIT_CARD_p1, sizeof(bool), 1, FileOfBoard);
-								fwrite(&one_click_btn_LIMIT_CARD_p2, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&one_click_btn_NextGuid_icon, sizeof(bool), 1, FileOfBoard);
-								fwrite(&one_click_btn_BackGuid_icon, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&sw_Show_MessageBoxMenu, sizeof(bool), 1, FileOfBoard);
-								fwrite(&sw_Show_MessageBoxRefresh, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&menu_massage_display, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&Tik_Opinion_ForCarridor, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&CoefCard_Operated, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&Is_StartOfBackToMenu, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&UnLocked_FORDISPLAY_Card_OR_Carridor_Place, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&turn, sizeof(int), 1, FileOfBoard);
-
-								//VarsLOGIC------------------------------
-								fwrite(&player_Turn, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&IsDoorClosed, sizeof(IsDoorClosed), 1, FileOfBoard);
-
-								fwrite(&CoefDice, sizeof(CoefDice), 1, FileOfBoard);
-
-								fwrite(&sw_AgainDice, sizeof(sw_AgainDice), 1, FileOfBoard);
-
-								fwrite(&NextPage, sizeof(NextPage), 1, FileOfBoard);
-
-								fwrite(&playerSW, sizeof(playerSW), 1, FileOfBoard);
-
-								fwrite(&IsLimitP1N1, sizeof(bool), 1, FileOfBoard);
-								fwrite(&IsLimitP1N2, sizeof(bool), 1, FileOfBoard);
-								fwrite(&IsLimitP2N1, sizeof(bool), 1, FileOfBoard);
-								fwrite(&IsLimitP2N2, sizeof(bool), 1, FileOfBoard);
-
-								fwrite(&DiceVar, sizeof(int), 1, FileOfBoard);
-
-								fwrite(&count, sizeof(int), 1, FileOfBoard);
-
-								fwrite(&iP1, sizeof(int), 1, FileOfBoard);
-								fwrite(&iP2, sizeof(int), 1, FileOfBoard);
-
-								fwrite(&User_operation, sizeof(User_operation), 1, FileOfBoard);
-								//----------------------------------------------------------------------
-								//structs---------------------------
-
-								fwrite(&btn_P1Nut1, sizeof(struct button), 1, FileOfBoard);
-								fwrite(&btn_P1Nut2, sizeof(struct button), 1, FileOfBoard);
-								fwrite(&btn_P2Nut1, sizeof(struct button), 1, FileOfBoard);
-								fwrite(&btn_P2Nut2, sizeof(struct button), 1, FileOfBoard);
-
-								fwrite(&P1Nut1.x, sizeof(int), 1, FileOfBoard);
-								fwrite(&P1Nut1.y, sizeof(int), 1, FileOfBoard);
-
-								fwrite(&P1Nut2.x, sizeof(int), 1, FileOfBoard);
-								fwrite(&P1Nut2.y, sizeof(int), 1, FileOfBoard);
-
-								fwrite(&P2Nut1.x, sizeof(int), 1, FileOfBoard);
-								fwrite(&P2Nut1.y, sizeof(int), 1, FileOfBoard);
-
-								fwrite(&P2Nut2.x, sizeof(int), 1, FileOfBoard);
-								fwrite(&P2Nut2.y, sizeof(int), 1, FileOfBoard);
-
-								fwrite(CardPlace, sizeof(struct NUT), 9, FileOfBoard);
-								fwrite(CarridorPlace, sizeof(struct NUT), 8, FileOfBoard);
-
-								fread(ArrayCardsPlace, sizeof(int), 9, FileOfBoard);
-
-								for (int i = 0; i < 8; i++)fwrite(&(ArrayCarridorsPlace[i][0]), sizeof(int), 1, FileOfBoard);
-
-								for (int i = 0; i < 8; i++) fwrite(&(ArrayCarridorsPlace[i][1]), sizeof(int), 1, FileOfBoard);
-
-								//----------------------------------------
-								fseek(FileOfBoard, 0, SEEK_SET);
-								fclose(FileOfBoard);
-								//-------------------------------------------------------------------------
-								sw_Show_MessageBoxMenu = false;
-								Is_StartOfBackToMenu = true;
-								pages_sw = FristMenu;
-								break;
+											Tik_Dice = false;
+											Tik_Player = true;
+										}
 							}
-						}
+							else if (sw_btn(&btn_P2Nut2, &mouseState))
+							{
+								if (!IsLimitP2N2)
+									if (P2N2_IsLive)
+										if (al_mouse_button_down(&mouseState, 1))
+										{
+											IsLimitP2N1 = false;
+											User_operation = CLICKNUT2_P2;
+											Tik_Nut = true;
+											if (player_Turn == P2)
+											{
+												Tik_Dice = false;
+												Tik_Player = true;
+											}
+										}
+							}
 
+						}
 					}
-				}
-				//Refresh Button
-				if (sw_btn(&btn_RefreshInTheBoard, &mouseState))
-				{
-					if (al_mouse_button_down(&mouseState, 1))
+					//-----------------------------------------
+
+					//Caracters---------------------------------
+					al_draw_bitmap(char_frame_p1, 95, 536, 0);
+					al_draw_bitmap(char_frame_p2, 1000, 76, 0);
+					al_draw_bitmap(charactors_PIC[char3], 115, 568, 0);
+					al_draw_bitmap(charactors_PIC[char1], 1020, 108, 0);
+
+					//-----------------------------------------
+
+					//Menu Frame-------------------------------
+					al_draw_bitmap(MenuFramePic, 25, -12, 0);
+					al_draw_bitmap(Menu_InTheBoard_Icon, 35, -5, 0);
+					al_draw_bitmap(RefreshIcon, 105, -5, 0);
+					al_draw_bitmap(GuideIcon, 170, -5, 0);
+					al_draw_bitmap(Save_Icon, 240, -5, 0);
+
+					al_get_mouse_state(&mouseState);
+
+					//idea of menu Message*
+					//*****************************************************
+					if (sw_btn(&btn_MenuInTheBoard, &mouseState))
 					{
-						sw_Show_MessageBoxRefresh = true;
+						if (al_mouse_button_down(&mouseState, 1))
+						{
+							sw_Show_MessageBoxMenu = true;
+						}
 					}
-				}
-				if (sw_Show_MessageBoxRefresh)
-				{
+					//Menu Button
+					if (sw_Show_MessageBoxMenu)
+					{
+
+						al_draw_bitmap(MenuInTheBoard_PIC, 0, 0, 0);
+						al_flip_display();
+						while (1)
+						{
+							al_wait_for_event(queue, &event);
+							al_get_mouse_state(&mouseState);
+							//NO
+							if (sw_btn(&btn_YesInMenuMessageInTheBoard, &mouseState))
+							{
+								if (al_mouse_button_down(&mouseState, 1))
+								{
+									sw_Show_MessageBoxMenu = false;
+									break;
+								}
+							}
+							//YES
+							else if (sw_btn(&btn_NoInMenuMessageInTheBoard, &mouseState))
+							{
+								if (al_mouse_button_down(&mouseState, 1))
+								{
+									fopen_s(&FileOfBoard, "FOB.MiM", "wb");
+									//SAVE Information---------------------------------------------------------
+									//fseek(FileOfBoard, 0, SEEK_SET);
+
+									fwrite(&Permission_change_mouse, sizeof(bool), 1, FileOfBoard);
+									fwrite(&sw_btnDown, sizeof(bool), 1, FileOfBoard);
+
+									printf("%d", sw_btnDown);
+
+
+									fwrite(Player1, sizeof(int), 2, FileOfBoard);
+									fwrite(Player2, sizeof(int), 2, FileOfBoard);
+
+									fwrite(CardsP1, sizeof(int), 4, FileOfBoard);
+									fwrite(CardsP2, sizeof(int), 4, FileOfBoard);
+
+									fwrite(&Tik_Dice, sizeof(bool), 1, FileOfBoard);
+									fwrite(&Tik_Nut, sizeof(bool), 1, FileOfBoard);
+									fwrite(&Tik_Player, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&Tik_AGAINDICE, sizeof(bool), 1, FileOfBoard);
+									fwrite(&Tik_COEF, sizeof(bool), 1, FileOfBoard);
+									fwrite(&Tik_LIMIT, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&P1N1_IsLive, sizeof(bool), 1, FileOfBoard);
+									fwrite(&P1N2_IsLive, sizeof(bool), 1, FileOfBoard);
+									fwrite(&P2N1_IsLive, sizeof(bool), 1, FileOfBoard);
+									fwrite(&P2N2_IsLive, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&one_click_btn_DICEAGAIN_CARD_p1, sizeof(bool), 1, FileOfBoard);
+									fwrite(&one_click_btn_DICEAGAIN_CARD_p2, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&one_click_btn_COEF_CARD_p1, sizeof(bool), 1, FileOfBoard);
+									fwrite(&one_click_btn_COEF_CARD_p2, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&one_click_btn_LIMIT_CARD_p1, sizeof(bool), 1, FileOfBoard);
+									fwrite(&one_click_btn_LIMIT_CARD_p2, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&one_click_btn_NextGuid_icon, sizeof(bool), 1, FileOfBoard);
+									fwrite(&one_click_btn_BackGuid_icon, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&sw_Show_MessageBoxMenu, sizeof(bool), 1, FileOfBoard);
+									fwrite(&sw_Show_MessageBoxRefresh, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&menu_massage_display, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&Tik_Opinion_ForCarridor, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&CoefCard_Operated, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&Is_StartOfBackToMenu, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&UnLocked_FORDISPLAY_Card_OR_Carridor_Place, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&turn, sizeof(int), 1, FileOfBoard);
+
+									//VarsLOGIC------------------------------
+									fwrite(&player_Turn, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&IsDoorClosed, sizeof(IsDoorClosed), 1, FileOfBoard);
+
+									fwrite(&CoefDice, sizeof(CoefDice), 1, FileOfBoard);
+
+									fwrite(&sw_AgainDice, sizeof(sw_AgainDice), 1, FileOfBoard);
+
+									fwrite(&NextPage, sizeof(NextPage), 1, FileOfBoard);
+
+									fwrite(&playerSW, sizeof(playerSW), 1, FileOfBoard);
+
+									fwrite(&IsLimitP1N1, sizeof(bool), 1, FileOfBoard);
+									fwrite(&IsLimitP1N2, sizeof(bool), 1, FileOfBoard);
+									fwrite(&IsLimitP2N1, sizeof(bool), 1, FileOfBoard);
+									fwrite(&IsLimitP2N2, sizeof(bool), 1, FileOfBoard);
+
+									fwrite(&DiceVar, sizeof(int), 1, FileOfBoard);
+
+									fwrite(&count, sizeof(int), 1, FileOfBoard);
+
+									fwrite(&iP1, sizeof(int), 1, FileOfBoard);
+									fwrite(&iP2, sizeof(int), 1, FileOfBoard);
+
+									fwrite(&User_operation, sizeof(User_operation), 1, FileOfBoard);
+									//----------------------------------------------------------------------
+									//structs---------------------------
+
+									fwrite(&btn_P1Nut1, sizeof(struct button), 1, FileOfBoard);
+									fwrite(&btn_P1Nut2, sizeof(struct button), 1, FileOfBoard);
+									fwrite(&btn_P2Nut1, sizeof(struct button), 1, FileOfBoard);
+									fwrite(&btn_P2Nut2, sizeof(struct button), 1, FileOfBoard);
+
+									fwrite(&P1Nut1.x, sizeof(int), 1, FileOfBoard);
+									fwrite(&P1Nut1.y, sizeof(int), 1, FileOfBoard);
+
+									fwrite(&P1Nut2.x, sizeof(int), 1, FileOfBoard);
+									fwrite(&P1Nut2.y, sizeof(int), 1, FileOfBoard);
+
+									fwrite(&P2Nut1.x, sizeof(int), 1, FileOfBoard);
+									fwrite(&P2Nut1.y, sizeof(int), 1, FileOfBoard);
+
+									fwrite(&P2Nut2.x, sizeof(int), 1, FileOfBoard);
+									fwrite(&P2Nut2.y, sizeof(int), 1, FileOfBoard);
+
+									fwrite(CardPlace, sizeof(struct NUT), 9, FileOfBoard);
+									fwrite(CarridorPlace, sizeof(struct NUT), 8, FileOfBoard);
+
+									fread(ArrayCardsPlace, sizeof(int), 9, FileOfBoard);
+
+									for (int i = 0; i < 8; i++)fwrite(&(ArrayCarridorsPlace[i][0]), sizeof(int), 1, FileOfBoard);
+
+									for (int i = 0; i < 8; i++) fwrite(&(ArrayCarridorsPlace[i][1]), sizeof(int), 1, FileOfBoard);
+
+									//----------------------------------------
+									fseek(FileOfBoard, 0, SEEK_SET);
+									fclose(FileOfBoard);
+									//-------------------------------------------------------------------------
+									sw_Show_MessageBoxMenu = false;
+									Is_StartOfBackToMenu = true;
+									IS_Single_Player = false;
+									pages_sw = FristMenu;
+									break;
+								}
+							}
+
+						}
+					}
 					//Refresh Button
-					al_draw_bitmap(RefreshInTheBoard_PIC, 0, 0, 0);
-					al_flip_display();
-					while (1)
+					if (sw_btn(&btn_RefreshInTheBoard, &mouseState))
 					{
-						al_wait_for_event(queue, &event);
-						al_get_mouse_state(&mouseState);
-						if (sw_btn(&btn_NoInMenuMessageInTheBoard, &mouseState))
+						if (al_mouse_button_down(&mouseState, 1))
 						{
-
-							if (al_mouse_button_down(&mouseState, 1))
-							{
-								sw_Show_MessageBoxRefresh = false;
-
-								//Vars///////////////////////////////////////////////////////////////////////
-								Player1[0] = 0;
-								Player1[1] = 0;
-								Player2[0] = 80;
-								Player2[1] = 80;
-
-								CardsP1[0] = CardsP1_Assumption[0];
-								CardsP1[1] = CardsP1_Assumption[1];
-								CardsP1[2] = CardsP1_Assumption[2];
-								CardsP1[3] = CardsP1_Assumption[3];
-
-								CardsP2[0] = CardsP2_Assumption[0];
-								CardsP2[1] = CardsP2_Assumption[1];
-								CardsP2[2] = CardsP2_Assumption[2];
-								CardsP2[3] = CardsP2_Assumption[3];
-
-								Tik_Dice = false;
-								Tik_Nut = false;
-								Tik_Player = true;
-
-								Tik_AGAINDICE = false;
-								Tik_COEF = false;
-								Tik_LIMIT = false;
-
-								P1N1_IsLive = true;
-								P1N2_IsLive = true;
-								P2N1_IsLive = true;
-								P2N2_IsLive = true;
-
-								one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form = false;
-
-								one_click_btn_DICEAGAIN_CARD_p1 = true;
-								one_click_btn_DICEAGAIN_CARD_p2 = true;
-
-								one_click_btn_COEF_CARD_p1 = true;
-								one_click_btn_COEF_CARD_p2 = true;
-
-								one_click_btn_LIMIT_CARD_p1 = true;
-								one_click_btn_LIMIT_CARD_p2 = true;
-
-								turn = 1;
-
-								//variable LOGIC-------------------------					
-								player_Turn = P1;//turn of players							
-
-								IsDoorClosed = 0;
-
-								CoefDice = 1;
-
-								sw_AgainDice = 0;
-
-								playerSW = 1;
-
-								IsLimitP1N1 = false;
-								IsLimitP1N2 = false;
-								IsLimitP2N1 = false;
-								IsLimitP2N2 = false;
-
-								DiceVar = 0;
-
-								count = 0;
-
-								iP1 = 0;
-								iP2 = 0;
-
-								CardChoosed;
-
-								User_operation = -1;
-								//---------------------------
-								//structs
-
-								btn_P1Nut1.X_frist = PP1N1_L;
-								btn_P1Nut1.Y_frist = PP1N1_T;
-								btn_P1Nut1.X_end = PP1N1_L + PPNW;
-								btn_P1Nut1.Y_end = PP1N1_T + PPNW;
-								btn_P1Nut1.sw_Link = NULL;
-
-								btn_P1Nut2.X_frist = PP1N2_L;
-								btn_P1Nut2.Y_frist = PP1N2_T;
-								btn_P1Nut2.X_end = PP1N2_L + PPNW;
-								btn_P1Nut2.Y_end = PP1N2_T + PPNW;
-								btn_P1Nut2.sw_Link = NULL;
-
-								btn_P2Nut1.X_frist = PP2N1_L;
-								btn_P2Nut1.Y_frist = PP2N1_T;
-								btn_P2Nut1.X_end = PP2N1_L + PPNW;
-								btn_P2Nut1.Y_end = PP2N1_T + PPNW;
-								btn_P2Nut1.sw_Link = NULL;
-
-								btn_P2Nut2.X_frist = PP2N2_L;
-								btn_P2Nut2.Y_frist = PP2N2_T;
-								btn_P2Nut2.X_end = PP2N2_L + PPNW;
-								btn_P2Nut2.Y_end = PP2N2_T + PPNW;
-								btn_P2Nut2.sw_Link = NULL;
-
-
-								//---------------------------
-								P1Nut1.x = PP1N1_L;
-								P1Nut1.y = PP1N1_T;
-
-								P1Nut2.x = PP1N2_L;
-								P1Nut2.y = PP1N2_T;
-
-								P2Nut1.x = PP2N1_L;
-								P2Nut1.y = PP2N1_T;
-
-								P2Nut2.x = PP2N2_L;
-								P2Nut2.y = PP2N2_T;
-								//End////////////////////////////////////////////////////////////////////////
-								break;
-							}
+							sw_Show_MessageBoxRefresh = true;
 						}
-						else if (sw_btn(&btn_YesInMenuMessageInTheBoard, &mouseState))
+					}
+					if (sw_Show_MessageBoxRefresh)
+					{
+						//Refresh Button
+						al_draw_bitmap(RefreshInTheBoard_PIC, 0, 0, 0);
+						al_flip_display();
+						while (1)
 						{
-							if (al_mouse_button_down(&mouseState, 1))
+							al_wait_for_event(queue, &event);
+							al_get_mouse_state(&mouseState);
+							if (sw_btn(&btn_NoInMenuMessageInTheBoard, &mouseState))
 							{
-								sw_Show_MessageBoxRefresh = false;
-								break;
+
+								if (al_mouse_button_down(&mouseState, 1))
+								{
+									sw_Show_MessageBoxRefresh = false;
+
+									//Vars///////////////////////////////////////////////////////////////////////
+									Player1[0] = 0;
+									Player1[1] = 0;
+									Player2[0] = 80;
+									Player2[1] = 80;
+
+									CardsP1[0] = CardsP1_Assumption[0];
+									CardsP1[1] = CardsP1_Assumption[1];
+									CardsP1[2] = CardsP1_Assumption[2];
+									CardsP1[3] = CardsP1_Assumption[3];
+
+									CardsP2[0] = CardsP2_Assumption[0];
+									CardsP2[1] = CardsP2_Assumption[1];
+									CardsP2[2] = CardsP2_Assumption[2];
+									CardsP2[3] = CardsP2_Assumption[3];
+
+									Tik_Dice = false;
+									Tik_Nut = false;
+									Tik_Player = true;
+
+									Tik_AGAINDICE = false;
+									Tik_COEF = false;
+									Tik_LIMIT = false;
+
+									P1N1_IsLive = true;
+									P1N2_IsLive = true;
+									P2N1_IsLive = true;
+									P2N2_IsLive = true;
+
+									one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form = false;
+
+									one_click_btn_DICEAGAIN_CARD_p1 = true;
+									one_click_btn_DICEAGAIN_CARD_p2 = true;
+
+									one_click_btn_COEF_CARD_p1 = true;
+									one_click_btn_COEF_CARD_p2 = true;
+
+									one_click_btn_LIMIT_CARD_p1 = true;
+									one_click_btn_LIMIT_CARD_p2 = true;
+
+									turn = 1;
+
+									//variable LOGIC-------------------------					
+									player_Turn = P1;//turn of players							
+
+									IsDoorClosed = 0;
+
+									CoefDice = 1;
+
+									sw_AgainDice = 0;
+
+									playerSW = 1;
+
+									IsLimitP1N1 = false;
+									IsLimitP1N2 = false;
+									IsLimitP2N1 = false;
+									IsLimitP2N2 = false;
+
+									DiceVar = 0;
+
+									count = 0;
+
+									iP1 = 0;
+									iP2 = 0;
+
+									CardChoosed;
+
+									User_operation = -1;
+									//---------------------------
+									//structs
+
+									btn_P1Nut1.X_frist = PP1N1_L;
+									btn_P1Nut1.Y_frist = PP1N1_T;
+									btn_P1Nut1.X_end = PP1N1_L + PPNW;
+									btn_P1Nut1.Y_end = PP1N1_T + PPNW;
+									btn_P1Nut1.sw_Link = NULL;
+
+									btn_P1Nut2.X_frist = PP1N2_L;
+									btn_P1Nut2.Y_frist = PP1N2_T;
+									btn_P1Nut2.X_end = PP1N2_L + PPNW;
+									btn_P1Nut2.Y_end = PP1N2_T + PPNW;
+									btn_P1Nut2.sw_Link = NULL;
+
+									btn_P2Nut1.X_frist = PP2N1_L;
+									btn_P2Nut1.Y_frist = PP2N1_T;
+									btn_P2Nut1.X_end = PP2N1_L + PPNW;
+									btn_P2Nut1.Y_end = PP2N1_T + PPNW;
+									btn_P2Nut1.sw_Link = NULL;
+
+									btn_P2Nut2.X_frist = PP2N2_L;
+									btn_P2Nut2.Y_frist = PP2N2_T;
+									btn_P2Nut2.X_end = PP2N2_L + PPNW;
+									btn_P2Nut2.Y_end = PP2N2_T + PPNW;
+									btn_P2Nut2.sw_Link = NULL;
+
+
+									//---------------------------
+									P1Nut1.x = PP1N1_L;
+									P1Nut1.y = PP1N1_T;
+
+									P1Nut2.x = PP1N2_L;
+									P1Nut2.y = PP1N2_T;
+
+									P2Nut1.x = PP2N1_L;
+									P2Nut1.y = PP2N1_T;
+
+									P2Nut2.x = PP2N2_L;
+									P2Nut2.y = PP2N2_T;
+									//End////////////////////////////////////////////////////////////////////////
+									break;
+								}
 							}
+							else if (sw_btn(&btn_YesInMenuMessageInTheBoard, &mouseState))
+							{
+								if (al_mouse_button_down(&mouseState, 1))
+								{
+									sw_Show_MessageBoxRefresh = false;
+									break;
+								}
+							}
+
 						}
-
 					}
-				}
-				//Guid Button
-				if (sw_btn(&btn_QuestionInTheBoard, &mouseState))
-				{
-					if (al_mouse_button_down(&mouseState, 1))
+					//Guid Button
+					if (sw_btn(&btn_QuestionInTheBoard, &mouseState))
 					{
-						pages_sw = Guide_Form;
-						IsBeforeWndow = Board_Form;
+						if (al_mouse_button_down(&mouseState, 1))
+						{
+							pages_sw = Guide_Form;
+							IsBeforeWndow = Board_Form;
+						}
 					}
+
+					//Save Button
+					if (sw_btn(&btn_SaveInTheBoard, &mouseState))
+						if (al_mouse_button_down(&mouseState, 1))
+						{
+							fopen_s(&FileOfBoard, "FOB.MiM", "wb");
+							//SAVE Information---------------------------------------------------------
+							//fseek(FileOfBoard, 0, SEEK_SET);
+
+							fwrite(&Permission_change_mouse, sizeof(bool), 1, FileOfBoard);
+							fwrite(&sw_btnDown, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(Player1, sizeof(int), 2, FileOfBoard);
+							fwrite(Player2, sizeof(int), 2, FileOfBoard);
+
+							fwrite(CardsP1, sizeof(int), 4, FileOfBoard);
+							fwrite(CardsP2, sizeof(int), 4, FileOfBoard);
+
+							fwrite(&Tik_Dice, sizeof(bool), 1, FileOfBoard);
+							fwrite(&Tik_Nut, sizeof(bool), 1, FileOfBoard);
+							fwrite(&Tik_Player, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&Tik_AGAINDICE, sizeof(bool), 1, FileOfBoard);
+							fwrite(&Tik_COEF, sizeof(bool), 1, FileOfBoard);
+							fwrite(&Tik_LIMIT, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&P1N1_IsLive, sizeof(bool), 1, FileOfBoard);
+							fwrite(&P1N2_IsLive, sizeof(bool), 1, FileOfBoard);
+							fwrite(&P2N1_IsLive, sizeof(bool), 1, FileOfBoard);
+							fwrite(&P2N2_IsLive, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&one_click_btn_DICEAGAIN_CARD_p1, sizeof(bool), 1, FileOfBoard);
+							fwrite(&one_click_btn_DICEAGAIN_CARD_p2, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&one_click_btn_COEF_CARD_p1, sizeof(bool), 1, FileOfBoard);
+							fwrite(&one_click_btn_COEF_CARD_p2, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&one_click_btn_LIMIT_CARD_p1, sizeof(bool), 1, FileOfBoard);
+							fwrite(&one_click_btn_LIMIT_CARD_p2, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&one_click_btn_NextGuid_icon, sizeof(bool), 1, FileOfBoard);
+							fwrite(&one_click_btn_BackGuid_icon, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&sw_Show_MessageBoxMenu, sizeof(bool), 1, FileOfBoard);
+							fwrite(&sw_Show_MessageBoxRefresh, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&menu_massage_display, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&Tik_Opinion_ForCarridor, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&CoefCard_Operated, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&Is_StartOfBackToMenu, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&UnLocked_FORDISPLAY_Card_OR_Carridor_Place, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&turn, sizeof(int), 1, FileOfBoard);
+
+							//VarsLOGIC------------------------------
+							fwrite(&player_Turn, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&IsDoorClosed, sizeof(IsDoorClosed), 1, FileOfBoard);
+
+							fwrite(&CoefDice, sizeof(CoefDice), 1, FileOfBoard);
+
+							fwrite(&sw_AgainDice, sizeof(sw_AgainDice), 1, FileOfBoard);
+
+							fwrite(&NextPage, sizeof(NextPage), 1, FileOfBoard);
+
+							fwrite(&playerSW, sizeof(playerSW), 1, FileOfBoard);
+
+							fwrite(&IsLimitP1N1, sizeof(bool), 1, FileOfBoard);
+							fwrite(&IsLimitP1N2, sizeof(bool), 1, FileOfBoard);
+							fwrite(&IsLimitP2N1, sizeof(bool), 1, FileOfBoard);
+							fwrite(&IsLimitP2N2, sizeof(bool), 1, FileOfBoard);
+
+							fwrite(&DiceVar, sizeof(int), 1, FileOfBoard);
+
+							fwrite(&count, sizeof(int), 1, FileOfBoard);
+
+							fwrite(&iP1, sizeof(int), 1, FileOfBoard);
+							fwrite(&iP2, sizeof(int), 1, FileOfBoard);
+
+							fwrite(&User_operation, sizeof(User_operation), 1, FileOfBoard);
+							//----------------------------------------------------------------------
+							//structs---------------------------
+
+							fwrite(&btn_P1Nut1, sizeof(struct button), 1, FileOfBoard);
+							fwrite(&btn_P1Nut2, sizeof(struct button), 1, FileOfBoard);
+							fwrite(&btn_P2Nut1, sizeof(struct button), 1, FileOfBoard);
+							fwrite(&btn_P2Nut2, sizeof(struct button), 1, FileOfBoard);
+
+							fwrite(&P1Nut1.x, sizeof(int), 1, FileOfBoard);
+							fwrite(&P1Nut1.y, sizeof(int), 1, FileOfBoard);
+
+							fwrite(&P1Nut2.x, sizeof(int), 1, FileOfBoard);
+							fwrite(&P1Nut2.y, sizeof(int), 1, FileOfBoard);
+
+							fwrite(&P2Nut1.x, sizeof(int), 1, FileOfBoard);
+							fwrite(&P2Nut1.y, sizeof(int), 1, FileOfBoard);
+
+							fwrite(&P2Nut2.x, sizeof(int), 1, FileOfBoard);
+							fwrite(&P2Nut2.y, sizeof(int), 1, FileOfBoard);
+
+							fwrite(CardPlace, sizeof(struct NUT), 9, FileOfBoard);
+							fwrite(CarridorPlace, sizeof(struct NUT), 8, FileOfBoard);
+
+							fread(ArrayCardsPlace, sizeof(int), 9, FileOfBoard);
+
+							for (int i = 0; i < 8; i++)fwrite(&(ArrayCarridorsPlace[i][0]), sizeof(int), 1, FileOfBoard);
+
+							for (int i = 0; i < 8; i++) fwrite(&(ArrayCarridorsPlace[i][1]), sizeof(int), 1, FileOfBoard);
+
+							//----------------------------------------
+							fseek(FileOfBoard, 0, SEEK_SET);
+							fclose(FileOfBoard);
+							//-------------------------------------------------------------------------
+						}
+					//********************************************************
+
+
+					//2x pic
+					if (Tik_COEF)
+						al_draw_bitmap(PIC_2X_forDice, 613, 410, 0);
+					//--------------------------------
+					//Number of cards
+					al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[COEF], Y_NOCP1_DOORCLOSED, 0, "%d", CardsP1[COEF]);
+					al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[DICEAGAIN], Y_NOCP1_COEF, 0, "%d", CardsP1[DICEAGAIN]);
+					al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[LIMIT], Y_NOCP1_LIMIT, 0, "%d", CardsP1[LIMIT]);
+					al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[DOORCLOSED], Y_NOCP1_DICEAGAIN, 0, "%d", CardsP1[DOORCLOSED]);
+
+					al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[COEF], Y_NOCP2_DOORCLOSED, 0, "%d", CardsP2[COEF]);
+					al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[DICEAGAIN], Y_NOCP2_COEF, 0, "%d", CardsP2[DICEAGAIN]);
+					al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[LIMIT], Y_NOCP2_LIMIT, 0, "%d", CardsP2[LIMIT]);
+					al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[DOORCLOSED], Y_NOCP2_DICEAGAIN, 0, "%d", CardsP2[DOORCLOSED]);
+
+					KeepCenterNUMBER(CardsP1DistanceFromLeft, CriterionOfDistanceP1, CardsP1);
+					KeepCenterNUMBER(CardsP2DistanceFromLeft, CriterionOfDistanceP2, CardsP2);
+					//----------------------------------------------------------------------------------------------------
 				}
-
-				//Save Button
-				if (sw_btn(&btn_SaveInTheBoard, &mouseState))
-					if (al_mouse_button_down(&mouseState, 1))
-					{
-						fopen_s(&FileOfBoard, "FOB.MiM", "wb");
-						//SAVE Information---------------------------------------------------------
-						//fseek(FileOfBoard, 0, SEEK_SET);
-
-						fwrite(&Permission_change_mouse, sizeof(bool), 1, FileOfBoard);
-						fwrite(&sw_btnDown, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(Player1, sizeof(int), 2, FileOfBoard);
-						fwrite(Player2, sizeof(int), 2, FileOfBoard);
-
-						fwrite(CardsP1, sizeof(int), 4, FileOfBoard);
-						fwrite(CardsP2, sizeof(int), 4, FileOfBoard);
-
-						fwrite(&Tik_Dice, sizeof(bool), 1, FileOfBoard);
-						fwrite(&Tik_Nut, sizeof(bool), 1, FileOfBoard);
-						fwrite(&Tik_Player, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&Tik_AGAINDICE, sizeof(bool), 1, FileOfBoard);
-						fwrite(&Tik_COEF, sizeof(bool), 1, FileOfBoard);
-						fwrite(&Tik_LIMIT, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&P1N1_IsLive, sizeof(bool), 1, FileOfBoard);
-						fwrite(&P1N2_IsLive, sizeof(bool), 1, FileOfBoard);
-						fwrite(&P2N1_IsLive, sizeof(bool), 1, FileOfBoard);
-						fwrite(&P2N2_IsLive, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&one_click_btn_TWEPERSON_To_buttons_continueANDnew_Form, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&one_click_btn_DICEAGAIN_CARD_p1, sizeof(bool), 1, FileOfBoard);
-						fwrite(&one_click_btn_DICEAGAIN_CARD_p2, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&one_click_btn_COEF_CARD_p1, sizeof(bool), 1, FileOfBoard);
-						fwrite(&one_click_btn_COEF_CARD_p2, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&one_click_btn_LIMIT_CARD_p1, sizeof(bool), 1, FileOfBoard);
-						fwrite(&one_click_btn_LIMIT_CARD_p2, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&one_click_btn_NextGuid_icon, sizeof(bool), 1, FileOfBoard);
-						fwrite(&one_click_btn_BackGuid_icon, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&sw_Show_MessageBoxMenu, sizeof(bool), 1, FileOfBoard);
-						fwrite(&sw_Show_MessageBoxRefresh, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&menu_massage_display, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&Tik_Opinion_ForCarridor, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&CoefCard_Operated, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&Is_StartOfBackToMenu, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&UnLocked_FORDISPLAY_Card_OR_Carridor_Place, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&turn, sizeof(int), 1, FileOfBoard);
-
-						//VarsLOGIC------------------------------
-						fwrite(&player_Turn, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&IsDoorClosed, sizeof(IsDoorClosed), 1, FileOfBoard);
-
-						fwrite(&CoefDice, sizeof(CoefDice), 1, FileOfBoard);
-
-						fwrite(&sw_AgainDice, sizeof(sw_AgainDice), 1, FileOfBoard);
-
-						fwrite(&NextPage, sizeof(NextPage), 1, FileOfBoard);
-
-						fwrite(&playerSW, sizeof(playerSW), 1, FileOfBoard);
-
-						fwrite(&IsLimitP1N1, sizeof(bool), 1, FileOfBoard);
-						fwrite(&IsLimitP1N2, sizeof(bool), 1, FileOfBoard);
-						fwrite(&IsLimitP2N1, sizeof(bool), 1, FileOfBoard);
-						fwrite(&IsLimitP2N2, sizeof(bool), 1, FileOfBoard);
-
-						fwrite(&DiceVar, sizeof(int), 1, FileOfBoard);
-
-						fwrite(&count, sizeof(int), 1, FileOfBoard);
-
-						fwrite(&iP1, sizeof(int), 1, FileOfBoard);
-						fwrite(&iP2, sizeof(int), 1, FileOfBoard);
-
-						fwrite(&User_operation, sizeof(User_operation), 1, FileOfBoard);
-						//----------------------------------------------------------------------
-						//structs---------------------------
-
-						fwrite(&btn_P1Nut1, sizeof(struct button), 1, FileOfBoard);
-						fwrite(&btn_P1Nut2, sizeof(struct button), 1, FileOfBoard);
-						fwrite(&btn_P2Nut1, sizeof(struct button), 1, FileOfBoard);
-						fwrite(&btn_P2Nut2, sizeof(struct button), 1, FileOfBoard);
-
-						fwrite(&P1Nut1.x, sizeof(int), 1, FileOfBoard);
-						fwrite(&P1Nut1.y, sizeof(int), 1, FileOfBoard);
-
-						fwrite(&P1Nut2.x, sizeof(int), 1, FileOfBoard);
-						fwrite(&P1Nut2.y, sizeof(int), 1, FileOfBoard);
-
-						fwrite(&P2Nut1.x, sizeof(int), 1, FileOfBoard);
-						fwrite(&P2Nut1.y, sizeof(int), 1, FileOfBoard);
-
-						fwrite(&P2Nut2.x, sizeof(int), 1, FileOfBoard);
-						fwrite(&P2Nut2.y, sizeof(int), 1, FileOfBoard);
-
-						fwrite(CardPlace, sizeof(struct NUT), 9, FileOfBoard);
-						fwrite(CarridorPlace, sizeof(struct NUT), 8, FileOfBoard);
-
-						fread(ArrayCardsPlace, sizeof(int), 9, FileOfBoard);
-
-						for (int i = 0; i < 8; i++)fwrite(&(ArrayCarridorsPlace[i][0]), sizeof(int), 1, FileOfBoard);
-
-						for (int i = 0; i < 8; i++) fwrite(&(ArrayCarridorsPlace[i][1]), sizeof(int), 1, FileOfBoard);
-
-						//----------------------------------------
-						fseek(FileOfBoard, 0, SEEK_SET);
-						fclose(FileOfBoard);
-						//-------------------------------------------------------------------------
-					}
-
-				//********************************************************
-
-
-				//2x pic
-				if (Tik_COEF)
-					al_draw_bitmap(PIC_2X_forDice, 613, 410, 0);
-				//--------------------------------
-				//Number of cards
-				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[COEF], Y_NOCP1_DOORCLOSED, 0, "%d", CardsP1[COEF]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[DICEAGAIN], Y_NOCP1_COEF, 0, "%d", CardsP1[DICEAGAIN]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[LIMIT], Y_NOCP1_LIMIT, 0, "%d", CardsP1[LIMIT]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP1DistanceFromLeft[DOORCLOSED], Y_NOCP1_DICEAGAIN, 0, "%d", CardsP1[DOORCLOSED]);
-
-				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[COEF], Y_NOCP2_DOORCLOSED, 0, "%d", CardsP2[COEF]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[DICEAGAIN], Y_NOCP2_COEF, 0, "%d", CardsP2[DICEAGAIN]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[LIMIT], Y_NOCP2_LIMIT, 0, "%d", CardsP2[LIMIT]);
-				al_draw_textf(font, al_map_rgb(240, 240, 240), CardsP2DistanceFromLeft[DOORCLOSED], Y_NOCP2_DICEAGAIN, 0, "%d", CardsP2[DOORCLOSED]);
-
-				KeepCenterNUMBER(CardsP1DistanceFromLeft, CriterionOfDistanceP1, CardsP1);
-				KeepCenterNUMBER(CardsP2DistanceFromLeft, CriterionOfDistanceP2, CardsP2);
-				//----------------------------------------------------------------------------------------------------
-
 #pragma region LOGIC
 				switch (player_Turn)
 				{
@@ -2222,40 +2445,44 @@ int main()
 					switch (User_operation)
 					{
 					case CLICKDICE:
-						if (Tik_COEF) DiceVar *= 2;
-						else
+						sw_btnDown = true;
+						al_rest(0.1);
+						DiceVar = DiceRand();
+						Dice_PIC_VAR = Dice_PIC[DiceVar];
+						ConvertToDiceMIM(&DiceVar);
+						if (DiceVar != 3)
 						{
-							sw_btnDown = true;
-							DiceVar = DiceRand();
-							Dice_PIC_VAR = Dice_PIC[DiceVar];
-							ConvertToDiceMIM(&DiceVar);
-							if (P1Nut1.y == PP1N1_T && P1Nut2.y == PP1N2_T && DiceVar != 3)
+							if ((P1Nut1.y == PP1N1_T))IsLimitP1N1 = true;
+							if ((P1Nut2.y == PP1N2_T))IsLimitP1N2 = true;
+							if ((P1Nut1.y == PP1N1_T && P1Nut2.y == PP1N2_T) ||
+								(P1Nut1.y == PP1N1_T && IsLimitP1N2) ||
+								(P1Nut2.y == PP1N2_T && IsLimitP1N1))
 							{
 								player_Turn = P2;
-								User_operation = -1;
 								Tik_Dice = false;
 								Tik_Player = true;
 								IsLimitP1N1 = false;
 								IsLimitP1N2 = false;
-							}
-							else if (P1Nut1.y == PP1N1_T && DiceVar != 3) IsLimitP1N1 = true;
-							else if (P1Nut2.y == PP1N2_T && DiceVar != 3) IsLimitP1N2 = true;
-							if ((IsLimitP1N1 && IsLimitP1N2) || (!P1N1_IsLive && IsLimitP1N2) || (!P1N2_IsLive && IsLimitP1N1))
-							{
-								player_Turn = P2;
 								User_operation = -1;
-								Tik_Dice = false;
-								Tik_Player = true;
-								IsLimitP1N1 = false;
-								IsLimitP1N2 = false;
 							}
-
 						}
+						if ((IsLimitP1N1 && IsLimitP1N2) || (!P1N1_IsLive && IsLimitP1N2) || (!P1N2_IsLive && IsLimitP1N1))
+						{
+							player_Turn = P2;
+							User_operation = -1;
+							Tik_Dice = false;
+							Tik_Player = true;
+							IsLimitP1N1 = false;
+							IsLimitP1N2 = false;
+						}
+						if (Tik_COEF)DiceVar *= 2;
 						User_operation = -1;
 						break;
 					case CLICKCARD_doorclosed:
 						break;
 					case CLICKCARD_coef:
+						DiceVar *= 2;
+						User_operation = -1;
 						break;
 					case CLICKCARD_limit:
 						al_flip_display();
@@ -2297,10 +2524,95 @@ int main()
 						{
 							if ((Player1[0] + DiceVar) > -1 && (Player1[0] + DiceVar) < 81)//check for Being to period
 							{
+								short int check_plus_Is_Right;
+								short int sign = 1;
 								//1-moving
 								if (P1Nut1.y == PP1N1_T) DiceVar = 0;
+
+								check_plus_Is_Right = Player1[0] % 18;
+								if (check_plus_Is_Right < 9)sign = 1;
+								else sign = -1;
+
 								Player1[0] += DiceVar;
+								int WW = P1Nut1.x;
+								int HH = P1Nut1.y;
 								MoveGraphic(Player1[0], &(P1Nut1.x), &(P1Nut1.y));
+
+								//Animation_Nut
+								if (WW >= 350 && HH <= 700)
+								{
+									printf("start Animation");
+									al_flip_display();
+									short int IsUPorDOWN = 0;
+									bool check_UPorDown_Func = false;
+									int i_Andis;
+									while (1)
+									{
+
+										switch (event.type)
+										{
+										case ALLEGRO_EVENT_TIMER:
+											sw = true;
+											break;
+										case ALLEGRO_EVENT_DISPLAY_CLOSE:
+											done = true;
+											break;
+										}
+										if (done) exit(0);
+
+										al_draw_bitmap(Board_PIC, 350, 100, 0);
+
+										for (int i = 0; i < 9; i++)
+											al_draw_bitmap(CardLuckPlace_PIC, CardPlace[i].x, CardPlace[i].y, 0);
+										for (int i = 0; i < 8; i++)
+											al_draw_bitmap(CarridorPlace_PIC, CarridorPlace[i].x, CarridorPlace[i].y, 0);
+
+										al_draw_bitmap(Dice_PIC_VAR, DICE_L, DICE_T, 0);
+
+										al_draw_bitmap(P1Nut1.picture, WW, HH, 0);
+
+										al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
+										al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
+										al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
+										if (!check_UPorDown_Func)
+											IsUPorDOWN = MoveVertically(WW, HH, ANIMATION_Move_V_Up, ANIMATION_Move_V_Down, &i_Andis, DiceVar);
+										if (IsUPorDOWN)
+										{
+											check_UPorDown_Func = true;
+											if (IsUPorDOWN == 1)
+											{
+												if (DiceVar > 0)HH--;
+												if (HH == ANIMATION_Move_V_Down[i_Andis][1])
+												{
+													sign *= -1;
+													check_UPorDown_Func = false;
+													IsUPorDOWN = false;
+												}
+											}
+											else if (IsUPorDOWN == -1)
+											{
+												if ((DiceVar < 0))HH++;
+												if (HH == ANIMATION_Move_V_Up[i_Andis][1])
+												{
+													sign *= -1;
+													check_UPorDown_Func = false;
+													IsUPorDOWN = false;
+												}
+											}
+										}
+										else
+										{
+											if (DiceVar > 0)WW += sign;
+											else if (DiceVar < 0)WW -= sign;
+
+										}
+										if (WW == P1Nut1.x && HH == P1Nut1.y)break;
+										if (WW > 1300)break;
+										al_rest(0.001);
+										al_flip_display();
+									}
+								}
+
 								//---------------------------------------
 
 								//2-Hitting
@@ -2448,10 +2760,96 @@ int main()
 							printf("yesP1N2\n\n");
 							if ((Player1[1] + DiceVar) > -1 && (Player1[1] + DiceVar) < 81)//check for Being to period
 							{
+								short int check_plus_Is_Right;
+								short int sign = 1;
 								//1-moving
 								if (P1Nut2.y == PP1N2_T) DiceVar = 0;
+
+								check_plus_Is_Right = Player1[1] % 18;
+								if (check_plus_Is_Right < 9)sign = 1;
+								else sign = -1;
+
 								Player1[1] += DiceVar;
+								int WW = P1Nut2.x;
+								int HH = P1Nut2.y;
 								MoveGraphic(Player1[1], &(P1Nut2.x), &(P1Nut2.y));
+
+								//Animation_Nut
+								if (WW >= 350 && HH <= 700)
+								{
+									printf("start Animation");
+									al_flip_display();
+									short int IsUPorDOWN = 0;
+									bool check_UPorDown_Func = false;
+									int i_Andis;
+									while (1)
+									{
+										switch (event.type)
+										{
+										case ALLEGRO_EVENT_TIMER:
+											sw = true;
+											break;
+										case ALLEGRO_EVENT_DISPLAY_CLOSE:
+											done = true;
+											break;
+										}
+										if (done) exit(0);
+
+										al_draw_bitmap(Board_PIC, 350, 100, 0);
+
+
+										for (int i = 0; i < 9; i++)
+											al_draw_bitmap(CardLuckPlace_PIC, CardPlace[i].x, CardPlace[i].y, 0);
+										for (int i = 0; i < 8; i++)
+											al_draw_bitmap(CarridorPlace_PIC, CarridorPlace[i].x, CarridorPlace[i].y, 0);
+
+										al_draw_bitmap(Dice_PIC_VAR, DICE_L, DICE_T, 0);
+
+										al_draw_bitmap(P1Nut2.picture, WW, HH, 0);
+
+										al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
+										al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
+										al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
+
+										if (!check_UPorDown_Func)
+											IsUPorDOWN = MoveVertically(WW, HH, ANIMATION_Move_V_Up, ANIMATION_Move_V_Down, &i_Andis, DiceVar);
+										if (IsUPorDOWN)
+										{
+											check_UPorDown_Func = true;
+											if (IsUPorDOWN == 1)
+											{
+												if (DiceVar > 0)HH--;
+												if (HH == ANIMATION_Move_V_Down[i_Andis][1])
+												{
+													sign *= -1;
+													check_UPorDown_Func = false;
+													IsUPorDOWN = false;
+												}
+											}
+											else if (IsUPorDOWN == -1)
+											{
+												if ((DiceVar < 0))HH++;
+												if (HH == ANIMATION_Move_V_Up[i_Andis][1])
+												{
+													sign *= -1;
+													check_UPorDown_Func = false;
+													IsUPorDOWN = false;
+												}
+											}
+										}
+										else
+										{
+											if (DiceVar > 0)WW += sign;
+											else if (DiceVar < 0)WW -= sign;
+
+										}
+										if (WW == P1Nut2.x && HH == P1Nut2.y)break;
+										if (WW > 1300)break;
+										al_rest(0.001);
+										al_flip_display();
+									}
+								}
+
 								//-----------------------------------
 
 								//2-Hitting
@@ -2601,6 +2999,7 @@ int main()
 					case CLICKNUT2_ENEMY:
 						break;
 					default:
+						User_operation = -1;
 						break;
 					}
 
@@ -2609,14 +3008,43 @@ int main()
 					switch (User_operation)
 					{
 					case CLICKDICE:
-						if (Tik_COEF) DiceVar *= 2;
+						printf("\n@2\n");
+						sw_btnDown = true;
+						DiceVar = DiceRand();
+						Dice_PIC_VAR = Dice_PIC[DiceVar];
+						ConvertToDiceMIM(&DiceVar);
+						/*if (P2Nut1.y == PP2N1_T && P2Nut2.y == PP2N2_T && DiceVar != -3)
+						{
+							player_Turn = P1;
+							User_operation = -1;
+							Tik_Dice = false;;
+							Tik_Player = true;
+							IsLimitP2N1 = false;
+							IsLimitP2N2 = false;
+						}
+						else if (P2Nut1.y == PP2N1_T && DiceVar != -3) IsLimitP2N1 = true;
+						else if (P2Nut2.y == PP2N2_T && DiceVar != -3) IsLimitP2N2 = true;
 						else
 						{
-							sw_btnDown = true;
-							DiceVar = DiceRand();
-							Dice_PIC_VAR = Dice_PIC[DiceVar];
-							ConvertToDiceMIM(&DiceVar);
-							if (P2Nut1.y == PP2N1_T && P2Nut2.y == PP2N2_T && DiceVar != -3)
+							IsLimitP2N1 = false;
+							IsLimitP2N2 = false;
+						}
+						if (IsLimitP2N1 && IsLimitP2N2 || (!P2N1_IsLive && IsLimitP2N2) || (!P2N2_IsLive && IsLimitP2N1))
+						{
+							player_Turn = P1;
+							User_operation = -1;
+							Tik_Dice = false;
+							Tik_Player = true;
+							IsLimitP2N1 = false;
+							IsLimitP2N2 = false;
+						}*/
+						if (DiceVar != -3)
+						{
+							if ((P2Nut1.y == PP2N1_T))IsLimitP2N1 = true;
+							if ((P2Nut2.y == PP2N2_T))IsLimitP2N2 = true;
+							if ((P2Nut1.y == PP2N1_T && P2Nut2.y == PP2N2_T) ||
+								(P2Nut1.y == PP2N1_T && IsLimitP2N2) ||
+								(P2Nut2.y == PP2N2_T && IsLimitP2N1))
 							{
 								player_Turn = P1;
 								User_operation = -1;
@@ -2625,23 +3053,24 @@ int main()
 								IsLimitP2N1 = false;
 								IsLimitP2N2 = false;
 							}
-							else if (P2Nut1.y == PP2N1_T && DiceVar != -3) IsLimitP2N1 = true;
-							else if (P2Nut2.y == PP2N2_T && DiceVar != -3) IsLimitP2N2 = true;
-							if (IsLimitP2N1 && IsLimitP2N2 || (!P2N1_IsLive && IsLimitP2N2) || (!P2N2_IsLive && IsLimitP2N1))
-							{
-								player_Turn = P1;
-								User_operation = -1;
-								Tik_Dice = false;
-								Tik_Player = true;
-								IsLimitP2N1 = false;
-								IsLimitP2N2 = false;
-							}
 						}
+						if (IsLimitP2N1 && IsLimitP2N2 || (!P2N1_IsLive && IsLimitP2N2) || (!P2N2_IsLive && IsLimitP2N1))
+						{
+							player_Turn = P1;
+							User_operation = -1;
+							Tik_Dice = false;
+							Tik_Player = true;
+							IsLimitP2N1 = false;
+							IsLimitP2N2 = false;
+						}
+						if (Tik_COEF) DiceVar *= 2;
 						User_operation = -1;
 						break;
 					case CLICKCARD_doorclosed:
 						break;
 					case CLICKCARD_coef:
+						DiceVar *= 2;
+						User_operation = -1;
 						break;
 					case CLICKCARD_limit:
 						al_flip_display();
@@ -2685,10 +3114,95 @@ int main()
 
 							if ((Player2[0] + DiceVar) > -1 && (Player2[0] + DiceVar) < 81)//check for Being to period
 							{
+								short int check_plus_Is_Right;
+								short int sign = -1;
 								//1-moving
 								if (P2Nut1.y == PP2N1_T) DiceVar = 0;
+
+								check_plus_Is_Right = Player2[0] % 18;
+								if (check_plus_Is_Right < 9)sign = 1;
+								else sign = -1;
+
 								Player2[0] += DiceVar;
+								int WW = P2Nut1.x;
+								int HH = P2Nut1.y;
 								MoveGraphic(Player2[0], &(P2Nut1.x), &(P2Nut1.y));
+
+								//Animation_Nut
+								if (WW >= 350 && HH <= 700 && (WW <= 951 && HH >= 100))
+								{
+									printf("start Animation");
+									al_flip_display();
+									short int IsUPorDOWN = 0;
+									bool check_UPorDown_Func = false;
+									int i_Andis;
+									while (1)
+									{
+										switch (event.type)
+										{
+										case ALLEGRO_EVENT_TIMER:
+											sw = true;
+											break;
+										case ALLEGRO_EVENT_DISPLAY_CLOSE:
+											done = true;
+											break;
+										}
+										if (done) exit(0);
+
+										al_draw_bitmap(Board_PIC, 350, 100, 0);
+
+										for (int i = 0; i < 9; i++)
+											al_draw_bitmap(CardLuckPlace_PIC, CardPlace[i].x, CardPlace[i].y, 0);
+										for (int i = 0; i < 8; i++)
+											al_draw_bitmap(CarridorPlace_PIC, CarridorPlace[i].x, CarridorPlace[i].y, 0);
+
+										al_draw_bitmap(Dice_PIC_VAR, DICE_L, DICE_T, 0);
+
+										al_draw_bitmap(P2Nut1.picture, WW, HH, 0);
+
+										al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
+										al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
+										al_draw_bitmap(P2Nut2.picture, P2Nut2.x, P2Nut2.y, 0);
+
+										if (!check_UPorDown_Func)
+											IsUPorDOWN = MoveVertically(WW, HH, ANIMATION_Move_V_Up, ANIMATION_Move_V_Down, &i_Andis, DiceVar);
+										if (IsUPorDOWN)
+										{
+											check_UPorDown_Func = true;
+											if (IsUPorDOWN == 1)
+											{
+												if (DiceVar > 0)HH--;
+												if (HH == ANIMATION_Move_V_Down[i_Andis][1])
+												{
+													sign *= -1;
+													check_UPorDown_Func = false;
+													IsUPorDOWN = false;
+												}
+											}
+											else if (IsUPorDOWN == -1)
+											{
+												if ((DiceVar < 0))HH++;
+												if (HH == ANIMATION_Move_V_Up[i_Andis][1])
+												{
+													sign *= -1;
+													check_UPorDown_Func = false;
+													IsUPorDOWN = false;
+												}
+											}
+										}
+										else
+										{
+											if (DiceVar > 0)WW += sign;
+											else if (DiceVar < 0)WW -= sign;
+
+										}
+										if (WW == P2Nut1.x && HH == P2Nut1.y)break;
+										if (WW > 1300)break;
+										al_rest(0.001);
+										al_flip_display();
+									}
+								}
+
 								//------------------------------------
 
 								//2-Hitting
@@ -2835,10 +3349,96 @@ int main()
 
 							if ((Player2[1] + DiceVar) > -1 && (Player2[1] + DiceVar) < 81)//check for Being to period
 							{
+								short int check_plus_Is_Right;
+								short int sign = -1;
 								//1-moving
 								if (P2Nut2.y == PP2N2_T) DiceVar = 0;
+
+								check_plus_Is_Right = Player2[1] % 18;
+								if (check_plus_Is_Right < 9)sign = 1;
+								else sign = -1;
+
 								Player2[1] += DiceVar;
+								int WW = P2Nut2.x;
+								int HH = P2Nut2.y;
+
 								MoveGraphic(Player2[1], &(P2Nut2.x), &(P2Nut2.y));
+
+								//Animation_Nut
+								if (WW >= 350 && HH <= 700 && (WW <= 951 && HH >= 100))
+								{
+									printf("start Animation");
+									al_flip_display();
+									short int IsUPorDOWN = 0;
+									bool check_UPorDown_Func = false;
+									int i_Andis;
+									while (1)
+									{
+										switch (event.type)
+										{
+										case ALLEGRO_EVENT_TIMER:
+											sw = true;
+											break;
+										case ALLEGRO_EVENT_DISPLAY_CLOSE:
+											done = true;
+											break;
+										}
+										if (done) exit(0);
+
+										al_draw_bitmap(Board_PIC, 350, 100, 0);
+
+										for (int i = 0; i < 9; i++)
+											al_draw_bitmap(CardLuckPlace_PIC, CardPlace[i].x, CardPlace[i].y, 0);
+										for (int i = 0; i < 8; i++)
+											al_draw_bitmap(CarridorPlace_PIC, CarridorPlace[i].x, CarridorPlace[i].y, 0);
+
+										al_draw_bitmap(Dice_PIC_VAR, DICE_L, DICE_T, 0);
+
+										al_draw_bitmap(P2Nut2.picture, WW, HH, 0);
+
+										al_draw_bitmap(P1Nut2.picture, P1Nut2.x, P1Nut2.y, 0);
+										al_draw_bitmap(P1Nut1.picture, P1Nut1.x, P1Nut1.y, 0);
+										al_draw_bitmap(P2Nut1.picture, P2Nut1.x, P2Nut1.y, 0);
+
+										if (!check_UPorDown_Func)
+											IsUPorDOWN = MoveVertically(WW, HH, ANIMATION_Move_V_Up, ANIMATION_Move_V_Down, &i_Andis, DiceVar);
+										if (IsUPorDOWN)
+										{
+											check_UPorDown_Func = true;
+											if (IsUPorDOWN == 1)
+											{
+												if (DiceVar > 0)HH--;
+												if (HH == ANIMATION_Move_V_Down[i_Andis][1])
+												{
+													sign *= -1;
+													check_UPorDown_Func = false;
+													IsUPorDOWN = false;
+												}
+											}
+											else if (IsUPorDOWN == -1)
+											{
+												if ((DiceVar < 0))HH++;
+												if (HH == ANIMATION_Move_V_Up[i_Andis][1])
+												{
+													sign *= -1;
+													check_UPorDown_Func = false;
+													IsUPorDOWN = false;
+												}
+											}
+										}
+										else
+										{
+											if (DiceVar > 0)WW += sign;
+											else if (DiceVar < 0)WW -= sign;
+
+										}
+										if (WW == P2Nut2.x && HH == P2Nut2.y)break;
+										if (WW > 1300)break;
+										al_rest(0.001);
+										al_flip_display();
+									}
+								}
+
 								//----------------------------------------------
 
 								//2-Hitting
@@ -2875,7 +3475,6 @@ int main()
 								//4-move with carridors
 								if (CardsP2[DOORCLOSED])
 								{
-									//	printf("check while1");
 									if (IsCarridorPlace(&Player2[1], ArrayCarridorsPlace, false))
 									{
 										//we can put p1nut1 for picture of p1nut2
@@ -2984,6 +3583,7 @@ int main()
 					case CLICKNUT2_ENEMY:
 						break;
 					default:
+						User_operation = -1;
 						break;
 					}
 

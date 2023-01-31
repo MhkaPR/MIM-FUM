@@ -3,19 +3,33 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include <stdbool.h>
+#include <string.h>
+#include "math.h"
 #define DOORCLOSED 0
 #define COEF 1
 #define LIMIT 2
 #define DICEAGAIN 3
 
+#define SIMPLE -1
+#define LIMIT_1_AND_COEF 211
+#define LIMIT_2_AND_COEF 221
+#define SIMPLE_AND_LIMIT_1 -121
+#define SIMPLE_AND_LIMIT_2 -122
+
 #define Direction 66
 #define Player1PlaceFrist_X 355
 #define Player1PlaceFrist_Y 630
-//extern struct NUT
-//{
-//	int x;
-//	int y;
-//};
+
+#define Target 40
+#define BestScore1 100000000
+#define BetterScore2 10000000
+
+#define Enemy1IsVeryNearToTarget 10
+#define Enemy2IsVeryNearToTarget 10
+#define Enemy1IsLittleNearToTarget 9
+#define Enemy2IsLittleNearToTarget 9
+#define Enemy1IsVeryNearToENEMY 7
+#define Enemy2IsVeryNearToENEMY 7
 
 int DiceRand()
 {
@@ -42,6 +56,18 @@ void ConvertToDiceMIM(int* x)
 	case 4: *x = 2; break;
 	case 5: *x = 3; break;
 	};//convert to -3 +3
+}
+void ConvertToDiceArray(int* x)
+{
+	switch (*x)
+	{
+	case -3: *x = 0; break;
+	case -2: *x = 1; break;
+	case -1: *x = 2; break;
+	case 1: *x = 3; break;
+	case 2: *x = 4; break;
+	case 3: *x = 5; break;
+	};//convert to 0 5
 }
 void CardPlacesRand(int ArrayCardsPlace[])
 //daryaftmohre()
@@ -130,6 +156,26 @@ bool Is_DOORCLOSEDcard(const int CardsP1[])
 {
 	if (CardsP1[0]) return true;
 	return false;
+}
+int MoveVertically(int x, int y, int arrayStateVerticall_UP[][2], int arrayStateVerticall_DOWN[][2], int* I_ARR, int Dice)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		if (x == arrayStateVerticall_UP[i][0] && y == arrayStateVerticall_UP[i][1])
+		{
+			*I_ARR = i;
+			if (Dice < 0)return 0;
+			return 1;
+		}
+	}
+	for (int i = 0; i < 8; i++)
+		if (x == arrayStateVerticall_DOWN[i][0] && y == arrayStateVerticall_DOWN[i][1])
+		{
+			*I_ARR = i;
+			if (Dice > 0)return 0;
+			return -1;
+		}
+	return 0;
 }
 void MoveGraphic(const int Corresponding_number, int* x, int* y)
 {
@@ -541,5 +587,211 @@ int KeepCenterNUMBER(int DistanceFromLeft[], int ArrayOfCriterion[], int Cards[]
 		DistanceFromLeft[i] = ArrayOfCriterion[count];
 	}
 }
+//--------------------------------------------
 
-//Logic Branch added
+
+float ScorePlaces(int Dice, int Position, const int Enemy_Positions[], const int ArrayCardPlace[], const int Data[][2], int ArrayCardsMe[])
+{
+	long float SCORE = 0;
+	if (Position + Dice == Target)return BestScore1;
+	if (Position + Dice == Enemy_Positions[0])return BetterScore2;
+	if (Position + Dice == Enemy_Positions[1])return BetterScore2;
+	SCORE = (-1) * abs(pow(Dice, 3));
+	if (abs(Position + Dice - Target) < abs(Position - Target))SCORE *= -1;
+	return SCORE;
+}
+float CoefMove(int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardPlace[], const int ArrayCarridorPlace[], const int ArrayCardsMe[])
+
+{
+	srand(time(0));
+	int DiceCopy = Dice;
+	int NutCopy = Nut_Position;
+	DiceCopy *= 2;
+	NutCopy += DiceCopy;
+	if (ArrayCardsMe[COEF] > 0)
+	{
+
+		if (Nut_Position > Target)
+		{
+
+			if (DiceCopy > 0)
+			{
+
+				if (NutCopy == Enemy_Position[0])return BetterScore2;
+				if (NutCopy == Enemy_Position[1])return BetterScore2;
+			}
+			else
+			{
+
+				bool STOPCoef;
+				if (NutCopy == Target)return BestScore1;//Best Score
+				if (NutCopy == Enemy_Position[0])return BetterScore2;
+				if (NutCopy == Enemy_Position[1])return BetterScore2;
+				STOPCoef = rand() % 6;
+				if (STOPCoef)
+				{
+					if (DiceCopy < -3)
+					{
+						printf("\n!!!COEF!!!\n");
+						return 2 * ScorePlaces(Dice, Nut_Position, Enemy_Position, ArrayCardPlace, ArrayCarridorPlace, ArrayCardsMe);
+
+					}
+				}
+			}
+		}
+		else
+		{
+			if (DiceCopy < 0)
+			{
+				if (NutCopy == Enemy_Position[0])return BetterScore2;
+				if (NutCopy == Enemy_Position[1])return BetterScore2;
+			}
+			else
+			{
+				bool STOPCoef;
+				if (NutCopy == Target)return BestScore1;//Best Score
+				if (NutCopy == Enemy_Position[0])return BetterScore2;
+				if (NutCopy == Enemy_Position[1])return BetterScore2;
+				STOPCoef = rand() % 4;
+				if (!STOPCoef)
+					if (DiceCopy > +3)
+						return ScorePlaces(Dice, Nut_Position, Enemy_Position, ArrayCardPlace, ArrayCarridorPlace, ArrayCardsMe);
+			}
+		}
+	}
+	else return ((-1) * BestScore1);
+}
+int Limitation(int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardsMe[], const int ArrayCardsEnemy[])
+{
+	Nut_Position += Dice;
+	if (ArrayCardsMe[LIMIT] > 0)
+	{
+		if ((abs(Enemy_Position[0] - Target) <= 3))
+		{
+			bool LIMIT_YES = rand() % 3;
+			if (LIMIT_YES)
+			{
+				if (Enemy_Position[0] != Nut_Position + Dice)
+					return Enemy1IsVeryNearToTarget;
+			}
+		}
+		else if (abs(Enemy_Position[0] - Target) > 3 && abs(Enemy_Position[0] - Target) <= 6)
+		{
+			if (ArrayCardsEnemy[COEF] > 0)
+			{
+				bool LIMIT_NO = rand() % 2;
+				if (!LIMIT_NO)
+				{
+					if (Enemy_Position[0] != Nut_Position + Dice)
+						return Enemy1IsLittleNearToTarget;
+				}
+			}
+			else
+			{
+				bool StopLimitation = rand() % 6;
+				if (!StopLimitation)
+				{
+					if (Enemy_Position[0] != Nut_Position + Dice)
+						return Enemy1IsLittleNearToTarget;
+				}
+			}
+		}
+		else if (abs(Enemy_Position[1] - Target) <= 3)
+		{
+			bool LIMIT_YES = rand() % 3;
+			if (LIMIT_YES)
+			{
+				if (Enemy_Position[1] != Nut_Position + Dice)
+					return Enemy2IsVeryNearToTarget;
+			}
+		}
+		else if (abs(Enemy_Position[1] - Target) > 3 && abs(Enemy_Position[1] - Target) <= 6)
+		{
+			if (ArrayCardsEnemy[COEF] > 0)
+			{
+				bool LIMIT_NO = rand() % 2;
+				if (!LIMIT_NO)
+				{
+					if (Enemy_Position[1] != Nut_Position + Dice)
+						return Enemy2IsLittleNearToTarget;
+				}
+			}
+			else
+			{
+				bool STOPLimitation = rand() % 6;
+				if (!STOPLimitation)
+				{
+					if (Enemy_Position[1] != Nut_Position + Dice)
+						return Enemy2IsLittleNearToTarget;
+				}
+			}
+		}
+		else if ((abs(Enemy_Position[0] - Nut_Position) <= 3))
+		{
+			bool STOPLimitation = rand() % 3;
+			if (!STOPLimitation)
+			{
+				if (Enemy_Position[0] != Nut_Position + Dice)
+					return Enemy1IsVeryNearToENEMY;
+			}
+		}
+		else if ((abs(Enemy_Position[1] - Nut_Position) <= 3))
+		{
+			bool STOPLimitation = rand() % 3;
+			if (!STOPLimitation)
+			{
+				if (Enemy_Position[1] != Nut_Position + Dice)
+					return Enemy1IsVeryNearToENEMY;
+			}
+		}
+	}
+
+	return 0;
+
+}
+int CarridorMove(int Data[][2], int ArrayCardMe[], int Nut_position)
+{
+	if (ArrayCardMe[DOORCLOSED] > 0)
+	{
+		if (Nut_position >= 27 || Nut_position <= 53)return false;
+		else if (Nut_position <= 8 || Nut_position >= 72)return true;
+		else
+		{
+			bool StopCarridor = rand() % 4;
+			if (!StopCarridor)
+			{
+				for (int i = 0; i < 8; i++)
+				{
+					if (Nut_position == Data[i][0])
+					{
+						if (Data[i][1] == -1)return true;
+						else
+						{
+							printf("checked Carridor\n");
+							if (abs(Data[i][1] - Target) < abs(Data[i][0] - Target))return true;
+							return false;
+						}
+
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+int MaxScore(bool* CoefPalse, int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardPlaces[], const int ArrayCarridorPlace[][2], const int ArrayCardsMe[], const int ArrayCardsEnemy[])
+{
+	bool UseCoef = false;
+	long long int SCORE = ScorePlaces(Dice, Nut_Position, Enemy_Position, ArrayCardPlaces, ArrayCarridorPlace, ArrayCardsMe);
+	long long int SCORE_COEF = CoefMove(Dice, Nut_Position, Enemy_Position, ArrayCardPlaces, ArrayCarridorPlace, ArrayCardsMe);
+
+	if (SCORE < SCORE_COEF)
+	{
+		*CoefPalse = true;
+		return SCORE_COEF;
+	}
+	return SCORE;
+	/*
+	if (UseCoef)return COEF;
+	return SIMPLE;*/
+}

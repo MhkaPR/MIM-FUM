@@ -983,6 +983,7 @@ int main()
 
 		if (sw && al_is_event_queue_empty(queue))
 		{
+
 			//Program
 			switch (pages_sw)
 			{
@@ -1549,155 +1550,181 @@ int main()
 				//AI
 				if (IS_Single_Player)
 				{
-					int LimitationPlaseNut1 = 0;
-					int LimitationPlaseNut2 = 0;
+
 					if (player_Turn == P2)
 					{
+
+						int LimitationPlaseNut1 = 0;
+						int LimitationPlaseNut2 = 0;
 						int State_Nut1 = -1;
 						int State_Nut2 = -1;
+						bool CoefPalse1 = false;
+						bool CoefPalse2 = false;
+						bool rotateTurn = false;
 
-						switch (Duties)
+						//Dice
+						sw_btnDown = true;
+						DiceVar = DiceRand();
+						Dice_PIC_VAR = Dice_PIC[DiceVar];
+						ConvertToDiceMIM(&DiceVar);
+
+						if (DiceVar != -3)
 						{
-						case Dice:
-
-							if (Tik_Player)
+							if ((P2Nut1.y == PP2N1_T))IsLimitP2N1 = true;
+							if ((P2Nut2.y == PP2N2_T))IsLimitP2N2 = true;
+							if ((P2Nut1.y == PP2N1_T && P2Nut2.y == PP2N2_T) ||
+								(P2Nut1.y == PP2N1_T && IsLimitP2N2) ||
+								(P2Nut2.y == PP2N2_T && IsLimitP2N1))
 							{
-								printf("\nhh AI\n");
-								printf("\n@1\n");
-								Tik_Dice = true;
-								Tik_Player = false;
+								player_Turn = P1;
+								User_operation = -1;
+								Tik_Dice = false;;
+								Tik_Player = true;
+								IsLimitP2N1 = false;
+								IsLimitP2N2 = false;
+								rotateTurn = true;
+							}
+						}
+						if (IsLimitP2N1 && IsLimitP2N2 || (!P2N1_IsLive && IsLimitP2N2) || (!P2N2_IsLive && IsLimitP2N1))
+						{
+							player_Turn = P1;
+							User_operation = -1;
+							Tik_Dice = false;
+							Tik_Player = true;
+							IsLimitP2N1 = false;
+							IsLimitP2N2 = false;
+							rotateTurn = true;
+						}
 
-								//Dice Doing---------------
-								sw_btnDown = true;
-								al_rest(0.1);
-								DiceVar = DiceRand();
-								Dice_PIC_VAR = Dice_PIC[DiceVar];
-								ConvertToDiceMIM(&DiceVar);
-								if (DiceVar != 3)
+						printf("\nDice: %d\n", DiceVar);
+
+						if (!rotateTurn)
+						{
+							int DiceForLimitCheck = DiceVar;
+
+							State_Nut1 = MaxScore(&CoefPalse1, DiceVar, Player2[0], Player1, ArrayCardsPlace, ArrayCarridorsPlace, CardsP2, CardsP1);
+							printf("\nScore1: %d , Coef: %d\n", State_Nut1, CoefPalse1);
+
+							State_Nut2 = MaxScore(&CoefPalse2, DiceVar, Player2[1], Player1, ArrayCardsPlace, ArrayCarridorsPlace, CardsP2, CardsP1);
+							printf("\nScore2: %d , Coef: %d\n", State_Nut2, CoefPalse2);
+
+							if (State_Nut1 == State_Nut2)
+							{
+								if (P2N1_IsLive)
 								{
-									if ((P1Nut1.y == PP1N1_T))IsLimitP1N1 = true;
-									if ((P1Nut2.y == PP1N2_T))IsLimitP1N2 = true;
-									if ((P1Nut1.y == PP1N1_T && P1Nut2.y == PP1N2_T) ||
-										(P1Nut1.y == PP1N1_T && IsLimitP1N2) ||
-										(P1Nut2.y == PP1N2_T && IsLimitP1N1))
+									if (abs(Player2[0] - Target) <= abs(Player2[1] - Target))
 									{
-										player_Turn = P2;
-										Tik_Dice = false;
-										Tik_Player = true;
-										IsLimitP1N1 = false;
-										IsLimitP1N2 = false;
-										User_operation = -1;
+										User_operation = CLICKNUT1_P2;
+										IsLimitP2N2 = false;
+									}
+									else if (P2N2_IsLive)
+									{
+										IsLimitP2N1 = false;
+										User_operation = CLICKNUT2_P2;
+									}
+									else
+									{
+										User_operation = CLICKNUT1_P2;
+										IsLimitP2N2 = false;
 									}
 								}
-								if ((IsLimitP1N1 && IsLimitP1N2) || (!P1N1_IsLive && IsLimitP1N2) || (!P1N2_IsLive && IsLimitP1N1))
+								else if (P2N2_IsLive)
 								{
-									player_Turn = P2;
-									User_operation = -1;
-									Tik_Dice = false;
-									Tik_Player = true;
-									IsLimitP1N1 = false;
-									IsLimitP1N2 = false;
+									IsLimitP2N1 = false;
+									User_operation = CLICKNUT2_P2;
 								}
-								//---------------
-
-								State_Nut1 = MaxScore(&LimitationPlaseNut1, DiceVar, Player2[0], Player1, ArrayCardsPlace, ArrayCarridorsPlace, CardsP2, CardsP1);
-								State_Nut2 = MaxScore(&LimitationPlaseNut2, DiceVar, Player2[1], Player1, ArrayCardsPlace, ArrayCarridorsPlace, CardsP2, CardsP1);
-
-								if (State_Nut1 == State_Nut2)Duties = rand() % 2 + 1;
-								else if (State_Nut1 > State_Nut2)
-								{
-									if (!IsLimitP2N1) Duties = ChooseNut1;
-									else Duties = ChooseNut2;
-								}
-								else Duties = ChooseNut2;
-								Duties = ChooseNut1;
 							}
-							break;
-						case ChooseNut1:
-							printf("\n@3\n");
-
-							if (!IsLimitP2N1)
+							else if (State_Nut1 > State_Nut2)
 							{
-								printf("\n\n** 1: %d %d **\n\n", State_Nut1, LimitationPlaseNut1);
-								switch (State_Nut1)
-								{
-								case COEF:
-									CardsP2[COEF]--;
-									DiceVar *= 2;
-									break;
-								default:
-									break;
-								}
 								if (P2N1_IsLive)
 								{
 									IsLimitP2N2 = false;
 									User_operation = CLICKNUT1_P2;
-									Tik_Nut = true;
-
-									if (player_Turn == P2)
-									{
-										Tik_Dice = false;
-										Tik_Player = true;
-									}
-
-									if (LimitationPlaseNut1 == Enemy1)
-									{
-										CardsP2[LIMIT]--;
-										IsLimitP1N1 = true;
-									}
-									else if (LimitationPlaseNut1 == Enemy2)
-									{
-										CardsP2[LIMIT]--;
-										IsLimitP1N2 = true;
-									}
+								}
+								else if (P2N2_IsLive)
+								{
+									IsLimitP2N1 = false;
+									User_operation = CLICKNUT2_P2;
 								}
 							}
-							Duties = Dice;
-							break;
-						case ChooseNut2:
-							printf("\n@3\n");
-							if (!IsLimitP2N2)
+							else
 							{
-								printf("\n\n** 2: %d %d **\n\n", State_Nut1, LimitationPlaseNut2);
-								switch (State_Nut2)
-								{
-								case COEF:
-									CardsP2[COEF]--;
-									DiceVar *= 2;
-									break;
-								default:
-									break;
-								}
 								if (P2N2_IsLive)
 								{
-									IsLimitP2N2 = false;
+									IsLimitP2N1 = false;
 									User_operation = CLICKNUT2_P2;
-									Tik_Nut = true;
+								}
+								else if (P2N1_IsLive)
+								{
+									IsLimitP2N2 = false;
+									User_operation = CLICKNUT1_P2;
+								}
+							}
 
-									if (player_Turn == P2)
-									{
-										Tik_Dice = false;
-										Tik_Player = true;
-									}
+							if (CoefPalse1)DiceForLimitCheck *= 2;
+							LimitationPlaseNut1 = Limitation(DiceForLimitCheck, Player2[0], Player1, CardsP2, CardsP1);
+							LimitationPlaseNut2 = Limitation(DiceForLimitCheck, Player2[1], Player1, CardsP2, CardsP1);
 
-									if (LimitationPlaseNut2 == Enemy1)
+							if (User_operation == CLICKNUT1_P2)
+							{
+
+								if (CoefPalse1)
+								{
+									Tik_COEF = true;
+									CardsP2[COEF]--;
+								}
+
+								printf("\nLPlase1: %d\n", LimitationPlaseNut1);
+							}
+							else if (User_operation == CLICKNUT2_P2)
+							{
+								if (CoefPalse2)
+								{
+									Tik_COEF = true;
+									CardsP2[COEF]--;
+								}
+
+								printf("\nLPlase2: %d\n", LimitationPlaseNut2);
+							}
+							if (LimitationPlaseNut1 || LimitationPlaseNut2)
+							{
+								if (LimitationPlaseNut1 > LimitationPlaseNut2)
+								{
+									IsLimitP1N1 = true;
+									CardsP2[LIMIT]--;
+								}
+								else if (LimitationPlaseNut1 < LimitationPlaseNut2)
+								{
+									IsLimitP1N2 = true;
+									CardsP2[LIMIT]--;
+								}
+								else
+								{
+									bool Limit1 = rand() % 2;
+									if (Limit1)
 									{
-										CardsP2[LIMIT]--;
-										IsLimitP1N1 = true;
+										if (LimitationPlaseNut1)
+										{
+											IsLimitP1N1 = true;
+											CardsP2[LIMIT]--;
+										}
 									}
-									else if (LimitationPlaseNut2 == Enemy2)
+									else
 									{
-										CardsP2[LIMIT]--;
-										IsLimitP1N2 = true;
+										if (LimitationPlaseNut2)
+										{
+											IsLimitP1N2 = true;
+											CardsP2[LIMIT]--;
+										}
 									}
 								}
 							}
-							Duties = Dice;
-							break;
-						case checkCarridor:
-						default:
-							break;
+							Tik_Nut = true;
 						}
+						else Tik_Nut = false;
+						Tik_Dice = false;
+						Tik_Player = true;
+
 					}
 				}
 				if (1)
@@ -1727,6 +1754,7 @@ int main()
 									}
 									else if (!al_mouse_button_down(&mouseState, 1)) one_click_btn_COEF_CARD_p1 = false;
 								}
+
 					al_get_mouse_state(&mouseState);
 					al_draw_bitmap(lucky_CardP1_PIC[Place3], lcp1_L, lcp1_T, 0);
 					if (Tik_Dice)
@@ -2458,6 +2486,7 @@ int main()
 								(P1Nut1.y == PP1N1_T && IsLimitP1N2) ||
 								(P1Nut2.y == PP1N2_T && IsLimitP1N1))
 							{
+								printf("\n----P1 Round----\n");
 								player_Turn = P2;
 								Tik_Dice = false;
 								Tik_Player = true;
@@ -2468,6 +2497,7 @@ int main()
 						}
 						if ((IsLimitP1N1 && IsLimitP1N2) || (!P1N1_IsLive && IsLimitP1N2) || (!P1N2_IsLive && IsLimitP1N1))
 						{
+							printf("\n----P1 Round----\n");
 							player_Turn = P2;
 							User_operation = -1;
 							Tik_Dice = false;
@@ -2650,7 +2680,7 @@ int main()
 
 								if (CardsP1[DOORCLOSED])
 								{
-									//	printf("check while1");
+
 									if (IsCarridorPlace(&Player1[0], ArrayCarridorsPlace, false))
 									{
 										al_draw_bitmap(P1Nut1.picture_Carridor, P1Nut1.x, P1Nut1.y, 0);
@@ -2691,6 +2721,7 @@ int main()
 													Tik_Opinion_ForCarridor = true;
 													break;
 												}
+
 												al_flip_display();
 											}
 										}
@@ -3013,31 +3044,6 @@ int main()
 						DiceVar = DiceRand();
 						Dice_PIC_VAR = Dice_PIC[DiceVar];
 						ConvertToDiceMIM(&DiceVar);
-						/*if (P2Nut1.y == PP2N1_T && P2Nut2.y == PP2N2_T && DiceVar != -3)
-						{
-							player_Turn = P1;
-							User_operation = -1;
-							Tik_Dice = false;;
-							Tik_Player = true;
-							IsLimitP2N1 = false;
-							IsLimitP2N2 = false;
-						}
-						else if (P2Nut1.y == PP2N1_T && DiceVar != -3) IsLimitP2N1 = true;
-						else if (P2Nut2.y == PP2N2_T && DiceVar != -3) IsLimitP2N2 = true;
-						else
-						{
-							IsLimitP2N1 = false;
-							IsLimitP2N2 = false;
-						}
-						if (IsLimitP2N1 && IsLimitP2N2 || (!P2N1_IsLive && IsLimitP2N2) || (!P2N2_IsLive && IsLimitP2N1))
-						{
-							player_Turn = P1;
-							User_operation = -1;
-							Tik_Dice = false;
-							Tik_Player = true;
-							IsLimitP2N1 = false;
-							IsLimitP2N2 = false;
-						}*/
 						if (DiceVar != -3)
 						{
 							if ((P2Nut1.y == PP2N1_T))IsLimitP2N1 = true;
@@ -3116,6 +3122,9 @@ int main()
 							{
 								short int check_plus_Is_Right;
 								short int sign = -1;
+
+
+
 								//1-moving
 								if (P2Nut1.y == PP2N1_T) DiceVar = 0;
 
@@ -3123,7 +3132,9 @@ int main()
 								if (check_plus_Is_Right < 9)sign = 1;
 								else sign = -1;
 
+								if (IS_Single_Player)if (Tik_COEF)DiceVar *= 2;
 								Player2[0] += DiceVar;
+
 								int WW = P2Nut1.x;
 								int HH = P2Nut1.y;
 								MoveGraphic(Player2[0], &(P2Nut1.x), &(P2Nut1.y));
@@ -3239,14 +3250,16 @@ int main()
 								//4-move with carridors
 								if (CardsP2[DOORCLOSED])
 								{
-									//	printf("check while1");
+
 									if (IsCarridorPlace(&Player2[0], ArrayCarridorsPlace, false))
 									{
 										//we can put p1nut1 for picture of p1nut2
 										al_draw_bitmap(P2Nut2.picture_Carridor, P2Nut1.x, P2Nut1.y, 0);
 										al_flip_display();
+
 										while (1)
 										{
+											//if (IS_Single_Player)al_rest(0.7);
 											if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) exit(0);
 											al_wait_for_event(queue, &event);
 											if (al_is_event_queue_empty(queue))
@@ -3254,21 +3267,42 @@ int main()
 												al_draw_bitmap(NoticeToCarridor, 800, 730, 0);
 												al_draw_bitmap(NoticeToCarridor_ProgressBar, X_ProgressBar, 801, 0);
 												al_get_mouse_state(&mouseState);
-												if (sw_btn(&btn_CANCEL_NoticeToCarridor, &mouseState))
+												if (IS_Single_Player)
 												{
-													if (al_mouse_button_down(&mouseState, 1))
+													printf("\n-----------Hello Carridor----------\n");
+													if (CarridorMove(ArrayCarridorsPlace, CardsP2, Player2[0]))
+													{
+														Tik_Opinion_ForCarridor = false;
+														al_flip_display();
+														if (IS_Single_Player)al_rest(0.5);
+														break;
+													}
+													else
 													{
 														Tik_Opinion_ForCarridor = true;
+														al_flip_display();
+														if (IS_Single_Player)al_rest(0.5);
 														break;
 													}
 												}
-												if (sw_btn(&btn_OK_NoticeToCarridor, &mouseState) || sw_btn(&btn_closeDoor_card_p2, &mouseState))
+												else
 												{
-													if (al_mouse_button_down(&mouseState, 1))
+													if (sw_btn(&btn_CANCEL_NoticeToCarridor, &mouseState))
 													{
-														CardsP2[DOORCLOSED]--;
-														Tik_Opinion_ForCarridor = false;
-														break;
+														if (al_mouse_button_down(&mouseState, 1))
+														{
+															Tik_Opinion_ForCarridor = true;
+															break;
+														}
+													}
+													if (sw_btn(&btn_OK_NoticeToCarridor, &mouseState) || sw_btn(&btn_closeDoor_card_p2, &mouseState))
+													{
+														if (al_mouse_button_down(&mouseState, 1))
+														{
+															CardsP2[DOORCLOSED]--;
+															Tik_Opinion_ForCarridor = false;
+															break;
+														}
 													}
 												}
 												if (X_ProgressBar < 1300)
@@ -3358,6 +3392,7 @@ int main()
 								if (check_plus_Is_Right < 9)sign = 1;
 								else sign = -1;
 
+								if (IS_Single_Player)if (Tik_COEF)DiceVar *= 2;
 								Player2[1] += DiceVar;
 								int WW = P2Nut2.x;
 								int HH = P2Nut2.y;
@@ -3480,8 +3515,10 @@ int main()
 										//we can put p1nut1 for picture of p1nut2
 										al_draw_bitmap(P2Nut2.picture_Carridor, P2Nut2.x, P2Nut2.y, 0);
 										al_flip_display();
+										if (IS_Single_Player)al_rest(2);
 										while (1)
 										{
+											/*if (IS_Single_Player)al_rest(3);*/
 											if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) exit(0);
 											al_wait_for_event(queue, &event);
 											if (al_is_event_queue_empty(queue))
@@ -3489,21 +3526,43 @@ int main()
 												al_draw_bitmap(NoticeToCarridor, 800, 730, 0);
 												al_draw_bitmap(NoticeToCarridor_ProgressBar, X_ProgressBar, 801, 0);
 												al_get_mouse_state(&mouseState);
-												if (sw_btn(&btn_CANCEL_NoticeToCarridor, &mouseState))
+												if (IS_Single_Player)
 												{
-													if (al_mouse_button_down(&mouseState, 1))
+													printf("Carridot!!!!!!!!!\n");
+													if (CarridorMove(ArrayCarridorsPlace, CardsP2, Player2[1]))
+													{
+
+														Tik_Opinion_ForCarridor = false;
+														al_flip_display();
+														if (IS_Single_Player)al_rest(0.5);
+														break;
+													}
+													else
 													{
 														Tik_Opinion_ForCarridor = true;
+														al_flip_display();
+														if (IS_Single_Player)al_rest(0.5);
 														break;
 													}
 												}
-												if (sw_btn(&btn_OK_NoticeToCarridor, &mouseState) || sw_btn(&btn_closeDoor_card_p2, &mouseState))
+												else
 												{
-													if (al_mouse_button_down(&mouseState, 1))
+													if (sw_btn(&btn_CANCEL_NoticeToCarridor, &mouseState))
 													{
-														CardsP2[DOORCLOSED]--;
-														Tik_Opinion_ForCarridor = false;
-														break;
+														if (al_mouse_button_down(&mouseState, 1))
+														{
+															Tik_Opinion_ForCarridor = true;
+															break;
+														}
+													}
+													if (sw_btn(&btn_OK_NoticeToCarridor, &mouseState) || sw_btn(&btn_closeDoor_card_p2, &mouseState))
+													{
+														if (al_mouse_button_down(&mouseState, 1))
+														{
+															CardsP2[DOORCLOSED]--;
+															Tik_Opinion_ForCarridor = false;
+															break;
+														}
 													}
 												}
 												if (X_ProgressBar < 1300)
@@ -3517,6 +3576,7 @@ int main()
 													break;
 												}
 												al_flip_display();
+
 											}
 										}
 									}

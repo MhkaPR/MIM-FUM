@@ -4,7 +4,9 @@
 #include "stdio.h"
 #include <stdbool.h>
 #include <string.h>
-#include "math.h"
+#include "allegro5/allegro_audio.h"
+#include "allegro5/allegro_acodec.h"
+
 #define DOORCLOSED 0
 #define COEF 1
 #define LIMIT 2
@@ -30,6 +32,7 @@
 #define Enemy2IsLittleNearToTarget 9
 #define Enemy1IsVeryNearToENEMY 7
 #define Enemy2IsVeryNearToENEMY 7
+
 
 int DiceRand()
 {
@@ -127,13 +130,12 @@ int IsCarridorPlace(int* Position, int CarridorArray[][2], bool Apply_Changes)
 	{
 		if (*Position == CarridorArray[i][0])
 		{
-			printf("check if2");
+
 			if (Apply_Changes) *Position = CarridorArray[i][1];
-			printf("??? 1");
+
 			return 1;
 		}
 	}
-	printf("??? 0");
 	return 0;
 }
 int Is_Any_Card(const int ArrCard[])
@@ -576,21 +578,30 @@ void MoveGraphic(const int Corresponding_number, int* x, int* y)
 		break;
 	}
 }
-int KeepCenterNUMBER(int DistanceFromLeft[], int ArrayOfCriterion[], int Cards[])//array of MeYar
+int KeepCenterNUMBER(int DistanceFromLeft[], int ArrayOfCriterion[], int Cards[][8], int Model)//array of MeYar
 {
 	int count;
 	for (int i = 0; i < 4; i++)
 	{
-		if (Cards[i] < 10)count = 0;
-		else if (Cards[i] < 100)count = 1;
+		if (Cards[i][Model] < 10)count = 0;
+		else if (Cards[i][Model] < 100)count = 1;
 		else count = 2;
 		DistanceFromLeft[i] = ArrayOfCriterion[count];
 	}
 }
-//--------------------------------------------
+
+void AudioRun(ALLEGRO_AUDIO_STREAM* audio, char* FileName)
+{
+
+	audio = al_load_audio_stream(FileName, 2, 2048);
+	al_attach_audio_stream_to_mixer(audio, al_get_default_mixer());
+}
+//------------------------
 
 
-float ScorePlaces(int Dice, int Position, const int Enemy_Positions[], const int ArrayCardPlace[], const int Data[][2], int ArrayCardsMe[])
+
+//ai----
+float ScorePlaces(int Dice, int Position, const int Enemy_Positions[])
 {
 	long float SCORE = 0;
 	if (Position + Dice == Target)return BestScore1;
@@ -600,15 +611,14 @@ float ScorePlaces(int Dice, int Position, const int Enemy_Positions[], const int
 	if (abs(Position + Dice - Target) < abs(Position - Target))SCORE *= -1;
 	return SCORE;
 }
-float CoefMove(int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardPlace[], const int ArrayCarridorPlace[], const int ArrayCardsMe[])
-
+float CoefMove(int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardsMe[][8], int charTemp)
 {
 	srand(time(0));
 	int DiceCopy = Dice;
 	int NutCopy = Nut_Position;
 	DiceCopy *= 2;
 	NutCopy += DiceCopy;
-	if (ArrayCardsMe[COEF] > 0)
+	if (ArrayCardsMe[COEF][charTemp] > 0)
 	{
 
 		if (Nut_Position > Target)
@@ -633,7 +643,7 @@ float CoefMove(int Dice, int Nut_Position, const int Enemy_Position[], const int
 					if (DiceCopy < -3)
 					{
 						printf("\n!!!COEF!!!\n");
-						return 2 * ScorePlaces(Dice, Nut_Position, Enemy_Position, ArrayCardPlace, ArrayCarridorPlace, ArrayCardsMe);
+						return 2 * ScorePlaces(Dice, Nut_Position, Enemy_Position);
 
 					}
 				}
@@ -655,16 +665,16 @@ float CoefMove(int Dice, int Nut_Position, const int Enemy_Position[], const int
 				STOPCoef = rand() % 4;
 				if (!STOPCoef)
 					if (DiceCopy > +3)
-						return ScorePlaces(Dice, Nut_Position, Enemy_Position, ArrayCardPlace, ArrayCarridorPlace, ArrayCardsMe);
+						return ScorePlaces(Dice, Nut_Position, Enemy_Position);
 			}
 		}
 	}
 	else return ((-1) * BestScore1);
 }
-int Limitation(int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardsMe[], const int ArrayCardsEnemy[])
+int Limitation(int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardsMe[][8], int charTemp, const int ArrayCardsEnemy[][8],int charTempENEMY)
 {
 	Nut_Position += Dice;
-	if (ArrayCardsMe[LIMIT] > 0)
+	if (ArrayCardsMe[LIMIT][charTemp] > 0)
 	{
 		if ((abs(Enemy_Position[0] - Target) <= 3))
 		{
@@ -677,7 +687,7 @@ int Limitation(int Dice, int Nut_Position, const int Enemy_Position[], const int
 		}
 		else if (abs(Enemy_Position[0] - Target) > 3 && abs(Enemy_Position[0] - Target) <= 6)
 		{
-			if (ArrayCardsEnemy[COEF] > 0)
+			if (ArrayCardsEnemy[COEF][charTempENEMY] > 0)
 			{
 				bool LIMIT_NO = rand() % 2;
 				if (!LIMIT_NO)
@@ -707,7 +717,7 @@ int Limitation(int Dice, int Nut_Position, const int Enemy_Position[], const int
 		}
 		else if (abs(Enemy_Position[1] - Target) > 3 && abs(Enemy_Position[1] - Target) <= 6)
 		{
-			if (ArrayCardsEnemy[COEF] > 0)
+			if (ArrayCardsEnemy[COEF][charTempENEMY] > 0)
 			{
 				bool LIMIT_NO = rand() % 2;
 				if (!LIMIT_NO)
@@ -749,9 +759,9 @@ int Limitation(int Dice, int Nut_Position, const int Enemy_Position[], const int
 	return 0;
 
 }
-int CarridorMove(int Data[][2], int ArrayCardMe[], int Nut_position)
+int CarridorMove(int Data[][2], int ArrayCardMe[][8],int charTemp, int Nut_position)
 {
-	if (ArrayCardMe[DOORCLOSED] > 0)
+	if (ArrayCardMe[DOORCLOSED][charTemp] > 0)
 	{
 		if (Nut_position >= 27 || Nut_position <= 53)return false;
 		else if (Nut_position <= 8 || Nut_position >= 72)return true;
@@ -779,11 +789,11 @@ int CarridorMove(int Data[][2], int ArrayCardMe[], int Nut_position)
 	}
 	return false;
 }
-int MaxScore(bool* CoefPalse, int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardPlaces[], const int ArrayCarridorPlace[][2], const int ArrayCardsMe[], const int ArrayCardsEnemy[])
+int MaxScore(bool* CoefPalse, int Dice, int Nut_Position, const int Enemy_Position[], const int ArrayCardsMe[][8], int charTemp)
 {
 	bool UseCoef = false;
-	long long int SCORE = ScorePlaces(Dice, Nut_Position, Enemy_Position, ArrayCardPlaces, ArrayCarridorPlace, ArrayCardsMe);
-	long long int SCORE_COEF = CoefMove(Dice, Nut_Position, Enemy_Position, ArrayCardPlaces, ArrayCarridorPlace, ArrayCardsMe);
+	long long int SCORE = ScorePlaces(Dice, Nut_Position, Enemy_Position);
+	long long int SCORE_COEF = CoefMove(Dice, Nut_Position, Enemy_Position, ArrayCardsMe, charTemp);
 
 	if (SCORE < SCORE_COEF)
 	{
@@ -795,3 +805,9 @@ int MaxScore(bool* CoefPalse, int Dice, int Nut_Position, const int Enemy_Positi
 	if (UseCoef)return COEF;
 	return SIMPLE;*/
 }
+//---------------
+
+
+
+
+//Logic Branch added

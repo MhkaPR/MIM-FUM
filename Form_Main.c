@@ -305,6 +305,50 @@ enum charactors
 	char8,
 	char9,
 };
+enum charFristValue
+{
+	VauleCH1_DOORCOSED = 1,
+	VauleCH1_COEF = 4,
+	VauleCH1_LIMIT = 1,
+	VauleCH1_DICEAGAIN = 2,
+
+	VauleCH2_DOORCOSED = 2,
+	VauleCH2_COEF = 2,
+	VauleCH2_LIMIT = 2,
+	VauleCH2_DICEAGAIN = 2,
+
+	VauleCH3_DOORCOSED = 2,
+	VauleCH3_COEF = 3,
+	VauleCH3_LIMIT = 1,
+	VauleCH3_DICEAGAIN = 2,
+
+	VauleCH4_DOORCOSED = 4,
+	VauleCH4_COEF = 4,
+	VauleCH4_LIMIT = 4,
+	VauleCH4_DICEAGAIN = 4,
+
+	VauleCH5_DOORCOSED = 4,
+	VauleCH5_COEF = 4,
+	VauleCH5_LIMIT = 4,
+	VauleCH5_DICEAGAIN = 4,
+
+	VauleCH6_DOORCOSED = 4,
+	VauleCH6_COEF = 4,
+	VauleCH6_LIMIT = 4,
+	VauleCH6_DICEAGAIN = 4,
+
+	VauleCH7_DOORCOSED = 4,
+	VauleCH7_COEF = 4,
+	VauleCH7_LIMIT = 4,
+	VauleCH7_DICEAGAIN = 4,
+
+	VauleCH8_DOORCOSED = 4,
+	VauleCH8_COEF = 4,
+	VauleCH8_LIMIT = 4,
+	VauleCH8_DICEAGAIN = 4,
+
+
+};
 enum saiyan_tem {
 	saiyan_L = 184,
 	saiyan_R = 184 + 190,
@@ -429,7 +473,7 @@ bool is_Position_btn(ALLEGRO_MOUSE_STATE mouseState)
 		(mouseState.x > OLB && mouseState.x < ORB && mouseState.y>OTB && mouseState.y < OBB) ||
 		(mouseState.x > TwLT && mouseState.x < TwRT && mouseState.y>TwTT && mouseState.y < TwBT) ||
 		(mouseState.x > TwLB && mouseState.x < TwRB && mouseState.y>TwTB && mouseState.y < TwBB) ||
-		(mouseState.x > PBG_L && mouseState.x < PBG_R && mouseState.y>PBG_T && mouseState.y < PBG_B)||
+		(mouseState.x > PBG_L && mouseState.x < PBG_R && mouseState.y>PBG_T && mouseState.y < PBG_B) ||
 		(mouseState.x > auL && mouseState.x < auR && mouseState.y>auT && mouseState.y < auB))
 
 	{
@@ -606,7 +650,7 @@ int main()
 
 	bool clickAudio = false;
 	int turn = 1;
-	enum Pages pages_sw = FristMenu;
+	enum Pages pages_sw = StartGame;
 
 	//variable LOGIC-------------------------
 	bool player_Turn = P1;//turn of players
@@ -623,90 +667,105 @@ int main()
 
 	short int IsBeforeWndow = FristMenu;
 
-	int CardsP1[4][8];
+	int CardsP1[4][8]; int CardsAssumptionP1[4][8];
 
 	CardsP1[DOORCLOSED][char1] = 1;
 	CardsP1[COEF][char1] = 4;
 	CardsP1[LIMIT][char1] = 2;
 	CardsP1[DICEAGAIN][char1] = 1;
 
-	CardsP1[DOORCLOSED][char2] = 1;
-	CardsP1[COEF][char2] = 4;
+	CardsP1[DOORCLOSED][char2] = 2;
+	CardsP1[COEF][char2] = 2;
 	CardsP1[LIMIT][char2] = 2;
-	CardsP1[DICEAGAIN][char2] = 1;
+	CardsP1[DICEAGAIN][char2] = 2;
 
-	CardsP1[DOORCLOSED][char3] = 1;
-	CardsP1[COEF][char3] = 4;
-	CardsP1[LIMIT][char3] = 2;
-	CardsP1[DICEAGAIN][char3] = 1;
+	CardsP1[DOORCLOSED][char3] = 2;
+	CardsP1[COEF][char3] = 3;
+	CardsP1[LIMIT][char3] = 1;
+	CardsP1[DICEAGAIN][char3] = 2;
 
-	CardsP1[DOORCLOSED][char4] = 1;
-	CardsP1[COEF][char4] = 4;
-	CardsP1[LIMIT][char4] = 2;
-	CardsP1[DICEAGAIN][char4] = 1;
+	CardsP1[DOORCLOSED][char4] = 4;
+	CardsP1[COEF][char4] = 1;
+	CardsP1[LIMIT][char4] = 1;
+	CardsP1[DICEAGAIN][char4] = 2;
 
 	CardsP1[DOORCLOSED][char5] = 1;
-	CardsP1[COEF][char5] = 4;
-	CardsP1[LIMIT][char5] = 2;
+	CardsP1[COEF][char5] = 1;
+	CardsP1[LIMIT][char5] = 5;
 	CardsP1[DICEAGAIN][char5] = 1;
 
 	CardsP1[DOORCLOSED][char6] = 1;
-	CardsP1[COEF][char6] = 4;
-	CardsP1[LIMIT][char6] = 2;
-	CardsP1[DICEAGAIN][char6] = 1;
+	CardsP1[COEF][char6] = 1;
+	CardsP1[LIMIT][char6] = 1;
+	CardsP1[DICEAGAIN][char6] = 5;
 
-	CardsP1[DOORCLOSED][char7] = 1;
-	CardsP1[COEF][char7] = 4;
-	CardsP1[LIMIT][char7] = 2;
+	CardsP1[DOORCLOSED][char7] = 2;
+	CardsP1[COEF][char7] = 1;
+	CardsP1[LIMIT][char7] = 4;
 	CardsP1[DICEAGAIN][char7] = 1;
 
-	CardsP1[DOORCLOSED][char8] = 1;
-	CardsP1[COEF][char8] = 4;
+	CardsP1[DOORCLOSED][char8] = 2;
+	CardsP1[COEF][char8] = 2;
 	CardsP1[LIMIT][char8] = 2;
-	CardsP1[DICEAGAIN][char8] = 1;
+	CardsP1[DICEAGAIN][char8] = 2;
 
-	int CardsP2[4][8];
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			CardsAssumptionP1[i][j] = CardsP1[i][j];
+		}
+	}
+
+	int CardsP2[4][8]; int CardsAssumptionP2[4][8];
 
 	CardsP2[DOORCLOSED][char1] = 1;
 	CardsP2[COEF][char1] = 4;
 	CardsP2[LIMIT][char1] = 2;
 	CardsP2[DICEAGAIN][char1] = 1;
 
-	CardsP2[DOORCLOSED][char2] = 1;
-	CardsP2[COEF][char2] = 4;
+	CardsP2[DOORCLOSED][char2] = 2;
+	CardsP2[COEF][char2] = 2;
 	CardsP2[LIMIT][char2] = 2;
-	CardsP2[DICEAGAIN][char2] = 1;
+	CardsP2[DICEAGAIN][char2] = 2;
 
-	CardsP2[DOORCLOSED][char3] = 1;
-	CardsP2[COEF][char3] = 4;
-	CardsP2[LIMIT][char3] = 2;
-	CardsP2[DICEAGAIN][char3] = 1;
+	CardsP2[DOORCLOSED][char3] = 2;
+	CardsP2[COEF][char3] = 3;
+	CardsP2[LIMIT][char3] = 1;
+	CardsP2[DICEAGAIN][char3] = 2;
 
-	CardsP2[DOORCLOSED][char4] = 1;
-	CardsP2[COEF][char4] = 4;
-	CardsP2[LIMIT][char4] = 2;
-	CardsP2[DICEAGAIN][char4] = 1;
+	CardsP2[DOORCLOSED][char4] = 4;
+	CardsP2[COEF][char4] = 1;
+	CardsP2[LIMIT][char4] = 1;
+	CardsP2[DICEAGAIN][char4] = 2;
 
 	CardsP2[DOORCLOSED][char5] = 1;
-	CardsP2[COEF][char5] = 4;
-	CardsP2[LIMIT][char5] = 2;
+	CardsP2[COEF][char5] = 1;
+	CardsP2[LIMIT][char5] = 5;
 	CardsP2[DICEAGAIN][char5] = 1;
 
 	CardsP2[DOORCLOSED][char6] = 1;
-	CardsP2[COEF][char6] = 4;
-	CardsP2[LIMIT][char6] = 2;
-	CardsP2[DICEAGAIN][char6] = 1;
+	CardsP2[COEF][char6] = 1;
+	CardsP2[LIMIT][char6] = 1;
+	CardsP2[DICEAGAIN][char6] = 5;
 
-	CardsP2[DOORCLOSED][char7] = 1;
-	CardsP2[COEF][char7] = 4;
-	CardsP2[LIMIT][char7] = 2;
+	CardsP2[DOORCLOSED][char7] = 2;
+	CardsP2[COEF][char7] = 1;
+	CardsP2[LIMIT][char7] = 4;
 	CardsP2[DICEAGAIN][char7] = 1;
 
-	CardsP2[DOORCLOSED][char8] = 1;
-	CardsP2[COEF][char8] = 4;
+	CardsP2[DOORCLOSED][char8] = 2;
+	CardsP2[COEF][char8] = 2;
 	CardsP2[LIMIT][char8] = 2;
-	CardsP2[DICEAGAIN][char8] = 1;
+	CardsP2[DICEAGAIN][char8] = 2;
 
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			CardsAssumptionP2[i][j] = CardsP2[i][j];
+		}
+	}
 	int CardsP1DistanceFromLeft[4] = { 246,246,246,246 };
 	int CardsP2DistanceFromLeft[4] = { 1040,1040,1040,1040 };
 
@@ -1308,13 +1367,13 @@ int main()
 				}
 				if (sw_btn(&btn_ONEPERSON_To_buttons_continueANDnew_Form[0], &mouseState) && mouseState.buttons == 1)
 				{
-					From_ONEPERSON = true;
+					
 					pages_sw = buttons_continueANDnew_Form;
 					Permission_change_mouse = true;
 				}
 				if (sw_btn(&btn_ONEPERSON_To_buttons_continueANDnew_Form[1], &mouseState) && mouseState.buttons == 1)
 				{
-					From_ONEPERSON = true;
+					
 					pages_sw = buttons_continueANDnew_Form;
 					Permission_change_mouse = true;
 
@@ -1396,17 +1455,13 @@ int main()
 								Player1[0] = 0;
 								Player1[1] = 0;
 								Player2[0] = 80;
+
 								Player2[1] = 80;
+								for (int i = 0; i < 4; i++)
+									CardsP1[i][char_template_p1] = CardsAssumptionP1[i][char_template_p1];
 
-								CardsP1[DICEAGAIN][char_template_p1] = 0;
-								CardsP1[COEF][char_template_p1] = 0;
-								CardsP1[LIMIT][char_template_p1] = 0;
-								CardsP1[DICEAGAIN][char_template_p1] = 0;
-
-								CardsP2[0][char_template_p2] = CardsP2_Assumption[0];
-								CardsP2[1][char_template_p2] = CardsP2_Assumption[1];
-								CardsP2[2][char_template_p2] = CardsP2_Assumption[2];
-								CardsP2[3][char_template_p2] = CardsP2_Assumption[3];
+								for (int i = 0; i < 4; i++)
+									CardsP2[i][char_template_p2] = CardsAssumptionP2[i][char_template_p2];
 
 								Tik_Dice = false;
 								Tik_Nut = false;
@@ -1577,9 +1632,6 @@ int main()
 										for (int j = 0; j < 8; j++)
 											fread(&(CardsP1[i][j]), sizeof(int), 1, FileOfBoard);
 									}
-
-
-
 									for (int i = 0; i < 4; i++)
 									{
 										for (int j = 0; j < 8; j++)
@@ -1660,6 +1712,8 @@ int main()
 									fread(&btn_P2Nut1, sizeof(struct button), 1, FileOfBoard);
 									fread(&btn_P2Nut2, sizeof(struct button), 1, FileOfBoard);
 
+									fread(&model, sizeof(int), 1, FileOfBoard);
+
 									fread(&P1Nut1[model].x, sizeof(int), 1, FileOfBoard);
 									fread(&P1Nut1[model].y, sizeof(int), 1, FileOfBoard);
 
@@ -1681,6 +1735,12 @@ int main()
 
 									for (int i = 0; i < 8; i++) fread(&(ArrayCarridorsPlace[i][1]), sizeof(int), 1, FileOfBoard);
 
+
+
+									fread(&char_template_p1, sizeof(int), 1, FileOfBoard);
+									fread(&char_template_p2, sizeof(int), 1, FileOfBoard);
+
+
 									//----------------------------------------
 									fseek(FileOfBoard, 0, SEEK_SET);
 									fclose(FileOfBoard);
@@ -1688,6 +1748,8 @@ int main()
 									ConvertToDiceArray(&DiceVar);
 									Dice_PIC_VAR = Dice_PIC[DiceVar][model];
 									ConvertToDiceMIM(&DiceVar);
+
+									Board_PIC_VAR = Board_PIC[model];
 
 									pages_sw = Board_Form;
 									break;
@@ -2010,7 +2072,7 @@ int main()
 
 					}
 				}
-					break;
+				break;
 			case Setting_Form:
 				break;
 			case Board_Form:
@@ -2650,6 +2712,9 @@ int main()
 								fwrite(&btn_P2Nut1, sizeof(struct button), 1, FileOfBoard);
 								fwrite(&btn_P2Nut2, sizeof(struct button), 1, FileOfBoard);
 
+
+								fwrite(&model, sizeof(int), 1, FileOfBoard);
+
 								fwrite(&P1Nut1[model].x, sizeof(int), 1, FileOfBoard);
 								fwrite(&P1Nut1[model].y, sizeof(int), 1, FileOfBoard);
 
@@ -2665,12 +2730,16 @@ int main()
 								fwrite(CardPlace, sizeof(struct NUT), 9, FileOfBoard);
 								fwrite(CarridorPlace, sizeof(struct NUT), 8, FileOfBoard);
 
-								fread(ArrayCardsPlace, sizeof(int), 9, FileOfBoard);
+								fwrite(ArrayCardsPlace, sizeof(int), 9, FileOfBoard);
 
 								for (int i = 0; i < 8; i++)fwrite(&(ArrayCarridorsPlace[i][0]), sizeof(int), 1, FileOfBoard);
 
 								for (int i = 0; i < 8; i++) fwrite(&(ArrayCarridorsPlace[i][1]), sizeof(int), 1, FileOfBoard);
 
+
+
+								fwrite(&char_template_p1, sizeof(int), 1, FileOfBoard);
+								fwrite(&char_template_p2, sizeof(int), 1, FileOfBoard);
 								//----------------------------------------
 								fseek(FileOfBoard, 0, SEEK_SET);
 								fclose(FileOfBoard);
@@ -2722,15 +2791,11 @@ int main()
 								Player2[0] = 80;
 								Player2[1] = 80;
 
-								CardsP1[0][char_template_p1] = CardsP1_Assumption[0];
-								CardsP1[1][char_template_p1] = CardsP1_Assumption[1];
-								CardsP1[2][char_template_p1] = CardsP1_Assumption[2];
-								CardsP1[3][char_template_p1] = CardsP1_Assumption[3];
+								for (int i = 0; i < 4; i++)
+									CardsP1[i][char_template_p1] = CardsAssumptionP1[i][char_template_p1];
 
-								CardsP2[0][char_template_p2] = CardsP2_Assumption[0];
-								CardsP2[1][char_template_p2] = CardsP2_Assumption[1];
-								CardsP2[2][char_template_p2] = CardsP2_Assumption[2];
-								CardsP2[3][char_template_p2] = CardsP2_Assumption[3];
+								for (int i = 0; i < 4; i++)
+									CardsP2[i][char_template_p2] = CardsAssumptionP2[i][char_template_p2];
 
 								Tik_Dice = false;
 								Tik_Nut = false;
@@ -2946,6 +3011,8 @@ int main()
 						fwrite(&btn_P2Nut1, sizeof(struct button), 1, FileOfBoard);
 						fwrite(&btn_P2Nut2, sizeof(struct button), 1, FileOfBoard);
 
+						fwrite(&model, sizeof(int), 1, FileOfBoard);
+
 						fwrite(&P1Nut1[model].x, sizeof(int), 1, FileOfBoard);
 						fwrite(&P1Nut1[model].y, sizeof(int), 1, FileOfBoard);
 
@@ -2961,12 +3028,16 @@ int main()
 						fwrite(CardPlace, sizeof(struct NUT), 9, FileOfBoard);
 						fwrite(CarridorPlace, sizeof(struct NUT), 8, FileOfBoard);
 
-						fread(ArrayCardsPlace, sizeof(int), 9, FileOfBoard);
+						fwrite(ArrayCardsPlace, sizeof(int), 9, FileOfBoard);
 
 						for (int i = 0; i < 8; i++)fwrite(&(ArrayCarridorsPlace[i][0]), sizeof(int), 1, FileOfBoard);
 
 						for (int i = 0; i < 8; i++) fwrite(&(ArrayCarridorsPlace[i][1]), sizeof(int), 1, FileOfBoard);
 
+
+
+						fwrite(&char_template_p1, sizeof(int), 1, FileOfBoard);
+						fwrite(&char_template_p2, sizeof(int), 1, FileOfBoard);
 						//----------------------------------------
 						fseek(FileOfBoard, 0, SEEK_SET);
 						fclose(FileOfBoard);
@@ -4269,246 +4340,242 @@ int main()
 				break;
 			default:
 				break;
-				}
-
-				//Build Window-----------------------------
-				al_flip_display();
-				//-----------------------------------------
-				sw = false;
-
 			}
-			if (Player1[0] == -1 && Player1[1] == -1)
-			{
-				printf("***************************   Hoora P1   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
-				//Vars///////////////////////////////////////////////////////////////////////
-				Player1[0] = 0;
-				Player1[1] = 0;
-				Player2[0] = 80;
-				Player1[1] = 80;
 
-				CardsP1[0][char_template_p1] = CardsP1_Assumption[0];
-				CardsP1[1][char_template_p1] = CardsP1_Assumption[1];
-				CardsP1[2][char_template_p1] = CardsP1_Assumption[2];
-				CardsP1[3][char_template_p1] = CardsP1_Assumption[3];
+			//Build Window-----------------------------
+			al_flip_display();
+			//-----------------------------------------
+			sw = false;
 
-				CardsP2[0][char_template_p2] = CardsP2_Assumption[0];
-				CardsP2[1][char_template_p2] = CardsP2_Assumption[1];
-				CardsP2[2][char_template_p2] = CardsP2_Assumption[2];
-				CardsP2[3][char_template_p2] = CardsP2_Assumption[3];
-
-				Tik_Dice = false;
-				Tik_Nut = false;
-				Tik_Player = true;
-
-				Tik_AGAINDICE = false;
-				Tik_COEF = false;
-				Tik_LIMIT = false;
-
-				P1N1_IsLive = true;
-				P1N2_IsLive = true;
-				P2N1_IsLive = true;
-				P2N2_IsLive = true;
-
-				one_click_btn_DICEAGAIN_CARD_p1 = true;
-				one_click_btn_DICEAGAIN_CARD_p2 = true;
-
-				one_click_btn_COEF_CARD_p1 = true;
-				one_click_btn_COEF_CARD_p2 = true;
-
-				one_click_btn_LIMIT_CARD_p1 = true;
-				one_click_btn_LIMIT_CARD_p2 = true;
-
-				turn = 1;
-
-				//variable LOGIC-------------------------					
-				player_Turn = P1;//turn of players							
-
-				IsDoorClosed = 0;
-
-				CoefDice = 1;
-
-				sw_AgainDice = 0;
-
-				playerSW = 1;
-
-				IsLimitP1N1 = false;
-				IsLimitP1N2 = false;
-				IsLimitP2N1 = false;
-				IsLimitP2N2 = false;
-
-				DiceVar = 0;
-
-				count = 0;
-
-				iP1 = 0;
-				iP2 = 0;
-
-				CardChoosed;
-
-				User_operation = -1;
-				//---------------------------
-				//structs
-
-				btn_P1Nut1.X_frist = PP1N1_L;
-				btn_P1Nut1.Y_frist = PP1N1_T;
-				btn_P1Nut1.X_end = PP1N1_L + PPNW;
-				btn_P1Nut1.Y_end = PP1N1_T + PPNW;
-				btn_P1Nut1.sw_Link = NULL;
-
-				btn_P1Nut2.X_frist = PP1N2_L;
-				btn_P1Nut2.Y_frist = PP1N2_T;
-				btn_P1Nut2.X_end = PP1N2_L + PPNW;
-				btn_P1Nut2.Y_end = PP1N2_T + PPNW;
-				btn_P1Nut2.sw_Link = NULL;
-
-				btn_P2Nut1.X_frist = PP2N1_L;
-				btn_P2Nut1.Y_frist = PP2N1_T;
-				btn_P2Nut1.X_end = PP2N1_L + PPNW;
-				btn_P2Nut1.Y_end = PP2N1_T + PPNW;
-				btn_P2Nut1.sw_Link = NULL;
-
-				btn_P2Nut2.X_frist = PP2N2_L;
-				btn_P2Nut2.Y_frist = PP2N2_T;
-				btn_P2Nut2.X_end = PP2N2_L + PPNW;
-				btn_P2Nut2.Y_end = PP2N2_T + PPNW;
-				btn_P2Nut2.sw_Link = NULL;
-
-
-				//---------------------------
-				P1Nut1[model].x = PP1N1_L;
-				P1Nut1[model].y = PP1N1_T;
-
-				P1Nut2[model].x = PP1N2_L;
-				P1Nut2[model].y = PP1N2_T;
-
-				P2Nut1[model].x = PP2N1_L;
-				P2Nut1[model].y = PP2N1_T;
-
-				P2Nut2[model].x = PP2N2_L;
-				P2Nut2[model].y = PP2N2_T;
-				//End////////////////////////////////////////////////////////////////////////
-
-				pages_sw = Wonpage;
-				Is_StartOfBackToMenu = true;
-			}
-			else if (Player2[0] == -1 && Player2[1] == -1)
-			{
-				printf("***************************   Hoora P2   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!22");
-				Player1[0] = 0;
-				Player1[1] = 0;
-				Player2[0] = 80;
-				Player1[1] = 80;
-				pages_sw = Wonpage;
-			}
 		}
+		if (Player1[0] == -1 && Player1[1] == -1)
+		{
+			printf("***************************   Hoora P1   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+			//Vars///////////////////////////////////////////////////////////////////////
+			Player1[0] = 0;
+			Player1[1] = 0;
+			Player2[0] = 80;
+			Player1[1] = 80;
+
+			CardsP1[0][char_template_p1] = CardsP1_Assumption[0];
+			CardsP1[1][char_template_p1] = CardsP1_Assumption[1];
+			CardsP1[2][char_template_p1] = CardsP1_Assumption[2];
+			CardsP1[3][char_template_p1] = CardsP1_Assumption[3];
+
+			CardsP2[0][char_template_p2] = CardsP2_Assumption[0];
+			CardsP2[1][char_template_p2] = CardsP2_Assumption[1];
+			CardsP2[2][char_template_p2] = CardsP2_Assumption[2];
+			CardsP2[3][char_template_p2] = CardsP2_Assumption[3];
+
+			Tik_Dice = false;
+			Tik_Nut = false;
+			Tik_Player = true;
+
+			Tik_AGAINDICE = false;
+			Tik_COEF = false;
+			Tik_LIMIT = false;
+
+			P1N1_IsLive = true;
+			P1N2_IsLive = true;
+			P2N1_IsLive = true;
+			P2N2_IsLive = true;
+
+			one_click_btn_DICEAGAIN_CARD_p1 = true;
+			one_click_btn_DICEAGAIN_CARD_p2 = true;
+
+			one_click_btn_COEF_CARD_p1 = true;
+			one_click_btn_COEF_CARD_p2 = true;
+
+			one_click_btn_LIMIT_CARD_p1 = true;
+			one_click_btn_LIMIT_CARD_p2 = true;
+
+			turn = 1;
+
+			//variable LOGIC-------------------------					
+			player_Turn = P1;//turn of players							
+
+			IsDoorClosed = 0;
+
+			CoefDice = 1;
+
+			sw_AgainDice = 0;
+
+			playerSW = 1;
+
+			IsLimitP1N1 = false;
+			IsLimitP1N2 = false;
+			IsLimitP2N1 = false;
+			IsLimitP2N2 = false;
+
+			DiceVar = 0;
+
+			count = 0;
+
+			iP1 = 0;
+			iP2 = 0;
+
+			CardChoosed;
+
+			User_operation = -1;
+			//---------------------------
+			//structs
+
+			btn_P1Nut1.X_frist = PP1N1_L;
+			btn_P1Nut1.Y_frist = PP1N1_T;
+			btn_P1Nut1.X_end = PP1N1_L + PPNW;
+			btn_P1Nut1.Y_end = PP1N1_T + PPNW;
+			btn_P1Nut1.sw_Link = NULL;
+
+			btn_P1Nut2.X_frist = PP1N2_L;
+			btn_P1Nut2.Y_frist = PP1N2_T;
+			btn_P1Nut2.X_end = PP1N2_L + PPNW;
+			btn_P1Nut2.Y_end = PP1N2_T + PPNW;
+			btn_P1Nut2.sw_Link = NULL;
+
+			btn_P2Nut1.X_frist = PP2N1_L;
+			btn_P2Nut1.Y_frist = PP2N1_T;
+			btn_P2Nut1.X_end = PP2N1_L + PPNW;
+			btn_P2Nut1.Y_end = PP2N1_T + PPNW;
+			btn_P2Nut1.sw_Link = NULL;
+
+			btn_P2Nut2.X_frist = PP2N2_L;
+			btn_P2Nut2.Y_frist = PP2N2_T;
+			btn_P2Nut2.X_end = PP2N2_L + PPNW;
+			btn_P2Nut2.Y_end = PP2N2_T + PPNW;
+			btn_P2Nut2.sw_Link = NULL;
+
+
+			//---------------------------
+			P1Nut1[model].x = PP1N1_L;
+			P1Nut1[model].y = PP1N1_T;
+
+			P1Nut2[model].x = PP1N2_L;
+			P1Nut2[model].y = PP1N2_T;
+
+			P2Nut1[model].x = PP2N1_L;
+			P2Nut1[model].y = PP2N1_T;
+
+			P2Nut2[model].x = PP2N2_L;
+			P2Nut2[model].y = PP2N2_T;
+			//End////////////////////////////////////////////////////////////////////////
+
+			pages_sw = Wonpage;
+			Is_StartOfBackToMenu = true;
+		}
+		else if (Player2[0] == -1 && Player2[1] == -1)
+		{
+			printf("***************************   Hoora P2   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!22");
+			Player1[0] = 0;
+			Player1[1] = 0;
+			Player2[0] = 80;
+			Player1[1] = 80;
+			pages_sw = Wonpage;
+		}
+	}
 #pragma region Destroying
 
-		al_uninstall_keyboard();
-		al_uninstall_mouse();
-		al_uninstall_system();
-		al_uninstall_system();
+	al_uninstall_keyboard();
+	al_uninstall_mouse();
+	al_uninstall_system();
+	al_uninstall_system();
 
-		al_destroy_display(disp);
-		al_destroy_font(font);
-		al_destroy_timer(timer);
-		al_destroy_event_queue(queue);
+	al_destroy_display(disp);
+	al_destroy_font(font);
+	al_destroy_timer(timer);
+	al_destroy_event_queue(queue);
 
-		al_destroy_bitmap(CaractersP1_PIC);
+	al_destroy_bitmap(CaractersP1_PIC);
 
-		al_destroy_bitmap(CaractersP2_PIC);
+	al_destroy_bitmap(CaractersP2_PIC);
 
-		al_destroy_bitmap(NutsP1_PIC[NUT1]);
-		al_destroy_bitmap(NutsP1_PIC[NUT2]);
-		al_destroy_bitmap(NutsP2_PIC[NUT1]);
-		al_destroy_bitmap(NutsP2_PIC[NUT2]);
+	al_destroy_bitmap(NutsP1_PIC[NUT1]);
+	al_destroy_bitmap(NutsP1_PIC[NUT2]);
+	al_destroy_bitmap(NutsP2_PIC[NUT1]);
+	al_destroy_bitmap(NutsP2_PIC[NUT2]);
 
-		al_destroy_bitmap(Dice_PIC[DiceM1][model]);
-		al_destroy_bitmap(Dice_PIC[DiceM2][model]);
-		al_destroy_bitmap(Dice_PIC[DiceM3][model]);
-		al_destroy_bitmap(Dice_PIC[DiceP1][model]);
-		al_destroy_bitmap(Dice_PIC[DiceP2][model]);
-		al_destroy_bitmap(Dice_PIC[DiceP3][model]);
-		al_destroy_bitmap(Dice_PIC_VAR);
+	al_destroy_bitmap(Dice_PIC[DiceM1][model]);
+	al_destroy_bitmap(Dice_PIC[DiceM2][model]);
+	al_destroy_bitmap(Dice_PIC[DiceM3][model]);
+	al_destroy_bitmap(Dice_PIC[DiceP1][model]);
+	al_destroy_bitmap(Dice_PIC[DiceP2][model]);
+	al_destroy_bitmap(Dice_PIC[DiceP3][model]);
+	al_destroy_bitmap(Dice_PIC_VAR);
 
-		al_destroy_bitmap(Place_Start_Nuts_P1[Place1][model]);
-		al_destroy_bitmap(Place_Start_Nuts_P1[Place2][model]);
-		al_destroy_bitmap(Place_Start_Nuts_P2[Place1][model]);
-		al_destroy_bitmap(Place_Start_Nuts_P2[Place2][model]);
+	al_destroy_bitmap(Place_Start_Nuts_P1[Place1][model]);
+	al_destroy_bitmap(Place_Start_Nuts_P1[Place2][model]);
+	al_destroy_bitmap(Place_Start_Nuts_P2[Place1][model]);
+	al_destroy_bitmap(Place_Start_Nuts_P2[Place2][model]);
 
-		al_destroy_bitmap(lucky_CardP1_PIC[Place1][model]);
-		al_destroy_bitmap(lucky_CardP1_PIC[Place2][model]);
-		al_destroy_bitmap(lucky_CardP1_PIC[Place3][model]);
-		al_destroy_bitmap(lucky_CardP1_PIC[Place4][model]);
-		al_destroy_bitmap(lucky_CardP2_PIC[Place1][model]);
-		al_destroy_bitmap(lucky_CardP2_PIC[Place2][model]);
-		al_destroy_bitmap(lucky_CardP2_PIC[Place3][model]);
-		al_destroy_bitmap(lucky_CardP2_PIC[Place4][model]);
+	al_destroy_bitmap(lucky_CardP1_PIC[Place1][model]);
+	al_destroy_bitmap(lucky_CardP1_PIC[Place2][model]);
+	al_destroy_bitmap(lucky_CardP1_PIC[Place3][model]);
+	al_destroy_bitmap(lucky_CardP1_PIC[Place4][model]);
+	al_destroy_bitmap(lucky_CardP2_PIC[Place1][model]);
+	al_destroy_bitmap(lucky_CardP2_PIC[Place2][model]);
+	al_destroy_bitmap(lucky_CardP2_PIC[Place3][model]);
+	al_destroy_bitmap(lucky_CardP2_PIC[Place4][model]);
 
-		al_destroy_bitmap(char_frame_p1[model]);
-		al_destroy_bitmap(char_frame_p2[model]);
+	al_destroy_bitmap(char_frame_p1[model]);
+	al_destroy_bitmap(char_frame_p2[model]);
 
-		al_destroy_bitmap(charactors_PIC[char1]);
-		al_destroy_bitmap(charactors_PIC[char2]);
-		al_destroy_bitmap(charactors_PIC[char3]);
-		al_destroy_bitmap(charactors_PIC[char4]);
-		al_destroy_bitmap(charactors_PIC[char5]);
-		al_destroy_bitmap(charactors_PIC[char6]);
-		al_destroy_bitmap(charactors_PIC[char7]);
-		al_destroy_bitmap(charactors_PIC[char8]);
-		al_destroy_bitmap(charactors_PIC[char9]);
+	al_destroy_bitmap(charactors_PIC[char1]);
+	al_destroy_bitmap(charactors_PIC[char2]);
+	al_destroy_bitmap(charactors_PIC[char3]);
+	al_destroy_bitmap(charactors_PIC[char4]);
+	al_destroy_bitmap(charactors_PIC[char5]);
+	al_destroy_bitmap(charactors_PIC[char6]);
+	al_destroy_bitmap(charactors_PIC[char7]);
+	al_destroy_bitmap(charactors_PIC[char8]);
+	al_destroy_bitmap(charactors_PIC[char9]);
 
-		al_destroy_bitmap(P1Nut1[model].picture);
-		al_destroy_bitmap(P1Nut1[model].picture_Carridor);
-		al_destroy_bitmap(P1Nut2[model].picture);
-		al_destroy_bitmap(P2Nut1[model].picture);
-		al_destroy_bitmap(P2Nut2[model].picture);
-		al_destroy_bitmap(P2Nut2[model].picture_Carridor);
+	al_destroy_bitmap(P1Nut1[model].picture);
+	al_destroy_bitmap(P1Nut1[model].picture_Carridor);
+	al_destroy_bitmap(P1Nut2[model].picture);
+	al_destroy_bitmap(P2Nut1[model].picture);
+	al_destroy_bitmap(P2Nut2[model].picture);
+	al_destroy_bitmap(P2Nut2[model].picture_Carridor);
 
-		al_destroy_bitmap(GuideIcon[model]);
-		al_destroy_bitmap(RefreshIcon[model]);
-		al_destroy_bitmap(Menu_InTheBoard_Icon[model]);
-		al_destroy_bitmap(MenuFramePic[model]);
-		al_destroy_bitmap(Save_Icon[model]);
+	al_destroy_bitmap(GuideIcon[model]);
+	al_destroy_bitmap(RefreshIcon[model]);
+	al_destroy_bitmap(Menu_InTheBoard_Icon[model]);
+	al_destroy_bitmap(MenuFramePic[model]);
+	al_destroy_bitmap(Save_Icon[model]);
 
-		al_destroy_bitmap(char_frame_p1[model]);
-		al_destroy_bitmap(char_frame_p2[model]);
+	al_destroy_bitmap(char_frame_p1[model]);
+	al_destroy_bitmap(char_frame_p2[model]);
 
-		al_destroy_bitmap(startgame_PIC);
-		al_destroy_bitmap(Formcontinue_PIC);
+	al_destroy_bitmap(startgame_PIC);
+	al_destroy_bitmap(Formcontinue_PIC);
 
-		al_destroy_bitmap(Formcontinue_PIC);
+	al_destroy_bitmap(Formcontinue_PIC);
 
-		al_destroy_bitmap(MenuInTheBoard_PIC);
+	al_destroy_bitmap(MenuInTheBoard_PIC);
 
-		al_destroy_bitmap(char_template_p1_PIC);
-		al_destroy_bitmap(char_template_p2_PIC);
-		al_destroy_bitmap(char_template_board);
+	al_destroy_bitmap(char_template_p1_PIC);
+	al_destroy_bitmap(char_template_p2_PIC);
+	al_destroy_bitmap(char_template_board);
 
-		al_destroy_bitmap(RefreshInTheBoard_PIC);
+	al_destroy_bitmap(RefreshInTheBoard_PIC);
 
-		al_destroy_bitmap(ContinueAndNewButtonsForm_PIC);
+	al_destroy_bitmap(ContinueAndNewButtonsForm_PIC);
 
-		al_destroy_bitmap(Guid_page[0]);
-		al_destroy_bitmap(Guid_page[1]);
-		al_destroy_bitmap(Guid_page[2]);
-		al_destroy_bitmap(Guid_page[3]);
-		al_destroy_bitmap(Guid_page[4]);
-		al_destroy_bitmap(Guid_page[5]);
+	al_destroy_bitmap(Guid_page[0]);
+	al_destroy_bitmap(Guid_page[1]);
+	al_destroy_bitmap(Guid_page[2]);
+	al_destroy_bitmap(Guid_page[3]);
+	al_destroy_bitmap(Guid_page[4]);
+	al_destroy_bitmap(Guid_page[5]);
 
-		al_destroy_bitmap(GuidVar);
+	al_destroy_bitmap(GuidVar);
 
-		al_destroy_bitmap(CarridorPlace_PIC);
-		al_destroy_bitmap(CardLuckPlace_PIC);
+	al_destroy_bitmap(CarridorPlace_PIC);
+	al_destroy_bitmap(CardLuckPlace_PIC);
 
+	al_destroy_bitmap(Board_PIC);
 
-
-
-		al_destroy_bitmap(Board_PIC);
-
-		al_destroy_bitmap(FristMenu_Form_PIC);
+	al_destroy_bitmap(FristMenu_Form_PIC);
 
 
 #pragma endregion
-		exit(0);
-	}
-	
+	exit(0);
+}

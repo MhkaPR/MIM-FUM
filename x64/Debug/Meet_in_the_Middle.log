@@ -3,47 +3,47 @@ C:\MIM-FUM\logic_Form.h(606,7): warning C4215: utilizzata estensione non standar
 C:\MIM-FUM\logic_Form.h(610,24): warning C4013: 'pow' non definita. Verrà considerata come esterna che restituisce un int.
 C:\MIM-FUM\Form_Main.c(29,1): warning C4005: 'BestScore1': ridefinizione macro
 C:\MIM-FUM\logic_Form.h(26): message : vedere la precedente definizione di 'BestScore1'
-C:\MIM-FUM\Form_Main.c(796,25): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(810,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(817,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(824,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(831,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(894,35): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(901,38): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(909,39): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(916,37): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(924,35): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(932,47): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(939,46): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(954,44): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(961,40): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(1486,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(1492,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(1498,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(1504,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(2417,18): warning C4778: 'printf': la stringa di formato '%$' non ha terminazione
-C:\MIM-FUM\Form_Main.c(2432,18): warning C4778: 'printf': la stringa di formato '%$' non ha terminazione
-C:\MIM-FUM\Form_Main.c(2451,18): warning C4778: 'printf': la stringa di formato '%$' non ha terminazione
-C:\MIM-FUM\Form_Main.c(2466,18): warning C4778: 'printf': la stringa di formato '%$' non ha terminazione
-C:\MIM-FUM\Form_Main.c(2792,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(2798,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(2804,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(2810,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4356,30): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4362,30): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4368,30): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4374,30): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4420,37): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4420,31): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
-C:\MIM-FUM\Form_Main.c(4421,37): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4421,31): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
-C:\MIM-FUM\Form_Main.c(4422,37): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4422,31): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
-C:\MIM-FUM\Form_Main.c(4423,37): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4423,31): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
-C:\MIM-FUM\Form_Main.c(4506,30): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
-C:\MIM-FUM\Form_Main.c(4506,21): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
-C:\MIM-FUM\Form_Main.c(4217,5): warning C4809: l'etichetta 'default' dell'istruzione switch è ridondante. Le etichette 'case' coprono già tutti i casi possibili.
+C:\MIM-FUM\Form_Main.c(855,25): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(869,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(876,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(883,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(890,27): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(953,35): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(960,38): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(968,39): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(975,37): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(983,35): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(991,47): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(998,46): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(1013,44): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(1020,40): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(1541,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(1547,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(1553,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(1559,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(2479,18): warning C4778: 'printf': la stringa di formato '%$' non ha terminazione
+C:\MIM-FUM\Form_Main.c(2494,18): warning C4778: 'printf': la stringa di formato '%$' non ha terminazione
+C:\MIM-FUM\Form_Main.c(2513,18): warning C4778: 'printf': la stringa di formato '%$' non ha terminazione
+C:\MIM-FUM\Form_Main.c(2528,18): warning C4778: 'printf': la stringa di formato '%$' non ha terminazione
+C:\MIM-FUM\Form_Main.c(2857,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(2863,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(2869,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(2875,34): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4427,29): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4433,29): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4439,29): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4445,29): warning C4047: '=': 'int' differisce da 'void *' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4491,36): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4491,30): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
+C:\MIM-FUM\Form_Main.c(4492,36): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4492,30): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
+C:\MIM-FUM\Form_Main.c(4493,36): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4493,30): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
+C:\MIM-FUM\Form_Main.c(4494,36): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4494,30): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
+C:\MIM-FUM\Form_Main.c(4574,29): warning C4047: 'funzione': 'ALLEGRO_BITMAP *' differisce da 'ALLEGRO_BITMAP *[2]' nei livelli di riferimento indiretto
+C:\MIM-FUM\Form_Main.c(4574,20): warning C4024: 'al_destroy_bitmap': tipi diversi tra il parametro 1 formale e quello effettivo
+C:\MIM-FUM\Form_Main.c(4288,5): warning C4809: l'etichetta 'default' dell'istruzione switch è ridondante. Le etichette 'case' coprono già tutti i casi possibili.
 C:\MIM-FUM\logic_Form.h(591): warning C4716: 'KeepCenterNUMBER': deve restituire un valore
 C:\MIM-FUM\logic_Form.h(673): warning C4715: 'CoefMove': non tutti i percorsi di controllo restituiscono un valore
   Meet_in_the_Middle.vcxproj -> C:\MIM-FUM\x64\Debug\Meet_in_the_Middle.exe
